@@ -1,0 +1,9 @@
+<%_ if(!IS_EXIST){ _%>
+const express = require('express');
+const router = express.Router();
+const <%-MODEL%>Controller = require('../../controller/<%-PLATFORM%>/<%-MODEL%>Controller');
+router.route("<%-ROUTE_PATTERN%>").<%-ROUTE_METHOD%>(<%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME%>);
+module.exports = router;
+<%_ }else{ _%>
+router.route("<%-ROUTE_PATTERN%>").<%-ROUTE_METHOD%>(<%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME%>);
+<%_ } _%>

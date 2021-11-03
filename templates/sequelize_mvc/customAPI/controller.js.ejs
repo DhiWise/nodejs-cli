@@ -1,0 +1,18 @@
+<%_ if(!IS_EXIST){ _%>
+const <%-CONTROLLER_FUNCTION_NAME %> = async (req, res) => {
+    try {
+       return  res.ok({});
+     } catch (error) {
+      return res.failureResponse(error.message); 
+    }
+};
+module.exports = { <%-CONTROLLER_FUNCTION_NAME %> }
+<%_}else{ _%>
+const <%-CONTROLLER_FUNCTION_NAME %> = async (req, res) => {
+  try {
+     return  res.ok({});
+   } catch (error) {
+    return res.failureResponse(error.message); 
+  }
+};
+<%_ } _%>

@@ -1,0 +1,32 @@
+{
+  "name": "dhiwise-node-generator",
+  "version": "0.0.1",
+  "description": "DhiWise Node generator is a development package to quickly generate Node APIs and Module which included route, controller, model and joi validation. It helps you to speed up productivity in back-end projects such as node-mongoose and node-sequelize with clean-code and mvc architecture.",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/DhiWise/dhiwise-node-generator"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DhiWise",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/generator": "^7.15.8",
+    "@babel/parser": "^7.15.8",
+    "@babel/traverse": "^7.15.4",
+    "@babel/types": "^7.15.6",
+    "commander": "^8.2.0",
+    "ejs": "^3.1.6",
+    "key-value-replace": "^3.0.0",
+    "lodash": "^4.17.21",
+    "minimatch": "^3.0.4",
+    "mkdirp": "^1.0.4",
+    "prompts": "^2.4.2"
+  },
+  "bin": {
+    "dhiwise-create-model": "./bin/create-model.js",
+    "dhiwise-create-api": "./bin/create-api.js",
+    "dhiwise-create-module": "./bin/create-module.js"
+  }
+}

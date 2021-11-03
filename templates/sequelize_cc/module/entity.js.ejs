@@ -1,0 +1,28 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
+function buildMake<%-MODEL_NAME%> ({
+    insert<%-MODEL_NAME%>Validator,update<%-MODEL_NAME%>Validator
+  }){
+    return function make<%-MODEL_NAME%> (data,validatorName){
+      let isValid = '';
+      switch (validatorName){
+      case 'insert<%-MODEL_NAME%>Validator':
+        isValid = insert<%-MODEL_NAME%>Validator(data);
+        break;
+  
+      case 'update<%-MODEL_NAME%>Validator':
+        isValid = update<%-MODEL_NAME%>Validator(data);  
+        break; 
+      }
+      if (isValid.error){
+        throw new Error({
+          name:'ValidationError',
+          message:`Invalid data in <%-MODEL_NAME%> entity. ${isValid.error}`
+        });
+      }
+        
+      return {
+        // model attribute
+      };
+    };
+  }
+  module.exports =  buildMake<%-MODEL_NAME%>;

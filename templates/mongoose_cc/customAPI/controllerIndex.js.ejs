@@ -1,0 +1,23 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
+const db = require('mongoose');
+const <%-MODEL%>Model = require('../../../model/<%-MODEL%>')(db);
+const {
+    schemaKeys,updateSchemaKeys
+  } = require('../../../validation/<%-MODEL%>Validation');
+const insert<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(schemaKeys);
+const update<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(updateSchemaKeys);
+const make<%-MODEL_NAME%> = require('../../../entity/<%-MODEL%>')({
+    insert<%-MODEL_NAME%>Validator,
+    update<%-MODEL_NAME%>Validator
+  });
+const <%-MODEL%>Service = require('../../../services/mongoDbService')({
+  model:<%-MODEL%>Model,
+  make<%-MODEL_NAME%>
+});
+const make<%-MODEL_NAME%>Controller = require('./<%-MODEL%>');
+
+const <%-MODEL%>Controller = make<%-MODEL_NAME%>Controller({
+    <%-MODEL%>Service,
+    make<%-MODEL_NAME%>
+});
+module.exports = <%-MODEL%>Controller;

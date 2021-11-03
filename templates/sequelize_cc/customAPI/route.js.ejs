@@ -1,0 +1,30 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
+<%_ if(!IS_EXIST){ _%>
+const express = require('express');
+const router = express.Router();
+const <%-MODEL%>Controller = require('../../controller/admin/<%-MODEL%>');
+const adaptRequest = require('../../helpers/adaptRequest');
+const sendResponse = require('../../helpers/sendResponse');
+    
+router.<%-ROUTE_METHOD%>('<%-ROUTE_PATTERN%>',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME%>({data: req.body}).then((result)=>{
+    sendResponse(res, result);
+    })
+    .catch((e) => {
+        sendResponse(res,e);
+    });
+});
+
+module.exports = router;    
+<%_ }else{ _%>
+router.<%-ROUTE_METHOD%>('<%-ROUTE_PATTERN%>',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME%>({data: req.body,}).then((result)=>{
+        sendResponse(res, result);
+    })
+    .catch((e) => {
+        sendResponse(res,e);
+    });
+});
+<%_ } _%>

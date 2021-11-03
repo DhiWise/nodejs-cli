@@ -1,0 +1,144 @@
+const express = require('express');
+const router = express.Router();
+const adaptRequest = require('../../helpers/adaptRequest');
+const sendResponse = require('../../helpers/sendResponse');
+const <%-MODEL%>Controller = require('../../controller/<%-PLATFORM%>/<%-MODEL%>');
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1); %>
+
+<%_ if(METHODS.includes("C")){ _%>
+router.post('/<%-ROUTE_PREFIX%>/create',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.add<%-MODEL_NAME%>({
+        data: req.body,
+    }).then((result)=>{
+        sendResponse(res, result);
+    }).catch((error) => {
+        sendResponse(res,error);
+        });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("BC")){ _%>
+router.post('/<%-ROUTE_PREFIX%>/addBulk',(req,res,next)=>{
+    <%-MODEL%>Controller.bulkInsert<%-MODEL_NAME%>({
+        body: req.body,
+    }).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("FALL")){ _%>
+router.post('/<%-ROUTE_PREFIX%>/list',(req,res,next)=>{
+    req = adaptRequest(req);    
+    <%-MODEL%>Controller.findAll<%-MODEL_NAME%>({
+        data: req.body,
+    }).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("FBYID")){ _%>
+router.get('/<%-ROUTE_PREFIX%>/:id',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.get<%-MODEL_NAME%>ById({ _id: req.pathParams.id }).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("COUNT")){ _%>
+router.route('/<%-ROUTE_PREFIX%>/count').post((req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.get<%-MODEL_NAME%>Count(req.body).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("U")){ _%>
+router.put('/<%-ROUTE_PREFIX%>/update/:id',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.update<%-MODEL_NAME%>(req.body,req.pathParams.id
+    ).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+router.put('/<%-ROUTE_PREFIX%>/partial-update/:id',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.partialUpdate<%-MODEL_NAME%>(req.body,req.pathParams.id).then((result)=>{
+      sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("BU")){ _%>
+router.put('/<%-ROUTE_PREFIX%>/updateBulk',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.bulkUpdate<%-MODEL_NAME%>(req.body
+    ).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+}); 
+<%_ } _%>
+<%_ if(METHODS.includes("UP")){ _%>
+router.post('/<%-ROUTE_PREFIX%>/upsert',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.upsert<%-MODEL_NAME%>(req.body).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("DMANY")){ _%>
+router.delete('/<%-ROUTE_PREFIX%>/deleteMany',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.deleteMany<%-MODEL_NAME%>(req.body).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("D")){ _%>
+router.delete('/<%-ROUTE_PREFIX%>/delete/:id',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.delete<%-MODEL_NAME%>(req.pathParams.id).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("SD")){ _%>
+router.put('/<%-ROUTE_PREFIX%>/softDelete/:id',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.softDelete<%-MODEL_NAME%>(req.pathParams.id).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+<%_ if(METHODS.includes("SDMANY")){ _%>
+router.put('/<%-ROUTE_PREFIX%>/softDeleteMany',(req,res,next)=>{
+    req = adaptRequest(req);
+    <%-MODEL%>Controller.softDeleteMany<%-MODEL_NAME%>(req.body.ids).then((result)=>{
+        sendResponse(res,result);
+    }).catch((error) => {
+        sendResponse(res,error);
+    });
+});
+<%_ } _%>
+
+module.exports = router;

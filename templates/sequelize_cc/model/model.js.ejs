@@ -1,0 +1,16 @@
+<% let MODEL_NAME = DB_MODEL.charAt(0).toUpperCase() + DB_MODEL.slice(1); %>
+const { DataTypes } = require('sequelize');
+const sequelizePaginate = require('sequelize-paginate');
+const sequelizeTransforms = require('sequelize-transforms');
+function makeModel (sequelize){
+
+    const <%-MODEL_NAME%> = sequelize.define("<%-DB_MODEL%>",{});
+    <%-MODEL_NAME%>.prototype.toJSON = function () {
+        var values = Object.assign({}, this.get());          
+        return values;
+    }
+    sequelizeTransforms(<%-MODEL_NAME%>);
+    sequelizePaginate.paginate(<%-MODEL_NAME%>);
+    return <%-MODEL_NAME%>;
+}
+module.exports = makeModel;

@@ -1,0 +1,43 @@
+const express = require('express');
+const router = express.Router();
+const <%-MODEL%>Controller = require('../../controller/<%-PLATFORM%>/<%-MODEL%>Controller');
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1); %>
+<%_ if(METHODS.includes("C")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/create").post(<%-MODEL%>Controller.add<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("BC")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/addBulk").post(<%-MODEL%>Controller.bulkInsert<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("FALL")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/list").post(<%-MODEL%>Controller.findAll<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("FBYID")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/:id").get(<%-MODEL%>Controller.get<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("COUNT")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/count").post(<%-MODEL%>Controller.get<%-MODEL_NAME%>Count);
+<%_ } _%>
+<%_ if(METHODS.includes("U")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/update/:id").put(<%-MODEL%>Controller.update<%-MODEL_NAME%>);
+router.route("/<%-ROUTE_PREFIX%>/partial-update/:id").put(<%-MODEL%>Controller.partialUpdate<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("BU")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/updateBulk").put(<%-MODEL%>Controller.bulkUpdate<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("UP")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/upsert").put(<%-MODEL%>Controller.upsert);
+<%_ } _%>
+<%_ if(METHODS.includes("DMANY")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/deleteMany").delete(<%-MODEL%>Controller.deleteMany<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("D")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/delete/:id").delete(<%-MODEL%>Controller.delete<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("SD")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/softDelete/:id").put(<%-MODEL%>Controller.softDelete<%-MODEL_NAME%>);
+<%_ } _%>
+<%_ if(METHODS.includes("SDMANY")){ _%>
+router.route("/<%-ROUTE_PREFIX%>/softDeleteMany").put(<%-MODEL%>Controller.softDeleteMany<%-MODEL_NAME%>);
+<%_ } _%>
+
+module.exports = router;
