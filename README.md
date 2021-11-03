@@ -1,16 +1,16 @@
 
 [![NPM version](https://img.shields.io/npm/v/dhiwise-node-generator?style=flat-square&color=1e88e5)](https://www.npmjs.com/package/dhiwise-node-generator)
-[![GitHub stars](https://img.shields.io/github/stars/Cristians953/dhiwise-node-generator?style=flat-square&color=yellow)](https://github.com/Cristians953/dhiwise-node-generator)
+[![GitHub stars](https://img.shields.io/github/stars/DhiWise/dhiwise-node-generator?style=flat-square&color=yellow)](https://github.com/DhiWise/dhiwise-node-generator)
 [![NPM total downloads](https://img.shields.io/npm/dt/dhiwise-node-generator.svg?style=flat-square)](https://npmcharts.com/compare/dhiwise-node-generator?minimal=true)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/dhiwise-node-generator.svg?style=flat-square&color=03a9f4)](https://npmcharts.com/compare/dhiwise-node-generator?minimal=true)
 [![NPM license](https://img.shields.io/npm/l/dhiwise-node-generator?style=flat-square)](https://www.npmjs.com/package/dhiwise-node-generator)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=66bb6a)](https://github.com/Cristians953/dhiwise-node-generator/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=66bb6a)](https://github.com/DhiWise/dhiwise-node-generator/issues)
 
 <br />
 
 <p align="center">
 
-<a href="https://github.com/Cristians953/dhiwise-node-generator">
+<a href="https://github.com/DhiWise/dhiwise-node-generator">
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/node-Generator.png" alt="logo" />
 
@@ -26,9 +26,9 @@ It helps you to speed up productivity in back-end projects such as node-mongoose
 <br />
 <a href="#get-started">Get Started</a>
 <br/>
-<a href="https://github.com/Cristians953/dhiwise-node-generator/issues">Report Bug</a>
+<a href="https://github.com/DhiWise/dhiwise-node-generator/issues">Report Bug</a>
 <br/>
-<a href="https://github.com/Cristians953/dhiwise-node-generator/issues">Request Feature</a>
+<a href="https://github.com/DhiWise/dhiwise-node-generator/issues">Request Feature</a>
 </p>
 </p>
 
