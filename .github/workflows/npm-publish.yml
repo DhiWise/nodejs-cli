@@ -17,7 +17,10 @@ jobs:
                   node-version: 14
                   registry-url: https://registry.npmjs.org
             - name: 🚀 publish
-              run: npm publish --access public
+              run: |
+                echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN  }}' > ${{ github.workspace }}/.npmrc
+                cat .npmrc
+                npm publish --access public
               working-directory: my-package
               env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
