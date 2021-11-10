@@ -240,28 +240,29 @@ function make<%-MODEL_NAME%>Controller ({
     };
 <%_ } _%>
 <%_ if(METHODS.includes("DMANY")){ FUNCTION_NAME.push(`deleteMany${MODEL_NAME}`); _%>
-    try {
-        if (data && data.ids){
-        let ids = data.ids;
-        if (ids && ids.length){
-            let query = { _id:{ $in:ids } };
-            let result  = await <%-MODEL%>Service.deleteMany(query);
-            if (!result){
-                return message.invalidRequest({ message:'your request is not successfully executed.' });
+    const deleteMany<%-MODEL_NAME%> = async (data) => {
+        try {
+            if (data && data.ids){
+            let ids = data.ids;
+            if (ids && ids.length){
+                let query = { _id:{ $in:ids } };
+                let result  = await <%-MODEL%>Service.deleteMany(query);
+                if (!result){
+                    return message.invalidRequest({ message:'your request is not successfully executed.' });
+                }
+                return message.successResponse({ data:result });      
             }
-            return message.successResponse({ data:result });      
-        }
+                return message.badRequest();
+            }
             return message.badRequest();
         }
-        return message.badRequest();
-    }
-    catch (error){
-        if (error.name === 'ValidationError'){
-            return message.inValidParam({ message :error.message });
+        catch (error){
+            if (error.name === 'ValidationError'){
+                return message.inValidParam({ message :error.message });
+            }
+            return message.failureResponse();
         }
-        return message.failureResponse();
-    }
-  };
+   };
 <%_ } _%>
 <%_ if(METHODS.includes("D")){ FUNCTION_NAME.push(`delete${MODEL_NAME}`); _%>
     const delete<%-MODEL_NAME%> = async (id) => {
