@@ -1,9 +1,9 @@
 
-[![NPM version](https://img.shields.io/npm/v/dhiwise-node-generator?style=flat-square&color=1e88e5)](https://www.npmjs.com/package/dhiwise-node-generator)
+[![NPM version](https://img.shields.io/npm/v/@dhiwise/node-generator?style=flat-square&color=1e88e5)](https://www.npmjs.com/package/@dhiwise/node-generator)
 [![GitHub stars](https://img.shields.io/github/stars/DhiWise/dhiwise-node-generator?style=flat-square&color=yellow)](https://github.com/DhiWise/dhiwise-node-generator)
-[![NPM total downloads](https://img.shields.io/npm/dt/dhiwise-node-generator.svg?style=flat-square)](https://npmcharts.com/compare/dhiwise-node-generator?minimal=true)
-[![NPM monthly downloads](https://img.shields.io/npm/dm/dhiwise-node-generator.svg?style=flat-square&color=03a9f4)](https://npmcharts.com/compare/dhiwise-node-generator?minimal=true)
-[![NPM license](https://img.shields.io/npm/l/dhiwise-node-generator?style=flat-square)](https://www.npmjs.com/package/dhiwise-node-generator)
+[![NPM total downloads](https://img.shields.io/npm/dt/@dhiwise/node-generator.svg?style=flat-square)](https://npmcharts.com/compare/@dhiwise/node-generator?minimal=true)
+[![NPM monthly downloads](https://img.shields.io/npm/dm/@dhiwise/node-generator.svg?style=flat-square&color=03a9f4)](https://npmcharts.com/compare/@dhiwise/node-generator?minimal=true)
+[![NPM license](https://img.shields.io/npm/l/@dhiwise/node-generator?style=flat-square)](https://www.npmjs.com/package/@dhiwise/node-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=66bb6a)](https://github.com/DhiWise/dhiwise-node-generator/issues)
 
 <br />
@@ -45,7 +45,7 @@ It helps you to speed up productivity in back-end projects such as node-mongoose
 To install the latest version run the following command:
 
 ```sh
-npm i -g dhiwise-node-generator
+npm i -g @dhiwise/node-generator
 ```
 
 ##  Get Started
@@ -79,4 +79,8 @@ above command will use to generate whole module (which include model, controller
 
 ##  Roadmap
 
-In upcoming releases we will provide features for generate boilerplate application, model with attributes as per your project ORM, route seeder, and the postman file of the generated routes.
+In upcoming releases we will provide following features - 
+
+* boilerplate application 
+* model with attributes as per your project ORM
+* postman file of the generated routes.
