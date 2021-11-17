@@ -7,6 +7,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=66bb6a)](https://github.com/DhiWise/dhiwise-node-generator/issues)
 
 <br />
+<br />
 
 <p align="center">
 
@@ -20,16 +21,25 @@
 
 <p align="center">
 
-DhiWise Node generator is a development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.
-It helps you to speed up productivity in back-end projects such as node-mongoose and node-sequelize with clean-code and mvc architecture.
+DhiWise Node generator is a development package to quickly generate Node APIs and Module which includes route, controller, model and joi validation. It helps you to speed up productivity in back-end projects such as node-mongoose and node-sequelize with clean-code and mvc architecture.
 
+Visit https://www.dhiwise.com/node for more details.
 <br />
-<a href="#get-started">Get Started</a>
+
+## Documentation
+
+Visit https://docs.dhiwise.com for our documentation.
+
+## Support & community
+If you have any issue or idea or question, share it with us via any of the below options and we will help you asap - 
+Support and feedback - <a href="https://discord.com/invite/hTuNauNjyJ">Discord</a> | <a href="https://dhiwise.canny.io/">Canny</a> | <a href="http://help@gmail.com">Email</a>
+
+GitHub Issues - <a href="https://github.com/DhiWise/dhiwise-node-generator/issues">GitHub</a>
+Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
+
 <br/>
-<a href="https://github.com/DhiWise/dhiwise-node-generator/issues">Report Bug</a>
-<br/>
-<a href="https://github.com/DhiWise/dhiwise-node-generator/issues">Request Feature</a>
-</p>
+
+
 </p>
 
 ##  Table of Contents
@@ -84,3 +94,16 @@ In upcoming releases we will provide following features -
 * boilerplate application 
 * model with attributes as per your project ORM
 * postman file of the generated routes.
+
+## Stay up to date
+
+We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
+https://www.dhiwise.com/subscription
+
+
+## Jobs
+If you are interested in working for DhiWise, click here to see open positions.
+
+
+## License
+DhiWise is distributed under Apache 2.0 with Commons Clause license.
