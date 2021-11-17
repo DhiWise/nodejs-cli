@@ -107,7 +107,7 @@ https://www.dhiwise.com/subscription
 <br/>
 
 ## Contributions
-Want to report a bug or have a great feature to contribute? Check out our <a href="http://dhiwise.com">contributing guide</a> for more details.
+Want to report a bug or have a great feature to contribute? Check out our <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/CONTRIBUTING.md">contributing guide</a> for more details.
 
 <br/>
 
