@@ -1,7 +1,7 @@
 {
   "name": "@dhiwise/node-generator",
   "version": "0.0.1",
-  "description": "DhiWise Node generator is a development package to quickly generate Node APIs and Module which included route, controller, model and joi validation. It helps you to speed up productivity in back-end projects such as node-mongoose and node-sequelize with clean-code and mvc architecture.",
+  "description": "The open source platform for Node.js application development. Development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.",
   "main": "index.js",
   "repository": {
     "url": "https://github.com/DhiWise/dhiwise-node-generator"
