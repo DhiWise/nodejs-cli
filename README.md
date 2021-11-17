@@ -30,11 +30,15 @@ Visit https://www.dhiwise.com/node for more details.
 
 Visit https://docs.dhiwise.com for our documentation.
 
+<br/>
+
 ## Support & community
 If you have any issue or idea or question, share it with us via any of the below options and we will help you asap - 
+<br/>
 Support and feedback - <a href="https://discord.com/invite/hTuNauNjyJ">Discord</a> | <a href="https://dhiwise.canny.io/">Canny</a> | <a href="http://help@gmail.com">Email</a>
-
+<br/>
 GitHub Issues - <a href="https://github.com/DhiWise/dhiwise-node-generator/issues">GitHub</a>
+<br/>
 Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
 
 <br/>
@@ -50,6 +54,8 @@ Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
 
 * [Roadmap](#roadmap)
 
+<br/>
+
 ##  Installation
 
 To install the latest version run the following command:
@@ -57,6 +63,8 @@ To install the latest version run the following command:
 ```sh
 npm i -g @dhiwise/node-generator
 ```
+
+<br/>
 
 ##  Get Started
 
@@ -67,25 +75,42 @@ dhiwise-create-model
 ```
 
 above command will ask you for the model name and it will generate single model file in the model directory of your project.
+<br />
+<br/>
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-model.png" />
+
+<br/>
+<br/>
 
 ```sh
 dhiwise-create-api
 ```
 above command will use to create single API in your specific platform or module.
+<br />
+<br/>
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-api.png" />
 
+<br/>
+<br/>
 
 ```sh
 dhiwise-create-module
 ```
 above command will use to generate whole module (which include model, controller with CRUD and many others methods and route and joi validation file) in the particulat platform.
+<br />
+<br/>
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-module.png" />
+
 <br/>
+<br/>
+
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-module-2.png" />
+
+<br/>
+<br/>
 
 ##  Roadmap
 
@@ -95,15 +120,23 @@ In upcoming releases we will provide following features -
 * model with attributes as per your project ORM
 * postman file of the generated routes.
 
+<br/>
 ## Stay up to date
 
 We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
 https://www.dhiwise.com/subscription
 
+<br/>
+
+## Contributions
+Want to report a bug or have a great feature to contribute? Check out our <a href="http://dhiwise.com">contributing guide</a> for more details.
+
+<br/>
 
 ## Jobs
-If you are interested in working for DhiWise, click here to see open positions.
+If you are interested in working for DhiWise, click here to see <a href="https://dhiwise.zohorecruit.in/jobs/Careers/">open positions.</a>
 
+<br/>
 
 ## License
-DhiWise is distributed under Apache 2.0 with Commons Clause license.
+DhiWise is distributed under <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/LICENSE">Apache 2.0 with Commons Clause</a> license.
