@@ -13,33 +13,28 @@
 
 <a href="https://github.com/DhiWise/dhiwise-node-generator">
 
-<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/node-Generator.png" alt="logo" />
-
+<img height="100" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/logo.jpg" alt="logo" />
+<hr/>
 </a>
-
-<h1 align="center">DhiWise Node Generator </h1>
-
+<br/>
+<h2 align="center">DhiWise Node Generator </h2>
 <p align="center">
 
 DhiWise Node generator is a development package to quickly generate Node APIs and Module which includes route, controller, model and joi validation. It helps you to speed up productivity in back-end projects such as node-mongoose and node-sequelize with clean-code and mvc architecture.
 
 Visit https://www.dhiwise.com/node for more details.
 <br />
-
-## Documentation
-
-Visit https://docs.dhiwise.com for our documentation.
-
 <br/>
 
 ## Support & community
 If you have any issue or idea or question, share it with us via any of the below options and we will help you asap - 
 <br/>
-Support and feedback - <a href="https://discord.com/invite/hTuNauNjyJ">Discord</a> | <a href="https://dhiwise.canny.io/">Canny</a> | <a href="http://help@gmail.com">Email</a>
-<br/>
-GitHub Issues - <a href="https://github.com/DhiWise/dhiwise-node-generator/issues">GitHub</a>
-<br/>
-Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
+
+* Support and feedback - <a href="https://discord.com/invite/hTuNauNjyJ">Discord</a> | <a href="https://dhiwise.canny.io/">Canny</a> | <a href="http://help@gmail.com">Email</a>
+
+* GitHub Issues - <a href="https://github.com/DhiWise/dhiwise-node-generator/issues">GitHub</a>
+
+* Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
 
 <br/>
 
@@ -49,9 +44,7 @@ Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
 ##  Table of Contents
 
 * [Installation](#installation)
-
 * [Get Started](#get-started)
-
 * [Roadmap](#roadmap)
 
 <br/>
@@ -78,11 +71,6 @@ above command will ask you for the model name and it will generate single model 
 <br />
 <br/>
 
-<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-model.png" />
-
-<br/>
-<br/>
-
 ```sh
 dhiwise-create-api
 ```
@@ -90,24 +78,14 @@ above command will use to create single API in your specific platform or module.
 <br />
 <br/>
 
-<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-api.png" />
-
-<br/>
-<br/>
-
 ```sh
 dhiwise-create-module
 ```
-above command will use to generate whole module (which include model, controller with CRUD and many others methods and route and joi validation file) in the particulat platform.
+above command will use to generate whole module (which include model, controller with CRUD and many others methods and route and joi validation file) in the particular platform.
 <br />
 <br/>
 
-<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-module.png" />
-
-<br/>
-<br/>
-
-<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/dhiwise-create-module-2.png" />
+<img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/cli.gif" />
 
 <br/>
 <br/>
@@ -121,8 +99,8 @@ In upcoming releases we will provide following features -
 * postman file of the generated routes.
 
 <br/>
-## Stay up to date
 
+## Stay up to date
 We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
 https://www.dhiwise.com/subscription
 
