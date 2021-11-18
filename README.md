@@ -18,8 +18,7 @@ DhiWise Node generator is a development package to quickly generate Node APIs an
 
 Visit https://www.dhiwise.com/node for more details.
 <br />
-
-
+  
 ## How it works ?
 
 DhiWise Node generator requires your basic inputs and a few pre-defined configurations. From those configurations DhiWise CLI engine works to create a custom template for your Node.js application, it automates the most basic and menial task which takes developers days and weeks to program. The code it generates is more than just a boilerplate. It is a production-ready code!
