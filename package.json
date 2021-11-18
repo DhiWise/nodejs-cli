@@ -1,12 +1,17 @@
 {
   "name": "@dhiwise/node-generator",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "The open source platform for Node.js application development. Development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.",
   "main": "index.js",
   "repository": {
     "url": "https://github.com/DhiWise/dhiwise-node-generator"
   },
   "scripts": {
+    "commit": "cz",
+    "release": "standard-version",
+    "release:minor": "standard-version --release-as minor",
+    "release:patch": "standard-version --release-as patch",
+    "release:major": "standard-version --release-as major",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "https://www.dhiwise.com/",
@@ -24,6 +29,12 @@
     "mkdirp": "^1.0.4",
     "prompts": "^2.4.2"
   },
+  "devDependencies": {
+    "commitizen": "^4.2.4",
+    "conventional-github-releaser": "^3.1.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "standard-version": "^9.3.2"
+  },
   "bin": {
     "dhiwise-create-model": "./bin/create-model.js",
     "dhiwise-create-api": "./bin/create-api.js",
@@ -36,5 +47,29 @@
       "url": "https://github.com/jasanishubh123"
     }
   ],
-  "keywords": ["nodejs","node","cli","dhiwise","cli-app","generator","boilerplate","code-generator","express","mongoose","sequelize","CRUD"]
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "yes": true
+    }
+  },
+  "keywords": [
+    "nodejs",
+    "node",
+    "cli",
+    "dhiwise",
+    "cli-app",
+    "generator",
+    "boilerplate",
+    "code-generator",
+    "express",
+    "mongoose",
+    "sequelize",
+    "CRUD"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
