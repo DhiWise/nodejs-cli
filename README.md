@@ -75,12 +75,12 @@ above command will use to generate more than boilerplate application (which incl
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/cli.gif" />
 
+## Contributions
+Want to report a bug or have a great feature to contribute? Check out our <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/CONTRIBUTING.md">contributing guide</a> for more details.
+
 ## Stay up to date
 We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
 https://www.dhiwise.com/subscription
-
-## Contributions
-Want to report a bug or have a great feature to contribute? Check out our <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/CONTRIBUTING.md">contributing guide</a> for more details.
 
 ## Jobs
 If you are interested in working for DhiWise, click here to see <a href="https://dhiwise.zohorecruit.in/jobs/Careers/">open positions.</a>
