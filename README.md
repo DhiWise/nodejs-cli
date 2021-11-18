@@ -11,7 +11,6 @@
 <img height="75" width="350" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/logo.jpg" alt="logo" />
 <hr/>
 </a>
-<br/>
 <h2 align="center">DhiWise Node Generator </h2>
 <p align="center">
 
@@ -76,8 +75,6 @@ above command will use to generate more than boilerplate application (which incl
 <br />
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/cli.gif" />
-
-<br/>
 
 ## Stay up to date
 We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
