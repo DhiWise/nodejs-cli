@@ -6,8 +6,20 @@
  */
 const joi = require('joi');
 exports.schemaKeys = joi.object({
-
+    <%_ for(let i in SCHEMA){ _%>
+        <%_ let jsonStr = JSON.stringify(SCHEMA[i]);
+        var finalStr = new String();
+        finalStr = jsonStr.toString().replace(/"/g, "");
+    _%>
+    <%-i%>:<%-finalStr%>,
+    <%_}_%>
 }).unknown(true);
 exports.updateSchemaKeys = joi.object({
-    
+    <%_ for(let i in SCHEMA){ _%>
+        <%_ let jsonStr = JSON.stringify(SCHEMA[i]);
+        var finalStr = new String();
+        finalStr = jsonStr.toString().replace(/"/g, "");
+    _%>
+    <%-i%>:<%-finalStr%>,
+    <%_}_%>
 }).unknown(true);

@@ -1,6 +1,6 @@
 {
   "name": "@dhiwise/node-generator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The open source platform for Node.js application development. Development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.",
   "main": "index.js",
   "repository": {
@@ -21,13 +21,15 @@
     "@babel/parser": "^7.15.8",
     "@babel/traverse": "^7.15.4",
     "@babel/types": "^7.15.6",
-    "commander": "^8.2.0",
+    "commander": "^8.3.0",
     "ejs": "^3.1.6",
+    "fs-extra": "^10.0.0",
     "key-value-replace": "^3.0.0",
     "lodash": "^4.17.21",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.4",
-    "prompts": "^2.4.2"
+    "prompts": "^2.4.2",
+    "yargs": "^13.2.4"
   },
   "devDependencies": {
     "commitizen": "^4.2.4",
@@ -36,9 +38,7 @@
     "standard-version": "^9.3.2"
   },
   "bin": {
-    "dhiwise-create-model": "./bin/create-model.js",
-    "dhiwise-create-api": "./bin/create-api.js",
-    "dhiwise-create-module": "./bin/create-module.js"
+    "dhi": "./bin/index.js"
   },
   "contributors": [
     {

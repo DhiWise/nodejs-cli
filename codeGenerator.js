@@ -7,14 +7,16 @@ const constant = require("./constant")
 const createModel = require("./repository/model");
 const customAPI = require("./repository/api");
 const createModule = require("./repository/module");
+const createBoilerplate = require("./repository/boilerplate");
 
 class codeGenerator {
 
-    constructor({ projectType, ormType, operation, projectPath }) {
+    constructor({ projectType, ormType, operation, projectPath, db }) {
         this.ormType = ormType;
         this.projectType = projectType;
         this.projectPath = projectPath;
-        this.setup = setting(projectType, ormType, projectPath);
+        this.db = db;
+        this.setup = setting(projectType, ormType, projectPath, db);
         this.operation = operation;
     }
     async updateApp() {
@@ -29,10 +31,12 @@ class codeGenerator {
                     projectType: this.projectType
                 });
                 let model = await prompts(questions.ASK_MODEL_NAME);
+
                 if (!model || !model.value) {
                     throw new Error("please provide model name");
                 }
-                await cm.renderModel(model.value);
+                let attributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
+                await cm.renderModel({ modelName: model.value, attributes: attributes.value });
                 break;
             case constant.CREATE_API:
                 let models = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
@@ -76,9 +80,12 @@ class codeGenerator {
             case constant.CREATE_MODULE:
                 let moduleModels = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
                 let moduleModelName = await prompts(questions.GET_EXISTING_MODEL(moduleModels, true));
+                let moduleModelAttributes = false;
+                let isNewModel = false;
                 if (moduleModelName.value === 1) {
                     moduleModelName = await prompts(questions.ASK_MODEL_NAME);
-                    //    need to ask for attribute
+                    isNewModel = true;
+                    moduleModelAttributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
                 }
                 let modulePlatform = await this.getPlatformName(path.join(`${this.projectPath}`, 'routes'));
                 let modulePlatformName = await prompts(questions.GET_EXISTING_PLATFORM(modulePlatform, "multiselect"));
@@ -95,11 +102,20 @@ class codeGenerator {
                 }
 
                 let module = new createModule({ projectPath: this.projectPath, setup: this.setup, orm: this.ormType, projectType: this.projectType });
-                module.renderModule({
+                await module.renderModule({
                     model: moduleModelName.value,
                     platform: modulePlatformName.value,
-                    modelPermission: modelPermission.value
+                    modelPermission: modelPermission.value,
+                    attributes: moduleModelAttributes?moduleModelAttributes.value:'',
+                    isNewModel
                 });
+                break;
+            case constant.CREATE_APP:
+                let projectName = await prompts(questions.ASK_PROJECT_NAME);
+                projectName = projectName.value;
+                let boilerplate = new createBoilerplate({ projectPath: this.projectPath, setup: this.setup, orm: this.ormType, projectType: this.projectType, db: this.db });
+                await boilerplate.renderBoilerplate({ projectName });
+
                 break;
         }
     }

@@ -17,7 +17,13 @@ mongoosePaginate.paginate.options = {
 };
 const Schema = mongoose.Schema;
 const schema = new Schema({
-        // add your attribute here !!!
+        <%_ for(let i in SCHEMA){ _%>
+            <%_ let jsonStr = JSON.stringify(SCHEMA[i]);
+            var finalStr = new String();
+            finalStr = jsonStr.toString().replace(/"/g, "");
+        _%>
+        <%-i%>:<%-finalStr%>,
+        <%_ } _%>
     },
     { 
         timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } 
