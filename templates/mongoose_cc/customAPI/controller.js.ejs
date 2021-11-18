@@ -9,7 +9,7 @@ function make<%-MODEL_NAME%>Controller ({ <%-MODEL%>Service,make<%-MODEL_NAME%> 
       return message.successResponse(
         { 'Content-Type': 'application/json' },
         responseCode.success,
-        createdMaster
+        {}
       );
 
     } catch (error){
@@ -32,7 +32,7 @@ const <%-CONTROLLER_FUNCTION_NAME %> = async () => {
     return message.successResponse(
       { 'Content-Type': 'application/json' },
       responseCode.success,
-      createdMaster
+      {}
     );
 
   } catch (error){
