@@ -23,6 +23,3 @@ Example call:
   $ dhiwise create-model`);
 
 program.parse(process.argv);
-
-// Try the following:
-//  node custom-help --help
