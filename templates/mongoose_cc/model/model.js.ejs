@@ -18,7 +18,15 @@ function makeModel(mongoose,...dependencies){
             customLabels: myCustomLabels
         };
         const Schema = mongoose.Schema;
-        const schema = new Schema({},{ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
+        const schema = new Schema({
+            <%_ for(let i in SCHEMA){ _%>
+                <%_ let jsonStr = JSON.stringify(SCHEMA[i]);
+                var finalStr = new String();
+                finalStr = jsonStr.toString().replace(/"/g, "");
+            _%>
+            <%-i%>:<%-finalStr%>,
+            <%_ } _%>
+        },{ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
     
         schema.pre('save', async function(next) {
             this.isDeleted = false;

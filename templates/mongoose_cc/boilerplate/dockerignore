@@ -1,0 +1,9 @@
+.vscode
+.dhiwise
+.git
+.vscode
+*Dockerfile*
+*DockerFile*
+*docker-compose*
+node_modules
+package-lock.json

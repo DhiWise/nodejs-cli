@@ -13,7 +13,7 @@ async function main() {
         let destinationPath = program.args.shift() || '.';
         // App name
         let projectPath = path.resolve(destinationPath);
-        // projectPath = path.join(projectPath,'project_cc_seq');
+        projectPath = path.join(projectPath,'project_mvc_mon');
         let projectInformation = utility.getProjectTypeAndOrmType(projectPath);
         let projectType = projectInformation.projectType;
         let ormType = projectInformation.ormType;
@@ -28,7 +28,7 @@ async function main() {
         }
 
         if(!ormType || !projectType){
-            throw new Error("please provide your project");
+            throw new Error("please provide your project details");
         }
 
         const codeGen = new codeGenerator({ projectType: projectType, ormType: ormType, operation: constant.CREATE_MODEL, projectPath });
@@ -37,4 +37,4 @@ async function main() {
         console.log(`\x1b[31m error\x1b[0m: ${error.message}`);
     }
 }
-main();
+module.exports = main;

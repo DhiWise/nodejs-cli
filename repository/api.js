@@ -45,7 +45,7 @@ class createAPI extends renderEJS {
             this.write(routePath, route.render(), MODE_0666);
             let platformIndexPath = this.setup.userDirectoryPaths.routePlatformIndexPath;
             platformIndexPath = replace(platformIndexPath,{platform});
-            let newCodePlatformIndex = utility.appendCodeInRoute(platformIndexPath, platformIndex.render());
+            let newCodePlatformIndex = await this.setRouteInExistingFile(platformIndexPath, platformIndex);
             this.write(platformIndexPath, newCodePlatformIndex, MODE_0666);
         }
         if (fs.existsSync(controllerPath)) {
@@ -67,6 +67,18 @@ class createAPI extends renderEJS {
             // create controller index file
             this.write(controllerPath, controller.render(), MODE_0666);
         }
+
+        // add postman
+        let postman = JSON.parse(fs.readFileSync(`${this.projectPath}/postman/postman-collection.json`));
+        let request = {
+            platform: platform,
+            model: model ,
+            name: controllerFunctionName,
+            url: routePattern,
+            method: routeMethod.toUpperCase(),
+        }
+        postman = await utility.setSingleApiInPostman(postman,request);
+        fs.writeFileSync(`${this.projectPath}/postman/postman-collection.json`,JSON.stringify(postman,null,2))
     }
 
     // ast call and merge code here

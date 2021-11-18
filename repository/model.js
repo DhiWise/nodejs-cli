@@ -1,6 +1,5 @@
-const prompts = require('prompts');
 const path = require("path");
-const questions = require('../questions');
+const replace = require('key-value-replace');
 const constant = require("../constant")
 const renderEJS = require('./render');
 const utility = require("../utils/index")
@@ -13,12 +12,17 @@ class createModel extends renderEJS {
         this.setup = setup;
         // console.log(this.projectPath, "===> from create model ");
     }
-    async renderModel(modelName) {
+    async renderModel({ modelName, attributes }) {
         let model = await this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modelFolderPath}/model.js`);
+        let validation = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modelFolderPath}/validation.js`);
         model.locals.DB_MODEL = modelName;
-        this.write(path.join(this.projectPath, 'model', `${modelName}.js`), model.render(), MODE_0666);
         // return this.render();
         if (constant.ORM.SEQUELIZE === this.orm) {
+            this.modelObject = await utility.getSQLModelAttribute(attributes || '');
+            this.modelValidation = await utility.getSequelizeJoiValidation(attributes || '');
+            model.locals.SCHEMA = this.modelObject;
+           // console.log(model.render());
+            this.write(path.join(this.projectPath, 'model', `${modelName}.js`), model.render(), MODE_0666);
             let modelIndex = await this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modelFolderPath}/index.js`);
             modelIndex.locals.MODEL = modelName;
             let indexModelPath = path.join(this.projectPath, 'model', 'index.js');
@@ -26,7 +30,33 @@ class createModel extends renderEJS {
             if (newCodeModelIndex) {
                 this.write(indexModelPath, newCodeModelIndex, MODE_0666);
             }
+        } else {
+            this.modelObject = await utility.getMongooseModelAttribute(attributes || '');
+            this.modelValidation = await utility.getMongooseJoiValidation(attributes || '');
+            model.locals.SCHEMA = this.modelObject;
+            //console.log(model.render());
+            this.write(path.join(this.projectPath, 'model', `${modelName}.js`), model.render(), MODE_0666);
         }
+
+
+        if (this.projectType === constant.PROJECT_TYPE.CC) {
+            let entityTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modelFolderPath}/entity.js`);
+            entityTemplate.locals.MODEL = modelName;
+            entityTemplate.locals.SCHEMA = this.modelObject?Object.keys(this.modelObject):[];
+            let entityPath = this.setup.userDirectoryPaths.entityPath;
+            entityPath = replace(entityPath, { model:modelName });
+            this.write(entityPath, entityTemplate.render(), MODE_0666);
+        }
+
+
+        let validationPath = this.setup.userDirectoryPaths.validationPath;
+        validationPath = replace(validationPath, { model:modelName });
+        // joi validation
+        if(this.modelValidation){
+            validation.locals.SCHEMA = this.modelValidation;
+        }
+        this.write(validationPath, validation.render(), MODE_0666);
+
     }
 
 }

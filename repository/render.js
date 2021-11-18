@@ -18,6 +18,7 @@ class renderEJS {
         this.renderPath = projectPath;
         global.MODE_0755 = MODE_0755;
         global.MODE_0666 = MODE_0666;
+        this.TEMPLATE_DIR = TEMPLATE_DIR;
         // console.log(this.renderPath, " ============>");
     }
     async render() {

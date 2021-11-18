@@ -15,8 +15,8 @@ module.exports = {
         name: 'value',
         message: 'Select Your ORM Type',
         choices: [
-            { title: 'Mongoose', value: 'mongoose' },
-            { title: 'Sequelize', value: 'sequelize' },
+            { title: 'Mongoose', value: constant.ORM.MONGOOSE },
+            { title: 'Sequelize', value: constant.ORM.SEQUELIZE },
         ],
         hint: '- Space to select. Return to submit'
     },
@@ -67,7 +67,7 @@ module.exports = {
         return {
             type: 'autocomplete',
             name: 'value',
-            message: `Select / Search model ${isNewAllowedToCreate?"or select <create new model> option for create new model":""}`,
+            message: `Select / Search model ${isNewAllowedToCreate ? "or select <create new model> option for create new model" : ""}`,
             choices: ch,
             hint: '- Space to select. Return to submit'
         }
@@ -113,5 +113,40 @@ module.exports = {
         ],
         hint: '- Space to select or deselect. Return to submit'
     },
+    ASK_PROJECT_NAME: {
+        type: 'text',
+        name: 'value',
+        message: 'Please enter project name'
+    },
+    SELECT_DATABASE: {
+        type: 'select',
+        name: 'value',
+        message: 'Select database (default MongoDB)',
+        choices: [
+            { title: 'MongoDB', value: constant.DB.MONGODB },
+            { title: 'MYSQL', value: constant.DB.MYSQL },
+            { title: 'MSSQL', value: constant.DB.MSSQL },
+            { title: 'POSTGRES SQL', value: constant.DB.PGSQL },
+        ],
+        hint: '- Space to select. Return to submit'
+    },
+    SELECT_PLATFORM: {
+        type: 'multiselect',
+        name: 'value',
+        message: 'Select platform (default MongoDB)',
+        choices: [
+            // { title: 'create platform', value: 0 },
+            { title: 'admin', value: 'admin' },
+            { title: 'device', value: 'device' },
+            { title: 'desktop', value: 'desktop' },
+            { title: 'client', value: 'client' },
+        ],
+        hint: '- Space to select. Return to submit'
+    },
+    ASK_MODEL_ATTRIBUTE:{
+        type: 'text',
+        name: 'value',
+        message: 'Enter model attribute ex.(field:type)'
+    }
 
 }

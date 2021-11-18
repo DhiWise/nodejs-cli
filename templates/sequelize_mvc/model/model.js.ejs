@@ -4,7 +4,15 @@ const sequelize = require('../config/dbConnection')
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
 
-let <%-MODEL_NAME%> = sequelize.define("<%-DB_MODEL%>",{});
+let <%-MODEL_NAME%> = sequelize.define("<%-DB_MODEL%>",{
+    <%_ for(let i in SCHEMA){ _%>
+        <%_ let jsonStr = JSON.stringify(SCHEMA[i]);
+        var finalStr = new String();
+        finalStr = jsonStr.toString().replace(/"/g, "");
+    _%>
+    <%-i%>:<%-finalStr%>,
+    <%_ } _%>
+});
 
 <%-MODEL_NAME%>.prototype.toJSON = function () {
     var values = Object.assign({}, this.get());

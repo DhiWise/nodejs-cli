@@ -16,7 +16,7 @@ async function main() {
         const codeGen = new codeGenerator({ projectType: projectType.value, ormType: ormType.value });
         await codeGen.updateApp({projectPath})
     } catch (error) {
-        console.error(error);
+        console.log(error);
     }
 }
 main();
