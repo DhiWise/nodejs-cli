@@ -1,6 +1,6 @@
 {
   "name": "@dhiwise/node-generator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The open source platform for Node.js application development. Development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.",
   "main": "index.js",
   "repository": {
