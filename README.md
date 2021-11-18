@@ -13,7 +13,7 @@
 
 <a href="https://github.com/DhiWise/dhiwise-node-generator">
 
-<img height="100" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/logo.jpg" alt="logo" />
+<img height="75" width="350" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/logo.jpg" alt="logo" />
 <hr/>
 </a>
 <br/>
