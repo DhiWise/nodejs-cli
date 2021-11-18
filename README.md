@@ -6,13 +6,8 @@
 [![NPM license](https://img.shields.io/npm/l/@dhiwise/node-generator?style=flat-square)](https://www.npmjs.com/package/@dhiwise/node-generator)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square&color=66bb6a)](https://github.com/DhiWise/dhiwise-node-generator/issues)
 
-<br />
-<br />
-
 <p align="center">
-
 <a href="https://github.com/DhiWise/dhiwise-node-generator">
-
 <img height="75" width="350" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/logo.jpg" alt="logo" />
 <hr/>
 </a>
@@ -24,7 +19,6 @@ DhiWise Node generator is a development package to quickly generate Node APIs an
 
 Visit https://www.dhiwise.com/node for more details.
 <br />
-<br/>
 
 ## Support & community
 If you have any issue or idea or question, share it with us via any of the below options and we will help you asap - 
@@ -36,9 +30,6 @@ If you have any issue or idea or question, share it with us via any of the below
 
 * Follow product updates - <a href="https://twitter.com/dhiwise">@dhiwise</a>
 
-<br/>
-
-
 </p>
 
 ##  Table of Contents
@@ -47,8 +38,6 @@ If you have any issue or idea or question, share it with us via any of the below
 * [Get Started](#get-started)
 * [Roadmap](#roadmap)
 
-<br/>
-
 ##  Installation
 
 To install the latest version run the following command:
@@ -56,8 +45,6 @@ To install the latest version run the following command:
 ```sh
 npm i -g @dhiwise/node-generator
 ```
-
-<br/>
 
 ##  Get Started
 
@@ -69,28 +56,24 @@ dhi create-model
 
 above command will ask you for the model name and it will generate single model file in the model directory of your project.
 <br />
-<br/>
 
 ```sh
 dhi create-api
 ```
 above command will use to create single API in your specific platform or module.
 <br />
-<br/>
 
 ```sh
 dhi create-module
 ```
 above command will use to generate whole module (which include model, controller with CRUD and many others methods, route and joi validation file) in the particular platform.
 <br />
-<br/>
 
 ```sh
 dhi create-app
 ```
 above command will use to generate more than boilerplate application (which includes two platform: admin and device,  user model,authentication and authorization, seeders, user controller with CRUD and many others methods and route and joi validation file)
 <br />
-<br/>
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/cli.gif" />
 
@@ -100,17 +83,11 @@ above command will use to generate more than boilerplate application (which incl
 We occasionally send out product and technology updates. Get the latest from DhiWise by subscribing to our newsletter. Signup to our newsletter using link below : 
 https://www.dhiwise.com/subscription
 
-<br/>
-
 ## Contributions
 Want to report a bug or have a great feature to contribute? Check out our <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/CONTRIBUTING.md">contributing guide</a> for more details.
 
-<br/>
-
 ## Jobs
 If you are interested in working for DhiWise, click here to see <a href="https://dhiwise.zohorecruit.in/jobs/Careers/">open positions.</a>
-
-<br/>
 
 ## License
 DhiWise is distributed under <a href="https://github.com/DhiWise/dhiwise-node-generator/blob/master/LICENSE">Apache 2.0 with Commons Clause</a> license.
