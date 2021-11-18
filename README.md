@@ -35,7 +35,6 @@ If you have any issue or idea or question, share it with us via any of the below
 
 * [Installation](#installation)
 * [Get Started](#get-started)
-* [Roadmap](#roadmap)
 
 ##  Installation
 
