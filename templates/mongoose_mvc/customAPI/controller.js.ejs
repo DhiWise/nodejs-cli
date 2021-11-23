@@ -1,4 +1,9 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
 <%_ if(!IS_EXIST){ _%>
+const <%- MODEL_NAME %> = require("../../model/<%-MODEL%>")
+const <%-MODEL %>SchemaKey = require("../../utils/validation/<%-MODEL%>Validation");
+const validation = require("../../utils/validateRequest");
+const dbService = require("../../utils/dbService");
 const <%-CONTROLLER_FUNCTION_NAME %> = async (req, res) => {
     try {
        return  res.ok({});

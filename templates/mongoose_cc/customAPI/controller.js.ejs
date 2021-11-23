@@ -1,23 +1,13 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
 <%_ if(!IS_EXIST){ _%>
 const message = require('../../../utils/messages');
-const responseCode = require('../../../utils/responseCode');
 function make<%-MODEL_NAME%>Controller ({ <%-MODEL%>Service,make<%-MODEL_NAME%> }){
 
   const <%-CONTROLLER_FUNCTION_NAME %> = async ({data}) => {
     try {   
-      return message.successResponse(
-        { 'Content-Type': 'application/json' },
-        responseCode.success,
-        {}
-      );
-
+      return message.successResponse({ data: {} });
     } catch (error){
-      return message.failureResponse(
-        { 'Content-Type': 'application/json' },
-        responseCode.internalServerError,
-        error.message
-      );
+      return message.failureResponse();
     }
   };
 
@@ -29,18 +19,9 @@ module.exports = { make<%-MODEL_NAME%>Controller }
 <%_}else{ _%>
 const <%-CONTROLLER_FUNCTION_NAME %> = async () => {
   try {   
-    return message.successResponse(
-      { 'Content-Type': 'application/json' },
-      responseCode.success,
-      {}
-    );
-
+    return message.successResponse({ data: {} });
   } catch (error){
-    return message.failureResponse(
-      { 'Content-Type': 'application/json' },
-      responseCode.internalServerError,
-      error.message
-    );
+    return message.failureResponse();
   }
 };
 <%_ } _%>

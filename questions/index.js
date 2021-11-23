@@ -147,6 +147,11 @@ module.exports = {
         type: 'text',
         name: 'value',
         message: 'Enter model attribute ex.(field:type)'
+    },
+    ASK_EXIST_MODEL:{
+        type: 'text',
+        name: 'value',
+        message: 'Model is already existed are you want to change ? (y|n)'
     }
 
 }
