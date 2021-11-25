@@ -36,12 +36,12 @@ class codeGenerator {
                     throw new Error("please provide model name");
                 }
                 let existingModels = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
-                let ansExistModel;
+                let ansExistModel='y';
                 if (existingModels.includes(model.value)) {
                     ansExistModel = await prompts(questions.ASK_EXIST_MODEL);
                     ansExistModel = ansExistModel.value;
                 }
-                if (ansExistModel && (ansExistModel === 'y' || ansExistModel === 'Y')) {
+                if (ansExistModel === 'y' || ansExistModel === 'Y') {
                     let attributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
                     await cm.renderModel({ modelName: model.value, attributes: attributes.value });
                 }

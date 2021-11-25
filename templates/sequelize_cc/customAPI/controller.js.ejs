@@ -19,7 +19,7 @@ function make<%-MODEL_NAME%>Controller ({
     <%-CONTROLLER_FUNCTION_NAME %>
   });
 }
-module.exports = { make<%-MODEL_NAME%>Controller }
+module.exports = make<%-MODEL_NAME%>Controller;
 <%_}else{ _%>
 const <%-CONTROLLER_FUNCTION_NAME %> = async ({
   data
@@ -30,7 +30,4 @@ const <%-CONTROLLER_FUNCTION_NAME %> = async ({
     return message.failureResponse();
   }
 };
-return Object.freeze({
-  <%-CONTROLLER_FUNCTION_NAME %>
-});
 <%_ } _%>

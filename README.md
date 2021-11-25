@@ -55,10 +55,17 @@ npm i -g @dhiwise/node-generator
 DhiWise Node Code Generator provides the following command to generate the code:
 
 ```sh
+dhi create-app
+```
+above command will use to generate more than boilerplate application (which includes two platform: admin and device,  user model,authentication and authorization, seeders, user controller with CRUD and many others methods and route and joi validation file)
+<br />
+
+
+```sh
 dhi create-model
 ```
 
-above command will ask you for the model name and it will generate single model file in the model directory of your project.
+above command will ask you for the model name and attribute. it will generate single model file in the model directory of your project.
 <br />
 
 ```sh
@@ -71,12 +78,6 @@ above command will use to create single API in your specific platform or module.
 dhi create-module
 ```
 above command will use to generate whole module (which include model, controller with CRUD and many others methods, route and joi validation file) in the particular platform.
-<br />
-
-```sh
-dhi create-app
-```
-above command will use to generate more than boilerplate application (which includes two platform: admin and device,  user model,authentication and authorization, seeders, user controller with CRUD and many others methods and route and joi validation file)
 <br />
 
 <img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/cli.gif" />

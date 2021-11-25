@@ -151,7 +151,7 @@ module.exports = {
     ASK_EXIST_MODEL:{
         type: 'text',
         name: 'value',
-        message: 'Model is already existed are you want to change ? (y|n)'
+        message: 'Model is already existed do you want to change ? (y|n)'
     }
 
 }

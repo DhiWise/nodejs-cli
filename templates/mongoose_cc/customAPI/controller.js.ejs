@@ -15,7 +15,7 @@ function make<%-MODEL_NAME%>Controller ({ <%-MODEL%>Service,make<%-MODEL_NAME%> 
     <%-CONTROLLER_FUNCTION_NAME %>,
   });
 }
-module.exports = { make<%-MODEL_NAME%>Controller }
+module.exports =  make<%-MODEL_NAME%>Controller 
 <%_}else{ _%>
 const <%-CONTROLLER_FUNCTION_NAME %> = async () => {
   try {   
