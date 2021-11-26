@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.2.0 (2021-11-26)
+
+
+### Bug Fixes
+
+* **changes is readme and codegenerator file:** improve validation for model and update readme ([d8050c1](https://github.com/DhiWise/dhiwise-node-generator/commit/d8050c158982b18fa31c51e33509cebf3abbda94))
+* **fix modules overwrite to apis:** improve validation for existing models and fix issue of modules ([e188b21](https://github.com/DhiWise/dhiwise-node-generator/commit/e188b21c10f595f3177072452663fa0ca3c8b1a0))
+
 ### 0.1.2 (2021-11-18)
 
 
