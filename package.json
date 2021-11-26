@@ -65,7 +65,11 @@
     "express",
     "mongoose",
     "sequelize",
-    "CRUD"
+    "CRUD",
+    "rest-api generator",
+    "REST",
+    "APIs",
+    "cli generator"
   ],
   "config": {
     "commitizen": {
