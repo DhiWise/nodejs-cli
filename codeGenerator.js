@@ -35,8 +35,16 @@ class codeGenerator {
                 if (!model || !model.value) {
                     throw new Error("please provide model name");
                 }
-                let attributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
-                await cm.renderModel({ modelName: model.value, attributes: attributes.value });
+                let existingModels = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
+                let ansExistModel='y';
+                if (existingModels.includes(model.value)) {
+                    ansExistModel = await prompts(questions.ASK_EXIST_MODEL);
+                    ansExistModel = ansExistModel.value;
+                }
+                if (ansExistModel === 'y' || ansExistModel === 'Y') {
+                    let attributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
+                    await cm.renderModel({ modelName: model.value, attributes: attributes.value });
+                }
                 break;
             case constant.CREATE_API:
                 let models = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
@@ -85,6 +93,14 @@ class codeGenerator {
                 if (moduleModelName.value === 1) {
                     moduleModelName = await prompts(questions.ASK_MODEL_NAME);
                     isNewModel = true;
+                    let ansOfModel;
+                    if (moduleModels.includes(moduleModelName.value)) {
+                        ansOfModel = await prompts(questions.ASK_EXIST_MODEL);
+                        ansOfModel = ansOfModel.value;
+                    }
+                    if(!ansOfModel || (ansOfModel !== 'y' && ansOfModel !== 'Y')){
+                        break;
+                    }
                     moduleModelAttributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
                 }
                 let modulePlatform = await this.getPlatformName(path.join(`${this.projectPath}`, 'routes'));
@@ -106,7 +122,7 @@ class codeGenerator {
                     model: moduleModelName.value,
                     platform: modulePlatformName.value,
                     modelPermission: modelPermission.value,
-                    attributes: moduleModelAttributes?moduleModelAttributes.value:'',
+                    attributes: moduleModelAttributes ? moduleModelAttributes.value : '',
                     isNewModel
                 });
                 break;

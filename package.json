@@ -1,6 +1,6 @@
 {
   "name": "@dhiwise/node-generator",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "The open source platform for Node.js application development. Development package to quickly generate Node APIs and Module which included route, controller, model and joi validation.",
   "main": "index.js",
   "repository": {
@@ -65,7 +65,11 @@
     "express",
     "mongoose",
     "sequelize",
-    "CRUD"
+    "CRUD",
+    "rest-api generator",
+    "REST",
+    "APIs",
+    "cli generator"
   ],
   "config": {
     "commitizen": {

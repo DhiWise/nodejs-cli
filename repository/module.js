@@ -14,15 +14,9 @@ class createModule extends renderEJS {
         this.projectType = projectType;
     }
     async renderModule({ model, platform, modelPermission, attributes, isNewModel }) {
-
-        let routeTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/routes.js`);
-        let controllerTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/controller.js`);
-        let platformIndex = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/platformIndex.js`);
-        platformIndex.locals.MODEL = model;
-        let validation = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/validation.js`);
-
         // modelIndex
         if (isNewModel) {
+            let validation = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/validation.js`);
             let modelPath = this.setup.userDirectoryPaths.modelPath;
             let modelTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modelFolderPath}/model.js`);
             modelTemplate.locals.DB_MODEL = model;
@@ -72,39 +66,81 @@ class createModule extends renderEJS {
 
                 let routePath = this.setup.userDirectoryPaths.routePath;
                 let controllerPath = this.setup.userDirectoryPaths.controllerPath;
-
-                routeTemplate.locals.MODEL = model;
-                routeTemplate.locals.METHODS = modelPermission;
-                routeTemplate.locals.PLATFORM = plt;
-                if (plt === "admin") {
-                    routeTemplate.locals.ROUTE_PREFIX = `${plt}/${model}`
-                } else {
-                    routeTemplate.locals.ROUTE_PREFIX = `${plt}/api/v1/${model}`
-                }
-
-                controllerTemplate.locals.MODEL = model;
-                controllerTemplate.locals.METHODS = modelPermission;
-                controllerTemplate.locals.PLATFORM = plt;
-
-
-                if (this.projectType === constant.PROJECT_TYPE.CC) {
-                    let controllerIndexTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/controllerIndex.js`);
-                    controllerIndexTemplate.locals.MODEL = model;
-                    let controllerIndexPath = this.setup.userDirectoryPaths.controllerIndexPath;
-                    controllerIndexPath = replace(controllerIndexPath, { platform: plt, model });
-                    this.mkdir(controllerIndexPath, '');
-                    this.write(path.join(controllerIndexPath, 'index.js'), controllerIndexTemplate.render(), MODE_0666);
-                }
-
                 routePath = replace(routePath, { platform: plt, model });
                 controllerPath = replace(controllerPath, { model, platform: plt })
-                this.write(routePath, routeTemplate.render(), MODE_0666);
-                this.write(controllerPath, controllerTemplate.render(), MODE_0666);
+                if (fs.existsSync(routePath)) {
+                    // load other template
+                    let routeTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/existRoute.js`);
+                    routeTemplate.locals.MODEL = model;
+                    routeTemplate.locals.METHODS = modelPermission;
+                    routeTemplate.locals.PLATFORM = plt;
+                    if (plt === "admin") {
+                        routeTemplate.locals.ROUTE_PREFIX = `${plt}/${model}`
+                    } else {
+                        routeTemplate.locals.ROUTE_PREFIX = `${plt}/api/v1/${model}`
+                    }
 
-                let platformIndexPath = path.join(this.projectPath, 'routes', plt, 'index.js');
-                let newCodePlatformIndex = utility.appendCodeInRoute(platformIndexPath, platformIndex.render());
-                if (newCodePlatformIndex) {
-                    this.write(platformIndexPath, newCodePlatformIndex, MODE_0666);
+                    // this.write(routePath, routeTemplate.render(), MODE_0666);
+                    // let platformIndexPath = path.join(this.projectPath, 'routes', plt, 'index.js');
+                    let newRouteCode = utility.appendCodeInRoute(routePath, routeTemplate.render());
+                    if (newRouteCode) {
+                        this.write(routePath, newRouteCode, MODE_0666);
+                    }
+                } else {
+                    let routeTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/routes.js`);
+                    routeTemplate.locals.MODEL = model;
+                    routeTemplate.locals.METHODS = modelPermission;
+                    routeTemplate.locals.PLATFORM = plt;
+                    if (plt === "admin") {
+                        routeTemplate.locals.ROUTE_PREFIX = `${plt}/${model}`
+                    } else {
+                        routeTemplate.locals.ROUTE_PREFIX = `${plt}/api/v1/${model}`
+                    }
+
+                    this.write(routePath, routeTemplate.render(), MODE_0666);
+                    let platformIndexPath = path.join(this.projectPath, 'routes', plt, 'index.js');
+                    let platformIndex = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/platformIndex.js`);
+                    platformIndex.locals.MODEL = model;
+                    let newCodePlatformIndex = utility.appendCodeInRoute(platformIndexPath, platformIndex.render());
+                    if (newCodePlatformIndex) {
+                        this.write(platformIndexPath, newCodePlatformIndex, MODE_0666);
+                    }
+                }
+
+                if (fs.existsSync(controllerPath)) {
+                    // load other template
+                    let controllerTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/controller.js`);
+                    controllerTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/existController.js`);
+                    controllerTemplate.locals.MODEL = model;
+                    controllerTemplate.locals.METHODS = modelPermission;
+                    controllerTemplate.locals.PLATFORM = plt;
+                    let newCode = '';
+                    let controllerFunctionName = utility.getControllerFunctionNames(modelPermission, model,this.projectType,this.orm);
+                    if (constant.PROJECT_TYPE.CC === this.projectType) {
+                        newCode = utility.appendCodeInCleanCodeController(controllerPath, controllerTemplate.render(), controllerFunctionName);
+                    }else{
+                        newCode = utility.appendCodeInController(controllerPath, controllerTemplate.render(), controllerFunctionName);
+                    }
+
+                    if (newCode) {
+                        this.write(controllerPath, newCode, MODE_0666);
+                    }
+
+                } else {
+                    let controllerTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/controller.js`);
+                    controllerTemplate.locals.MODEL = model;
+                    controllerTemplate.locals.METHODS = modelPermission;
+                    controllerTemplate.locals.PLATFORM = plt;
+
+                    if (this.projectType === constant.PROJECT_TYPE.CC) {
+                        let controllerIndexTemplate = this.loadTemplate(`${this.setup.templateFolderName}${this.setup.templateRegistry.modulePath}/controllerIndex.js`);
+                        controllerIndexTemplate.locals.MODEL = model;
+                        let controllerIndexPath = this.setup.userDirectoryPaths.controllerIndexPath;
+                        controllerIndexPath = replace(controllerIndexPath, { platform: plt, model });
+                        this.mkdir(controllerIndexPath, '');
+                        this.write(path.join(controllerIndexPath, 'index.js'), controllerIndexTemplate.render(), MODE_0666);
+                    }
+                    this.write(controllerPath, controllerTemplate.render(), MODE_0666);
                 }
             })
         }
@@ -113,7 +149,7 @@ class createModule extends renderEJS {
         let postman = JSON.parse(fs.readFileSync(`${this.projectPath}/postman/postman-collection.json`));
         let requests = this.setPostmanObject(modelPermission, platform, model);
         postman = await utility.setMultipleApiInPostman(postman, requests, model);
-        fs.writeFileSync(`${this.projectPath}/postman/postman-collection.json`, JSON.stringify(postman, null, 2))
+        fs.writeFileSync(`${this.projectPath}/postman/postman-collection.json`, JSON.stringify(postman, null, 2)); ``
 
     }
 

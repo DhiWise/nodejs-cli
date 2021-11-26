@@ -1,13 +1,6 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);
     FUNCTION_NAME = [];
 %>
-const message = require('../../../utils/messages');
-
-function make<%-MODEL_NAME%>Controller ({
-    <%-MODEL%>Service,make<%-MODEL_NAME%>
-  })
-  {
-
 <%_ if(METHODS.includes("C")){ FUNCTION_NAME.push(`add${MODEL_NAME}`); _%>
     const add<%-MODEL_NAME%> = async ({
         data
@@ -136,6 +129,14 @@ function make<%-MODEL_NAME%>Controller ({
     };      
 <%_ } _%>
 <%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
+    const removeEmpty = (obj) => {
+        Object.entries(obj).forEach(([key, value]) => {
+            if (value === undefined) {
+                delete obj[key];
+            }
+        });
+        return obj;
+    };
     const update<%-MODEL_NAME%> = async (data,id) =>{
         try {
             delete data['addedBy'];
@@ -318,19 +319,3 @@ const softDeleteMany<%-MODEL_NAME%> = async (ids) => {
     }
 };
 <%_ } _%>
-
-    const removeEmpty = (obj) => {
-        Object.entries(obj).forEach(([key,value])=>{
-        if (value === undefined){
-            delete obj[key];
-        }
-        });
-        return obj;
-    };
-    
-    return Object.freeze({
-        <%- FUNCTION_NAME.join(",") %>
-    });
-
-}
-module.exports = make<%-MODEL_NAME%>Controller;

@@ -6,6 +6,7 @@ const generate = require('@babel/generator').default;
 const types = require('@babel/types');
 const astConstant = require("../constant/astConstant")
 const constant = require("../constant/index")
+const replace = require("key-value-replace");
 
 
 function getProjectTypeAndOrmType(projectPath) {
@@ -60,7 +61,9 @@ function appendCodeInRoute(filePath, newCode) {
                                 if (element.expression?.left?.object?.name === "module" && element.expression?.left?.property?.name === "exports" && element.expression?.right?.name === "router") {
                                     let newBody = parse(newCode);
                                     if (newBody.program.body.length) {
-                                        ast.program.body.splice(index, 0, newBody.program.body[0]);
+                                        newBody.program.body.forEach((d, i) => {
+                                            ast.program.body.splice(index + i, 0, d);
+                                        })
                                         let { code } = generate(ast, {
                                             comments: false,
                                             minified: false,
@@ -75,7 +78,9 @@ function appendCodeInRoute(filePath, newCode) {
                                         if (element.expression.right?.callee?.name === "require" || element.expression.right?.callee?.callee?.name === "require") {
                                             let newBody = parse(newCode);
                                             if (newBody.program.body.length) {
-                                                ast.program.body.splice(index + 1, 0, newBody.program.body[0]);
+                                                newBody.program.body.forEach((d, i) => {
+                                                    ast.program.body.splice(index + i, 0, d);
+                                                })
                                                 let { code } = generate(ast, {
                                                     comments: false,
                                                     minified: false,
@@ -112,10 +117,23 @@ function appendCodeInController(filePath, newCode, controllerFunctionName) {
                             if (element.expression?.left?.object?.name === "module" && element.expression?.left?.property?.name === "exports") {
                                 let newBody = parse(newCode);
                                 if (newBody.program.body.length) {
-                                    astConstant.CONTROLLER_EXPORT_AST.key.name = controllerFunctionName;
-                                    astConstant.CONTROLLER_EXPORT_AST.value.name = controllerFunctionName;
-                                    element.expression?.right?.properties.push(astConstant.CONTROLLER_EXPORT_AST);
-                                    ast.program.body.splice(index, 0, newBody.program.body[0]);
+                                    if (Array.isArray(controllerFunctionName)) {
+                                        for (let k = 0; k < controllerFunctionName.length; k++) {
+                                            const nameOfElement = controllerFunctionName[k];
+                                            let exportBody = JSON.parse(JSON.stringify(astConstant.CONTROLLER_EXPORT_AST));
+                                            exportBody.key.name = nameOfElement;
+                                            exportBody.value.name = nameOfElement;
+                                            element.expression?.right?.properties.push(exportBody);
+                                            exportBody = null;
+                                        }
+                                    } else {
+                                        astConstant.CONTROLLER_EXPORT_AST.key.name = controllerFunctionName;
+                                        astConstant.CONTROLLER_EXPORT_AST.value.name = controllerFunctionName;
+                                        element.expression?.right?.properties.push(astConstant.CONTROLLER_EXPORT_AST);
+                                    }
+                                    newBody.program.body.forEach((d, i) => {
+                                        ast.program.body.splice(index + i, 0, d);
+                                    })
                                     let { code } = generate(ast, {
                                         comments: false,
                                         minified: false,
@@ -153,12 +171,24 @@ function appendCodeInCleanCodeController(filePath, newCode, controllerFunctionNa
                                 const functionElement = functionBody[j];
                                 if (types.isReturnStatement(functionElement)) {
                                     if (functionElement?.argument?.callee?.object?.name === "Object" && functionElement?.argument?.callee?.property?.name === "freeze") {
-                                        astConstant.CONTROLLER_EXPORT_AST.key.name = controllerFunctionName;
-                                        astConstant.CONTROLLER_EXPORT_AST.value.name = controllerFunctionName;
-                                        functionElement.argument.arguments[0].properties.push(astConstant.CONTROLLER_EXPORT_AST);
+                                        if (Array.isArray(controllerFunctionName)) {
+                                            for (let k = 0; k < controllerFunctionName.length; k++) {
+                                                const nameOfElement = controllerFunctionName[k];
+                                                let exportBody = JSON.parse(JSON.stringify(astConstant.CONTROLLER_EXPORT_AST));
+                                                exportBody.key.name = nameOfElement;
+                                                exportBody.value.name = nameOfElement;
+                                                functionElement.argument.arguments[0].properties.push(exportBody);
+                                                exportBody = null;
+                                            }
+                                        } else {
+                                            astConstant.CONTROLLER_EXPORT_AST.key.name = controllerFunctionName;
+                                            astConstant.CONTROLLER_EXPORT_AST.value.name = controllerFunctionName;
+                                            functionElement.argument.arguments[0].properties.push(astConstant.CONTROLLER_EXPORT_AST);
+                                        }
                                         let newBody = parse(newCode, { allowReturnOutsideFunction: true });
-                                        ast.program.body[index].body.body.splice(j, 0, newBody.program.body[0]);
-
+                                        newBody.program.body.forEach((d, i) => {
+                                            ast.program.body[index].body.body.splice(j + i, 0, d);
+                                        })
                                         let { code } = generate(ast, {
                                             comments: false,
                                             minified: false,
@@ -184,7 +214,9 @@ async function getMongooseModelAttribute(attribute) {
     let modelAttr = {}
     attribute.forEach((v) => {
         v = v.split(":")
-        modelAttr[v[0]] = v[1];
+        if (v[0] !== '') {
+            modelAttr[v[0]] = v[1];
+        }
     })
     for (let i in modelAttr) {
         if (!Object.keys(constant.MONGOOSE_TYPE).includes(modelAttr[i])) {
@@ -203,7 +235,9 @@ async function getSQLModelAttribute(attribute) {
     let modelAttr = {}
     attribute.forEach((v) => {
         v = v.split(":")
-        modelAttr[v[0]] = v[1];
+        if (v[0] !== '') {
+            modelAttr[v[0]] = v[1];
+        }
     })
     for (let i in modelAttr) {
         if (!Object.keys(constant.SEQUELIZE_TYPE).includes(modelAttr[i])) {
@@ -222,7 +256,9 @@ async function getSequelizeJoiValidation(attribute) {
     let modelAttr = {}
     attribute.forEach((v) => {
         v = v.split(":")
-        modelAttr[v[0]] = v[1];
+        if (v[0] !== '') {
+            modelAttr[v[0]] = v[1];
+        }
     });
 
     for (const key in modelAttr) {
@@ -243,7 +279,9 @@ async function getMongooseJoiValidation(attribute) {
     let modelAttr = {}
     attribute.forEach((v) => {
         v = v.split(":")
-        modelAttr[v[0]] = v[1];
+        if (v[0] !== '') {
+            modelAttr[v[0]] = v[1];
+        }
     });
 
     for (const key in modelAttr) {
@@ -333,6 +371,36 @@ function groupBy(objectArray, property) {
     }, {});
 }
 
+function getControllerFunctionNames(modelPermission, model, type, orm) {
+    model = model.charAt(0).toUpperCase() + model.slice(1);
+    let functionName = [];
+    let functionPattern = {}
+    if(type === constant.PROJECT_TYPE.MVC && orm === constant.ORM.MONGOOSE){
+        functionPattern = constant.MODEL_PERMISSION_FUNCTION_NAME_MVC_MONGOOSE;
+    } else if(type === constant.PROJECT_TYPE.MVC && orm === constant.ORM.SEQUELIZE){
+        functionPattern = constant.MODEL_PERMISSION_FUNCTION_NAME_MVC_SEQUELIZE;
+    } else if(type === constant.PROJECT_TYPE.CC && orm === constant.ORM.MONGOOSE){
+        functionPattern = constant.MODEL_PERMISSION_FUNCTION_NAME_CC_MONGOOSE;
+    }else if(type === constant.PROJECT_TYPE.CC && orm === constant.ORM.SEQUELIZE){
+        functionPattern = constant.MODEL_PERMISSION_FUNCTION_NAME_CC_SEQUELIZE;
+    }
+    modelPermission.forEach((value) => {
+        let element = functionPattern[value];
+        if(element){
+            if (Array.isArray(element)) {
+                element.forEach((s) => {
+                    let str = replace(s, { model });
+                    functionName.push(str);
+                })
+            } else {
+                let str = replace(element, { model });
+                functionName.push(str);
+            }
+        }
+    })
+    return functionName
+}
+
 module.exports = {
     getProjectTypeAndOrmType,
     appendCodeInRoute,
@@ -343,5 +411,6 @@ module.exports = {
     getSequelizeJoiValidation,
     getMongooseJoiValidation,
     setSingleApiInPostman,
-    setMultipleApiInPostman
+    setMultipleApiInPostman,
+    getControllerFunctionNames
 }

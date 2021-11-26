@@ -10,7 +10,7 @@ const make<%-MODEL_NAME%> = require('../../../entity/<%-MODEL%>')({
     insert<%-MODEL_NAME%>Validator,
     update<%-MODEL_NAME%>Validator
   });
-const <%-MODEL%>Service = require('../../../services/mongoDbService')({
+const <%-MODEL%>Service = require('../../../services/dbService')({
   model:<%-MODEL%>Model,
   make<%-MODEL_NAME%>
 });

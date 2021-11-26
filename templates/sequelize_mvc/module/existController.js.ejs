@@ -1,0 +1,301 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);
+    FUNCTION_NAME = [];
+%>
+<%_ if(METHODS.includes("C")){ FUNCTION_NAME.push(`add${MODEL_NAME}`); _%>
+const add<%-MODEL_NAME%> = async (req, res) => {
+    try {
+        let isValid = validation.validateParamsWithJoi(
+        req.body,
+        <%-MODEL%>SchemaKey.schemaKeys);
+        if (isValid.error) {
+            return res.inValidParam(isValid.error);
+        } 
+        delete req.body['addedBy'];
+        delete req.body['updatedBy'];
+        let data =  {
+            ...req.body
+        };
+        let result = await dbService.createOne(<%-MODEL_NAME%>,data);
+        return res.ok(result);
+    } catch (error) {
+        return res.failureResponse(error.message); 
+    }
+};
+
+<%_ } _%>
+<%_ if(METHODS.includes("BC")){ FUNCTION_NAME.push(`bulkInsert${MODEL_NAME}`); _%>
+const bulkInsert<%-MODEL_NAME%> = async (req,res)=>{
+    try {
+        let data;   
+        if (req.body.data !== undefined && req.body.data.length){
+            data = req.body.data;
+            data = data.map(item=>{
+                delete item.addedBy;
+                delete item.updatedBy;
+                return item;
+            });        
+            let result = await dbService.createMany(<%-MODEL_NAME%>,data);
+            return  res.ok({ data : result });
+        } else {
+            return res.badRequest();
+        }  
+    } catch (error){
+        return res.failureResponse();
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("FALL")){ FUNCTION_NAME.push(`findAll${MODEL_NAME}`); _%>
+const findAll<%-MODEL_NAME%> = async (req,res) => {
+    try {
+        let options = {};
+        let query = {};
+        let result;
+        if (req.body && req.body.isCountOnly){
+            if (req.body.query !== undefined) {
+                query = { ...req.body.query };
+            }
+            query = dbService.queryBuilderParser(query);
+            result = await dbService.count(<%-MODEL_NAME%>, query);
+            if (result) {
+                result = { totalRecords: result };
+                return res.ok(result);
+            } 
+            return res.recordNotFound({});
+        }
+        else {
+            if (req.body && req.body.options !== undefined) {
+                options = { ...req.body.options };
+            }
+            if (options && options.select && options.select.length){
+                options.attributes = options.select;
+            }
+                
+            if (req.body.query !== undefined){
+                query = { ...req.body.query };
+            }
+            query = dbService.queryBuilderParser(query);
+            if (options && options.include && options.include.length){
+            let include = [];
+            options.include.forEach(i => {
+                i.model = models[i.model];
+                if (i.query) {
+                    i.where = dbService.queryBuilderParser(i.query);
+                }
+                include.push(i);
+            });
+            options.include = include;
+            }
+            if (options && options.sort){
+                options.order = dbService.sortParser(options.sort);
+                delete options.sort;
+            }
+            result = await dbService.findMany(<%-MODEL_NAME%>,query,options);
+                
+            if (!result){
+                return res.recordNotFound({});
+            }
+            return res.ok(result);   
+        }
+    }
+    catch (error){
+        return res.failureResponse(error.message);
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("FBYID")){ FUNCTION_NAME.push(`get${MODEL_NAME}`); _%>
+const get<%-MODEL_NAME%> = async (req,res) => {
+    try {
+        let query = {};
+        let id = req.params.id;
+        let result = await dbService.findByPk(<%-MODEL_NAME %>,id,query);
+        if (result){
+          return  res.ok(result);
+        }
+        return res.recordNotFound({});
+    }
+      catch (error){
+        return res.failureResponse(error.message);
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("COUNT")){ FUNCTION_NAME.push(`get${MODEL_NAME}Count`); _%>
+const get<%-MODEL_NAME%>Count = async (req,res) => {
+    try {
+        let where = {};
+        if (req.body.where){
+          where = req.body.where;
+        }
+        let result = await dbService.count(<%-MODEL_NAME%>,where);
+        if (result){
+          result = { totalRecords:result };
+          return res.ok(result);
+        }
+        return res.recordNotFound({});
+    }
+      catch (error){
+        return res.failureResponse(error.message);
+    }
+};      
+<%_ } _%>
+<%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
+const update<%-MODEL_NAME%> = async (req,res) => {
+    try {
+        const data = { ...req.body };
+        delete data.addedBy;
+        delete data.updatedBy;
+        let isValid = validation.validateParamsWithJoi(
+          data,
+          <%-MODEL%>SchemaKey.schemaKeys
+        );
+        if (isValid.error) {
+          return  res.inValidParam(isValid.error);
+        }
+    
+        let query = { id:req.params.id };
+        let result = await dbService.updateMany(<%-MODEL_NAME%>,query,data);
+        if (!result){
+          return res.failureResponse('something is wrong');
+        }
+        return  res.ok(result);
+    }
+      catch (error){
+        return res.failureResponse(error.message);
+    }
+};
+
+const partialUpdate<%-MODEL_NAME%> = async (req,res) => {
+    try {
+        const data = {
+          ...req.body,
+          id: req.params.id
+        };
+        delete data.addedBy;
+        delete data.updatedBy;
+        
+        let isValid = validation.validateParamsWithJoi(
+          data,
+          <%-MODEL%>SchemaKey.updateSchemaKeys
+        );
+        if (isValid.error) {
+          return res.inValidParam(isValid.error);
+        }
+    
+        const query = { id:req.params.id };
+        let result = await dbService.updateMany(<%-MODEL_NAME%>, query, data);
+        if (!result) {
+          return res.failureResponse('something is wrong');
+        }
+        return res.ok(result);    
+    }
+    catch (error){
+        return res.failureResponse(error.message);
+    }
+}
+<%_ } _%>
+<%_ if(METHODS.includes("BU")){ FUNCTION_NAME.push(`bulkUpdate${MODEL_NAME}`); _%>
+const bulkUpdate<%-MODEL_NAME%> = async (req,res)=>{
+    try {
+        let filter = {};
+        let data;
+        if (req.body.filter !== undefined){
+          filter = req.body.filter;
+        }
+        if (req.body.data !== undefined){
+          data = req.body.data;
+          let result = await dbService.updateMany(<%-MODEL_NAME%>,filter,data);
+          if (!result){
+            return res.failureResponse('something is wrong.');
+          }
+          return  res.ok(result);
+        }
+        else {
+          return res.failureResponse('Invalid Data');
+        }
+      }
+      catch (error){
+        return res.failureResponse(error.message); 
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("UP")){ FUNCTION_NAME.push("upsert"); _%>
+const upsert = async (req,res) => {
+    try {
+        let params = req.body;
+        let isValid = validation.validateParamsWithJoi(
+          params,
+          <%-MODEL%>SchemaKey.schemaKeys
+        );
+        if (isValid.error) {
+          return res.inValidParam(isValid.error);
+        }
+    
+        let result = await dbService.upsert(<%-MODEL_NAME%>,req.body);
+    
+        return  res.ok(result);    
+      }
+    catch (error){
+        return res.failureResponse(error.message); 
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("DMANY")){ FUNCTION_NAME.push(`deleteMany${MODEL_NAME}`); _%>
+const deleteMany<%-MODEL_NAME%> = async (req, res) => {
+    try {
+        let ids = req.body.ids; 
+        if (ids){
+          const query = { id:{ [Op.in]:ids } };
+          let result = await dbService.deleteMany(<%-MODEL_NAME%>,query);
+          return res.ok({ data : result });
+        }
+        return res.badRequest({}); 
+      }
+    catch (error){
+        return res.failureResponse(error.message); 
+    }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("D")){ FUNCTION_NAME.push(`delete${MODEL_NAME}`); _%>
+const delete<%-MODEL_NAME%> = async (req,res) => {
+  try {
+    const result = await dbService.deleteByPk(<%-MODEL_NAME%>, req.params.id);
+    if (result){
+      return  res.ok({ data : result });
+    }
+    return res.recordNotFound({});
+  }
+  catch (error){
+    return res.failureResponse(error.message);
+  }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("SD")){ FUNCTION_NAME.push(`softDelete${MODEL_NAME}`); _%>
+const softDelete<%-MODEL_NAME%> = async (req,res) => {
+  try {
+    let id = req.params.id;
+    let result = await dbService.softDeleteByPk(<%-MODEL_NAME%>,id);
+    if (!result){
+      return res.failureResponse('something went wrong');
+    }
+    return  res.ok(result);
+  } catch (error){
+    return res.failureResponse(error.message); 
+  }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("SDMANY")){ FUNCTION_NAME.push(`softDeleteMany${MODEL_NAME}`); _%>
+const softDeleteMany<%-MODEL_NAME%> = async (req,res) => {
+  try {
+    let ids = req.body.ids;
+    if (ids){
+      let result = await dbService.softDeleteMany(<%-MODEL_NAME%>,{ id:{ [Op.in]:ids } });
+      if (!result) {
+        return res.recordNotFound({});
+      }
+      return  res.ok(result);
+    }
+    return res.badRequest({});
+  } catch (error){
+    return res.failureResponse(error.message); 
+  }    
+};
+<%_ } _%>
