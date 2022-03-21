@@ -8,7 +8,7 @@
 
 <p align="center">
 <a href="https://github.com/DhiWise/dhiwise-node-generator">
-<img height="75" width="350" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/assets/Main-Logo.png" alt="logo" />
+<img height="75" width="350" src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/assets/Main-Logo.jpg" alt="logo" />
 <hr/>
 </a>
 <h2 align="center">DhiWise Node Generator </h2>
