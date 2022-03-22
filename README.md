@@ -23,7 +23,7 @@ Visit https://www.dhiwise.com/node for more details.
 
 DhiWise Node generator requires your basic inputs and a few pre-defined configurations. From those configurations DhiWise CLI engine works to create a custom template for your Node.js application, it automates the most basic and menial task which takes developers days and weeks to program. The code it generates is more than just a boilerplate. It is a production-ready code!
 
-<center><img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/HowItWorks.jpg"/></center>
+<center><img src="https://development-dhvs.s3.ap-south-1.amazonaws.com/uploads/user-profile/HowItWorks_.jpg"/></center>
 
 ## Support & community
 If you have any issue or idea or question, share it with us via any of the below options and we will help you asap - 
