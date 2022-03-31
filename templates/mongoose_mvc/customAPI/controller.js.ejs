@@ -1,23 +1,32 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
 <%_ if(!IS_EXIST){ _%>
-const <%- MODEL_NAME %> = require("../../model/<%-MODEL%>")
-const <%-MODEL %>SchemaKey = require("../../utils/validation/<%-MODEL%>Validation");
-const validation = require("../../utils/validateRequest");
-const dbService = require("../../utils/dbService");
+<%
+  let MODEL_PATH = `../../model/${MODEL}`;
+  let UTILS_PATH = `../../utils`;
+  if(PLATFORM !== "admin"){
+    MODEL_PATH = `../../../model/${MODEL}`;
+    UTILS_PATH = `../../../utils`;
+  }
+%>
+const <%- MODEL_NAME %> = require(<%=MODEL_PATH%>)
+const <%-MODEL %>SchemaKey = require("<%-UTILS_PATH%>/validation/<%-MODEL%>Validation");
+const validation = require("<%-UTILS_PATH%>/validateRequest");
+const dbService = require("<%-UTILS_PATH%>/dbService");
+const ObjectId = require('mongodb').ObjectId;
 const <%-CONTROLLER_FUNCTION_NAME %> = async (req, res) => {
     try {
-       return  res.ok({});
+       return  res.success({ data:{} });
      } catch (error) {
-      return res.failureResponse(error.message); 
+      return res.internalServerError( { message : error.message  } );  
     }
 };
 module.exports = { <%-CONTROLLER_FUNCTION_NAME %> }
 <%_}else{ _%>
 const <%-CONTROLLER_FUNCTION_NAME %> = async (req, res) => {
   try {
-     return  res.ok({});
+     return  res.success({ data:{} });
    } catch (error) {
-    return res.failureResponse(error.message); 
+    return res.internalServerError( { message : error.message  } );  
   }
 };
 <%_ } _%>

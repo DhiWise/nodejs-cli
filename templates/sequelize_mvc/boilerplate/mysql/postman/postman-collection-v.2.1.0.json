@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "seq_mysql_mvc",
-    "_postman_id": "6d041672-31ae-4141-87b3-43b1e9dc32eb",
+    "name": "mysql_mvc_boilerplate",
+    "_postman_id": "9b9da4a6-f833-4c7b-8459-e710f3253da1",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -65,7 +65,61 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-07-06T04:34:06.227Z\",\n    \"updatedAt\": \"2022-08-16T11:42:29.374Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"userType\": 1,\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n    \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "get loggedin User",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/user/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "user",
+                    "me"
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "loggedInUserInfo_response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/user/me"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": \"[{\\\"username\\\":\\\"Reynold.Beatty\\\",\\\"email\\\":\\\"Gilberto_Runolfsson@yahoo.com\\\",\\\"name\\\":\\\"Lynn McLaughlin\\\",\\\"userType\\\":1,\\\"mobileNo\\\":\\\"(775) 508-6870 x55941\\\",\\\"id\\\":101,\\\"isDeleted\\\":false,\\\"isActive\\\":true,\\\"createdAt\\\":\\\"2022-08-10T09:47:48.116Z\\\",\\\"updatedAt\\\":\\\"2022-06-22T12:17:37.581Z\\\"}]\"\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -96,7 +150,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"userType\": 1,\n  \"mobileNo\": \"(775) 508-6870 x55941\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -119,7 +173,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 1,\n    \"createdAt\": \"2022-01-05T00:45:05.192Z\",\n    \"updatedAt\": \"2022-08-19T03:18:35.458Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"userType\": 1,\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n    \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -173,7 +227,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"username\": \"Cary66\",\n        \"password\": \"1DB6nAR9wvA4gT7\",\n        \"email\": \"Electa33@hotmail.com\",\n        \"name\": \"Jane Hane\",\n        \"mobileNo\": \"380-962-6562\",\n        \"role\": 1,\n        \"id\": 101,\n        \"createdAt\": \"2021-12-27T04:33:54.342Z\",\n        \"updatedAt\": \"2022-06-27T00:21:12.174Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"username\": \"Reynold.Beatty\",\n        \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n        \"name\": \"Lynn McLaughlin\",\n        \"userType\": 1,\n        \"mobileNo\": \"(775) 508-6870 x55941\",\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n        \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -258,7 +312,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"password\": \"AntFH0HtYjQivYC\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"userType\": 1,\n      \"mobileNo\": \"(775) 508-6870 x55941\"\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -281,7 +335,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1,\n      \"id\": 101,\n      \"createdAt\": \"2022-03-16T07:43:20.358Z\",\n      \"updatedAt\": \"2022-06-14T16:15:20.624Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"userType\": 1,\n      \"mobileNo\": \"(775) 508-6870 x55941\",\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n      \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -289,22 +343,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "getuser",
+              "name": "deleteManyuser",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/user/:id",
+                  "raw": "{{url}}/admin/user/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "user",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -317,7 +366,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -329,18 +378,18 @@
               },
               "response": [
                 {
-                  "name": "getuser_response",
+                  "name": "deleteManyuser_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/user/:id"
+                      "raw": "{{url}}/admin/user/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-05-23T23:20:24.045Z\",\n    \"updatedAt\": \"2022-09-22T14:29:20.443Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"userType\": 1,\n      \"mobileNo\": \"(775) 508-6870 x55941\",\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n      \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -394,7 +443,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {}\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -508,7 +557,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-09-04T02:22:09.862Z\",\n    \"updatedAt\": \"2021-12-06T23:25:01.271Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"userType\": 1,\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n    \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -605,7 +654,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"userType\": 1,\n  \"mobileNo\": \"(775) 508-6870 x55941\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -628,7 +677,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-01-09T08:15:20.749Z\",\n    \"updatedAt\": \"2022-03-17T18:30:48.474Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"userType\": 1,\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n    \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -659,7 +708,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"userType\": 1,\n  \"mobileNo\": \"(775) 508-6870 x55941\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -682,61 +731,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n            \"status\": \"SUCCESS\",\n            \"message\": \"Your request is successfully executed\",\n            \"data\": [{\"username\":\"Cary66\",\"password\":\"1DB6nAR9wvA4gT7\",\"email\":\"Electa33@hotmail.com\",\"name\":\"Jane Hane\",\"mobileNo\":\"380-962-6562\",\"role\":1,\"id\":101,\"createdAt\":\"2022-07-13T20:27:36.963Z\",\"updatedAt\":\"2022-08-06T14:04:27.335Z\",\"isDeleted\":false,\"isActive\":true}]\n        }",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "deleteManyuser",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/user/deleteMany",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "user",
-                    "deleteMany"
-                  ]
-                },
-                "method": "DELETE",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "deleteManyuser_response",
-                  "originalRequest": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/user/deleteMany"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1,\n      \"id\": 101,\n      \"createdAt\": \"2022-09-19T07:55:03.213Z\",\n      \"updatedAt\": \"2022-05-02T11:10:18.229Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": \"[{\\\"username\\\":\\\"Reynold.Beatty\\\",\\\"email\\\":\\\"Gilberto_Runolfsson@yahoo.com\\\",\\\"name\\\":\\\"Lynn McLaughlin\\\",\\\"userType\\\":1,\\\"mobileNo\\\":\\\"(775) 508-6870 x55941\\\",\\\"id\\\":101,\\\"isDeleted\\\":false,\\\"isActive\\\":true,\\\"createdAt\\\":\\\"2022-08-10T09:47:48.116Z\\\",\\\"updatedAt\\\":\\\"2022-06-22T12:17:37.581Z\\\"}]\"\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -796,7 +791,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-06-23T22:51:13.686Z\",\n    \"updatedAt\": \"2022-09-29T09:58:10.501Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"userType\": 1,\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-10T09:47:48.116Z\",\n    \"updatedAt\": \"2022-06-22T12:17:37.581Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -833,7 +828,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Your username\",\n  \"password\": \"YourPassword\"\n}"
+                  "raw": "{\n  \"username\": \"username\",\n  \"password\": \"password\"\n}"
                 },
                 "description": "",
                 "auth": {}
@@ -851,7 +846,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Login Successful\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWRlZDVjMGFjMjAxMmFjMDI4ODkxZiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2MjkzNTEyNzAsImV4cCI6MTYyOTk1MTI3MH0.BJ-WKjNYeFDQ4pn8kfli5gwn6GLz_c3voFht20Agj9k\",\n    \"createdAt\": \"2022-08-12T01:44:05.439Z\",\n    \"updatedAt\": \"2022-06-19T08:50:09.392Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Login Successful\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWRlZDVjMGFjMjAxMmFjMDI4ODkxZiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2MjkzNTEyNzAsImV4cCI6MTYyOTk1MTI3MH0.BJ-WKjNYeFDQ4pn8kfli5gwn6GLz_c3voFht20Agj9k\",\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-20T04:17:02.793Z\",\n    \"updatedAt\": \"2022-06-09T03:03:15.787Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -882,7 +877,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"mobileNo\": \"(775) 508-6870 x55941\"\n}"
                 },
                 "description": "",
                 "auth": {}
@@ -900,7 +895,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-09-17T13:51:32.459Z\",\n    \"updatedAt\": \"2022-06-30T18:23:21.591Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-20T04:17:02.793Z\",\n    \"updatedAt\": \"2022-06-09T03:03:15.787Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1065,7 +1060,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"oldPassword\": \"YourOldPassword\",\n  \"newPassword\": \"YourNewPassword\"\n}"
+                  "raw": "{\n  \"oldPassword\": \"OldPassword\",\n  \"newPassword\": \"NewPassword\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1088,7 +1083,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Password changed successfully\",\n  \"data\": {}\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Password changed successfully\",\n  \"data\": null\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1202,7 +1197,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": 101,\n    \"createdAt\": \"2022-04-29T23:24:01.056Z\",\n    \"updatedAt\": \"2022-10-07T19:01:43.667Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Misty Glover\",\n    \"code\": \"User-centric\",\n    \"weight\": 233,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n    \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1233,7 +1228,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Rosemary O'Conner\",\n  \"code\": \"Niger\",\n  \"weight\": 149\n}"
+                  "raw": "{\n  \"name\": \"Misty Glover\",\n  \"code\": \"User-centric\",\n  \"weight\": 233\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1256,7 +1251,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": 1,\n    \"createdAt\": \"2022-06-03T07:58:32.156Z\",\n    \"updatedAt\": \"2021-12-18T18:42:40.878Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Misty Glover\",\n    \"code\": \"User-centric\",\n    \"weight\": 233,\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n    \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1287,7 +1282,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"name\": \"Rosemary O'Conner\",\n      \"code\": \"Niger\",\n      \"weight\": 149\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"name\": \"Misty Glover\",\n      \"code\": \"User-centric\",\n      \"weight\": 233\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1310,7 +1305,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"name\": \"Rosemary O'Conner\",\n      \"code\": \"Niger\",\n      \"weight\": 149,\n      \"id\": 101,\n      \"createdAt\": \"2022-08-13T20:37:19.968Z\",\n      \"updatedAt\": \"2022-05-14T15:40:04.213Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"name\": \"Misty Glover\",\n      \"code\": \"User-centric\",\n      \"weight\": 233,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n      \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1364,66 +1359,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"name\": \"Rosemary O'Conner\",\n        \"code\": \"Niger\",\n        \"weight\": 149,\n        \"id\": 101,\n        \"createdAt\": \"2022-02-02T08:00:12.229Z\",\n        \"updatedAt\": \"2021-11-14T08:22:20.928Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "getrole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/role/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "role",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "getrole_response",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/role/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": 101,\n    \"createdAt\": \"2022-08-07T22:04:29.876Z\",\n    \"updatedAt\": \"2022-10-16T16:37:18.966Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"name\": \"Misty Glover\",\n        \"code\": \"User-centric\",\n        \"weight\": 233,\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n        \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1485,17 +1421,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForInsertrole",
+              "name": "deleteManyrole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/role/upsert",
+                  "raw": "{{url}}/admin/role/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "role",
-                    "upsert"
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -1508,7 +1444,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Rosemary O'Conner\",\n  \"code\": \"Niger\",\n  \"weight\": 149\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1520,18 +1456,18 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertrole_response",
+                  "name": "deleteManyrole_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/role/upsert"
+                      "raw": "{{url}}/admin/role/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-04-15T18:11:23.674Z\",\n    \"updatedAt\": \"2022-08-08T00:05:10.736Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"name\": \"Misty Glover\",\n      \"code\": \"User-centric\",\n      \"weight\": 233,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n      \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1539,20 +1475,20 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForUpdaterole",
+              "name": "updateBulkrole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/role/upsert",
+                  "raw": "{{url}}/admin/role/updateBulk",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "role",
-                    "upsert"
+                    "updateBulk"
                   ]
                 },
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -1562,7 +1498,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Rosemary O'Conner\",\n  \"code\": \"Niger\",\n  \"weight\": 149,\n  \"id\": \":id\"\n}"
+                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1574,18 +1510,132 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertrole_response",
+                  "name": "updateBulkrole_response",
                   "originalRequest": {
-                    "method": "POST",
+                    "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/role/upsert"
+                      "raw": "{{url}}/admin/role/updateBulk"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-04-15T18:11:23.674Z\",\n    \"updatedAt\": \"2022-08-08T00:05:10.736Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteManyrole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/role/softDeleteMany",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "role",
+                    "softDeleteMany"
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \":id\"\n  ]\n}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteManyrole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/role/softDeleteMany"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleterole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/role/softDelete/:id",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "role",
+                    "softDelete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleterole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/role/softDelete/:id"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Misty Glover\",\n    \"code\": \"User-centric\",\n    \"weight\": 233,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n    \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1653,66 +1703,6 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "softDeleterole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/role/softDelete/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "role",
-                    "softDelete",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "softDeleterole_response",
-                  "originalRequest": {
-                    "method": "PUT",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/role/softDelete/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": 101,\n    \"createdAt\": \"2022-06-13T21:59:18.121Z\",\n    \"updatedAt\": \"2022-10-16T03:18:31.137Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
               "name": "updaterole",
               "request": {
                 "url": {
@@ -1742,7 +1732,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Rosemary O'Conner\",\n  \"code\": \"Niger\",\n  \"weight\": 149\n}"
+                  "raw": "{\n  \"name\": \"Misty Glover\",\n  \"code\": \"User-centric\",\n  \"weight\": 233\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1765,7 +1755,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Rosemary O'Conner\",\n    \"code\": \"Niger\",\n    \"weight\": 149,\n    \"id\": 101,\n    \"createdAt\": \"2022-05-05T05:08:54.429Z\",\n    \"updatedAt\": \"2022-09-20T16:35:22.480Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Misty Glover\",\n    \"code\": \"User-centric\",\n    \"weight\": 233,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n    \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1773,20 +1763,26 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "updateBulkrole",
+              "name": "deleterole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/role/updateBulk",
+                  "raw": "{{url}}/admin/role/delete/:id",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "role",
-                    "updateBulk"
+                    "delete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
                   ]
                 },
-                "method": "PUT",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -1796,7 +1792,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
+                  "raw": "{\n  \"isWarning\": true\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1808,18 +1804,18 @@
               },
               "response": [
                 {
-                  "name": "updateBulkrole_response",
+                  "name": "deleterole_response",
                   "originalRequest": {
-                    "method": "PUT",
+                    "method": "DELETE",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/role/updateBulk"
+                      "raw": "{{url}}/admin/role/delete/:id"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"name\": \"Misty Glover\",\n    \"code\": \"User-centric\",\n    \"weight\": 233,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-11-19T05:54:32.685Z\",\n    \"updatedAt\": \"2022-04-29T04:45:13.179Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1884,7 +1880,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": 101,\n    \"createdAt\": \"2022-09-17T02:25:41.653Z\",\n    \"updatedAt\": \"2022-04-08T06:12:34.477Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"hack\",\n    \"method\": \"Garden\",\n    \"uri\": \"Pound\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n    \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1915,7 +1911,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"route_name\": \"Human\",\n  \"method\": \"grey\",\n  \"uri\": \"neural\"\n}"
+                  "raw": "{\n  \"route_name\": \"hack\",\n  \"method\": \"Garden\",\n  \"uri\": \"Pound\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1938,7 +1934,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": 1,\n    \"createdAt\": \"2022-02-16T11:30:44.284Z\",\n    \"updatedAt\": \"2022-10-03T15:53:14.878Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"hack\",\n    \"method\": \"Garden\",\n    \"uri\": \"Pound\",\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n    \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -1969,7 +1965,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"route_name\": \"Human\",\n      \"method\": \"grey\",\n      \"uri\": \"neural\"\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"route_name\": \"hack\",\n      \"method\": \"Garden\",\n      \"uri\": \"Pound\"\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -1992,7 +1988,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"route_name\": \"Human\",\n      \"method\": \"grey\",\n      \"uri\": \"neural\",\n      \"id\": 101,\n      \"createdAt\": \"2022-02-21T17:06:48.245Z\",\n      \"updatedAt\": \"2022-07-08T05:36:44.149Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"route_name\": \"hack\",\n      \"method\": \"Garden\",\n      \"uri\": \"Pound\",\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n      \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2046,66 +2042,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"route_name\": \"Human\",\n        \"method\": \"grey\",\n        \"uri\": \"neural\",\n        \"id\": 101,\n        \"createdAt\": \"2022-06-21T15:53:20.725Z\",\n        \"updatedAt\": \"2021-12-09T21:50:35.769Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "getprojectRoute",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/projectroute/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "projectroute",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "getprojectRoute_response",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/projectroute/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": 101,\n    \"createdAt\": \"2022-06-26T11:04:48.275Z\",\n    \"updatedAt\": \"2022-10-23T06:55:42.695Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"route_name\": \"hack\",\n        \"method\": \"Garden\",\n        \"uri\": \"Pound\",\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n        \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2167,17 +2104,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForInsertprojectRoute",
+              "name": "deleteManyprojectRoute",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/projectroute/upsert",
+                  "raw": "{{url}}/admin/projectroute/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "projectroute",
-                    "upsert"
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -2190,7 +2127,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"route_name\": \"Human\",\n  \"method\": \"grey\",\n  \"uri\": \"neural\"\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2202,18 +2139,18 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertprojectRoute_response",
+                  "name": "deleteManyprojectRoute_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/projectroute/upsert"
+                      "raw": "{{url}}/admin/projectroute/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": \":id\",\n    \"createdAt\": \"2021-11-21T22:40:30.236Z\",\n    \"updatedAt\": \"2022-05-23T05:53:48.617Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"route_name\": \"hack\",\n      \"method\": \"Garden\",\n      \"uri\": \"Pound\",\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n      \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2221,20 +2158,20 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForUpdateprojectRoute",
+              "name": "updateBulkprojectRoute",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/projectroute/upsert",
+                  "raw": "{{url}}/admin/projectroute/updateBulk",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "projectroute",
-                    "upsert"
+                    "updateBulk"
                   ]
                 },
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -2244,7 +2181,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"route_name\": \"Human\",\n  \"method\": \"grey\",\n  \"uri\": \"neural\",\n  \"id\": \":id\"\n}"
+                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2256,18 +2193,132 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertprojectRoute_response",
+                  "name": "updateBulkprojectRoute_response",
                   "originalRequest": {
-                    "method": "POST",
+                    "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/projectroute/upsert"
+                      "raw": "{{url}}/admin/projectroute/updateBulk"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": \":id\",\n    \"createdAt\": \"2021-11-21T22:40:30.236Z\",\n    \"updatedAt\": \"2022-05-23T05:53:48.617Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteManyprojectRoute",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/projectroute/softDeleteMany",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "projectroute",
+                    "softDeleteMany"
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \":id\"\n  ]\n}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteManyprojectRoute_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/projectroute/softDeleteMany"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteprojectRoute",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/projectroute/softDelete/:id",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "projectroute",
+                    "softDelete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteprojectRoute_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/projectroute/softDelete/:id"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"hack\",\n    \"method\": \"Garden\",\n    \"uri\": \"Pound\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n    \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2335,66 +2386,6 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "softDeleteprojectRoute",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/projectroute/softDelete/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "projectroute",
-                    "softDelete",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "softDeleteprojectRoute_response",
-                  "originalRequest": {
-                    "method": "PUT",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/projectroute/softDelete/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": 101,\n    \"createdAt\": \"2022-03-25T06:23:16.170Z\",\n    \"updatedAt\": \"2021-11-28T17:47:41.141Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
               "name": "updateprojectRoute",
               "request": {
                 "url": {
@@ -2424,7 +2415,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"route_name\": \"Human\",\n  \"method\": \"grey\",\n  \"uri\": \"neural\"\n}"
+                  "raw": "{\n  \"route_name\": \"hack\",\n  \"method\": \"Garden\",\n  \"uri\": \"Pound\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2447,7 +2438,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"Human\",\n    \"method\": \"grey\",\n    \"uri\": \"neural\",\n    \"id\": 101,\n    \"createdAt\": \"2022-07-27T22:38:50.356Z\",\n    \"updatedAt\": \"2021-12-09T07:40:34.607Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"hack\",\n    \"method\": \"Garden\",\n    \"uri\": \"Pound\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n    \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2455,20 +2446,26 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "updateBulkprojectRoute",
+              "name": "deleteprojectRoute",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/projectroute/updateBulk",
+                  "raw": "{{url}}/admin/projectroute/delete/:id",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "projectroute",
-                    "updateBulk"
+                    "delete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
                   ]
                 },
-                "method": "PUT",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -2478,7 +2475,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
+                  "raw": "{\n  \"isWarning\": true\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2490,18 +2487,18 @@
               },
               "response": [
                 {
-                  "name": "updateBulkprojectRoute_response",
+                  "name": "deleteprojectRoute_response",
                   "originalRequest": {
-                    "method": "PUT",
+                    "method": "DELETE",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/projectroute/updateBulk"
+                      "raw": "{{url}}/admin/projectroute/delete/:id"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"route_name\": \"hack\",\n    \"method\": \"Garden\",\n    \"uri\": \"Pound\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-14T02:16:15.750Z\",\n    \"updatedAt\": \"2022-09-25T17:38:20.353Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2566,7 +2563,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": 101,\n    \"createdAt\": \"2022-08-01T04:26:21.987Z\",\n    \"updatedAt\": \"2021-11-25T09:36:20.997Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 714,\n    \"roleId\": 973,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n    \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2597,7 +2594,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"routeId\": 970,\n  \"roleId\": 798\n}"
+                  "raw": "{\n  \"routeId\": 714,\n  \"roleId\": 973\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2620,7 +2617,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": 1,\n    \"createdAt\": \"2021-12-02T02:15:50.467Z\",\n    \"updatedAt\": \"2022-07-19T09:35:17.657Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 714,\n    \"roleId\": 973,\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n    \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2651,7 +2648,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"routeId\": 970,\n      \"roleId\": 798\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"routeId\": 714,\n      \"roleId\": 973\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2674,7 +2671,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"routeId\": 970,\n      \"roleId\": 798,\n      \"id\": 101,\n      \"createdAt\": \"2022-03-08T03:47:21.820Z\",\n      \"updatedAt\": \"2022-08-13T04:22:44.355Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"routeId\": 714,\n      \"roleId\": 973,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n      \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2728,66 +2725,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"routeId\": 970,\n        \"roleId\": 798,\n        \"id\": 101,\n        \"createdAt\": \"2022-03-01T03:49:28.041Z\",\n        \"updatedAt\": \"2022-01-27T22:17:51.501Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "getrouteRole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/routerole/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "routerole",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "getrouteRole_response",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/routerole/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": 101,\n    \"createdAt\": \"2022-01-27T08:43:45.289Z\",\n    \"updatedAt\": \"2022-02-13T12:59:26.234Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"routeId\": 714,\n        \"roleId\": 973,\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n        \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2849,17 +2787,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForInsertrouteRole",
+              "name": "deleteManyrouteRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/routerole/upsert",
+                  "raw": "{{url}}/admin/routerole/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "routerole",
-                    "upsert"
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -2872,7 +2810,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"routeId\": 970,\n  \"roleId\": 798\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2884,18 +2822,18 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertrouteRole_response",
+                  "name": "deleteManyrouteRole_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/routerole/upsert"
+                      "raw": "{{url}}/admin/routerole/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-08-06T06:30:32.871Z\",\n    \"updatedAt\": \"2022-08-02T10:08:51.595Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"routeId\": 714,\n      \"roleId\": 973,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n      \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -2903,20 +2841,20 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForUpdaterouteRole",
+              "name": "updateBulkrouteRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/routerole/upsert",
+                  "raw": "{{url}}/admin/routerole/updateBulk",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "routerole",
-                    "upsert"
+                    "updateBulk"
                   ]
                 },
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -2926,7 +2864,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"routeId\": 970,\n  \"roleId\": 798,\n  \"id\": \":id\"\n}"
+                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
                 },
                 "description": "",
                 "auth": {
@@ -2938,18 +2876,132 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertrouteRole_response",
+                  "name": "updateBulkrouteRole_response",
                   "originalRequest": {
-                    "method": "POST",
+                    "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/routerole/upsert"
+                      "raw": "{{url}}/admin/routerole/updateBulk"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-08-06T06:30:32.871Z\",\n    \"updatedAt\": \"2022-08-02T10:08:51.595Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteManyrouteRole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/routerole/softDeleteMany",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "routerole",
+                    "softDeleteMany"
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \":id\"\n  ]\n}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteManyrouteRole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/routerole/softDeleteMany"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleterouteRole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/routerole/softDelete/:id",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "routerole",
+                    "softDelete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleterouteRole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/routerole/softDelete/:id"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 714,\n    \"roleId\": 973,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n    \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3046,7 +3098,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"routeId\": 970,\n  \"roleId\": 798\n}"
+                  "raw": "{\n  \"routeId\": 714,\n  \"roleId\": 973\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3069,7 +3121,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": 101,\n    \"createdAt\": \"2022-08-07T07:29:22.279Z\",\n    \"updatedAt\": \"2022-11-08T21:26:55.583Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 714,\n    \"roleId\": 973,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n    \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3077,17 +3129,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "softDeleterouteRole",
+              "name": "deleterouteRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/routerole/softDelete/:id",
+                  "raw": "{{url}}/admin/routerole/delete/:id",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "routerole",
-                    "softDelete",
+                    "delete",
                     ":id"
                   ],
                   "variable": [
@@ -3096,7 +3148,7 @@
                     }
                   ]
                 },
-                "method": "PUT",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -3106,7 +3158,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{}"
+                  "raw": "{\n  \"isWarning\": true\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3118,72 +3170,18 @@
               },
               "response": [
                 {
-                  "name": "softDeleterouteRole_response",
+                  "name": "deleterouteRole_response",
                   "originalRequest": {
-                    "method": "PUT",
+                    "method": "DELETE",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/routerole/softDelete/:id"
+                      "raw": "{{url}}/admin/routerole/delete/:id"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 970,\n    \"roleId\": 798,\n    \"id\": 101,\n    \"createdAt\": \"2021-12-11T15:10:53.545Z\",\n    \"updatedAt\": \"2022-01-28T18:25:02.159Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "updateBulkrouteRole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/routerole/updateBulk",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "routerole",
-                    "updateBulk"
-                  ]
-                },
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "updateBulkrouteRole_response",
-                  "originalRequest": {
-                    "method": "PUT",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/routerole/updateBulk"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"routeId\": 714,\n    \"roleId\": 973,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-08-27T23:07:33.398Z\",\n    \"updatedAt\": \"2022-06-03T18:50:47.811Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3248,7 +3246,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": 101,\n    \"createdAt\": \"2022-03-03T10:07:35.229Z\",\n    \"updatedAt\": \"2022-06-09T11:46:13.176Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 882,\n    \"roleId\": 199,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n    \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3279,7 +3277,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"userId\": 61,\n  \"roleId\": 513\n}"
+                  "raw": "{\n  \"userId\": 882,\n  \"roleId\": 199\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3302,7 +3300,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": 1,\n    \"createdAt\": \"2022-01-11T04:42:43.220Z\",\n    \"updatedAt\": \"2022-05-12T10:27:48.613Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 882,\n    \"roleId\": 199,\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n    \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3333,7 +3331,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"userId\": 61,\n      \"roleId\": 513\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"userId\": 882,\n      \"roleId\": 199\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3356,7 +3354,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"userId\": 61,\n      \"roleId\": 513,\n      \"id\": 101,\n      \"createdAt\": \"2022-04-12T01:28:06.372Z\",\n      \"updatedAt\": \"2022-09-12T17:25:45.889Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"userId\": 882,\n      \"roleId\": 199,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n      \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3410,66 +3408,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"userId\": 61,\n        \"roleId\": 513,\n        \"id\": 101,\n        \"createdAt\": \"2022-05-17T23:38:46.957Z\",\n        \"updatedAt\": \"2022-07-24T18:42:46.187Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "getuserRole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/userrole/:id",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "userrole",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "getuserRole_response",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/userrole/:id"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": 101,\n    \"createdAt\": \"2022-05-20T09:27:27.449Z\",\n    \"updatedAt\": \"2021-12-03T10:12:13.449Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"userId\": 882,\n        \"roleId\": 199,\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n        \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3531,17 +3470,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForInsertuserRole",
+              "name": "deleteManyuserRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/userrole/upsert",
+                  "raw": "{{url}}/admin/userrole/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "userrole",
-                    "upsert"
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -3554,7 +3493,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"userId\": 61,\n  \"roleId\": 513\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3566,18 +3505,18 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertuserRole_response",
+                  "name": "deleteManyuserRole_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/userrole/upsert"
+                      "raw": "{{url}}/admin/userrole/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-01-02T22:24:26.222Z\",\n    \"updatedAt\": \"2022-07-09T20:00:34.380Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"userId\": 882,\n      \"roleId\": 199,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n      \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3585,20 +3524,20 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "upsertForUpdateuserRole",
+              "name": "updateBulkuserRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/userrole/upsert",
+                  "raw": "{{url}}/admin/userrole/updateBulk",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "userrole",
-                    "upsert"
+                    "updateBulk"
                   ]
                 },
-                "method": "POST",
+                "method": "PUT",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -3608,7 +3547,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"userId\": 61,\n  \"roleId\": 513,\n  \"id\": \":id\"\n}"
+                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3620,18 +3559,132 @@
               },
               "response": [
                 {
-                  "name": "upsertForInsertuserRole_response",
+                  "name": "updateBulkuserRole_response",
                   "originalRequest": {
-                    "method": "POST",
+                    "method": "PUT",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/userrole/upsert"
+                      "raw": "{{url}}/admin/userrole/updateBulk"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": \":id\",\n    \"createdAt\": \"2022-01-02T22:24:26.222Z\",\n    \"updatedAt\": \"2022-07-09T20:00:34.380Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteManyuserRole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/userrole/softDeleteMany",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "userrole",
+                    "softDeleteMany"
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \":id\"\n  ]\n}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteManyuserRole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/userrole/softDeleteMany"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "softDeleteuserRole",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/admin/userrole/softDelete/:id",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "userrole",
+                    "softDelete",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "softDeleteuserRole_response",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/admin/userrole/softDelete/:id"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 882,\n    \"roleId\": 199,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n    \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3728,7 +3781,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"userId\": 61,\n  \"roleId\": 513\n}"
+                  "raw": "{\n  \"userId\": 882,\n  \"roleId\": 199\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3751,7 +3804,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": 101,\n    \"createdAt\": \"2022-11-08T12:06:28.770Z\",\n    \"updatedAt\": \"2022-09-08T20:15:05.127Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 882,\n    \"roleId\": 199,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n    \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3759,17 +3812,17 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "softDeleteuserRole",
+              "name": "deleteuserRole",
               "request": {
                 "url": {
-                  "raw": "{{url}}/admin/userrole/softDelete/:id",
+                  "raw": "{{url}}/admin/userrole/delete/:id",
                   "host": [
                     "{{url}}"
                   ],
                   "path": [
                     "admin",
                     "userrole",
-                    "softDelete",
+                    "delete",
                     ":id"
                   ],
                   "variable": [
@@ -3778,7 +3831,7 @@
                     }
                   ]
                 },
-                "method": "PUT",
+                "method": "DELETE",
                 "header": [
                   {
                     "key": "Content-Type",
@@ -3788,7 +3841,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{}"
+                  "raw": "{\n  \"isWarning\": true\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3800,72 +3853,18 @@
               },
               "response": [
                 {
-                  "name": "softDeleteuserRole_response",
+                  "name": "deleteuserRole_response",
                   "originalRequest": {
-                    "method": "PUT",
+                    "method": "DELETE",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/admin/userrole/softDelete/:id"
+                      "raw": "{{url}}/admin/userrole/delete/:id"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 61,\n    \"roleId\": 513,\n    \"id\": 101,\n    \"createdAt\": \"2022-04-30T07:05:57.080Z\",\n    \"updatedAt\": \"2022-08-19T09:50:02.285Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "updateBulkuserRole",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/admin/userrole/updateBulk",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "admin",
-                    "userrole",
-                    "updateBulk"
-                  ]
-                },
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"filter\": {\n    \"isActive\": true\n  },\n  \"data\": {\n    \"isDeleted\": false\n  }\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "updateBulkuserRole_response",
-                  "originalRequest": {
-                    "method": "PUT",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/admin/userrole/updateBulk"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"status\": \"SUCCESS\",\n    \"message\": \"Your request is successfully executed\",\n    \"data\": [\n      null,\n      1\n    ]\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"userId\": 882,\n    \"roleId\": 199,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2022-04-28T12:29:31.434Z\",\n    \"updatedAt\": \"2022-10-27T09:10:13.986Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3938,7 +3937,63 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-01-10T03:40:37.351Z\",\n    \"updatedAt\": \"2022-07-02T02:30:28.614Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"userType\": 1,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n    \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n  }\n}",
+                  "header": [],
+                  "cookie": []
+                }
+              ],
+              "_postman_isSubFolder": true
+            },
+            {
+              "name": "get loggedin User",
+              "request": {
+                "url": {
+                  "raw": "{{url}}/device/api/v1/user/me",
+                  "host": [
+                    "{{url}}"
+                  ],
+                  "path": [
+                    "device",
+                    "api",
+                    "v1",
+                    "user",
+                    "me"
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "description": ""
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "description": "",
+                "auth": {
+                  "type": "bearer",
+                  "bearer": {
+                    "token": "{{token}}"
+                  }
+                }
+              },
+              "response": [
+                {
+                  "name": "loggedInUserInfo_response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/device/api/v1/user/me"
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": \"[{\\\"username\\\":\\\"Reynold.Beatty\\\",\\\"email\\\":\\\"Gilberto_Runolfsson@yahoo.com\\\",\\\"name\\\":\\\"Lynn McLaughlin\\\",\\\"mobileNo\\\":\\\"(775) 508-6870 x55941\\\",\\\"userType\\\":1,\\\"id\\\":101,\\\"isDeleted\\\":false,\\\"isActive\\\":true,\\\"createdAt\\\":\\\"2023-02-04T08:23:22.932Z\\\",\\\"updatedAt\\\":\\\"2022-11-07T12:29:36.220Z\\\"}]\"\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -3971,7 +4026,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"mobileNo\": \"(775) 508-6870 x55941\",\n  \"userType\": 1\n}"
                 },
                 "description": "",
                 "auth": {
@@ -3994,7 +4049,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 1,\n    \"createdAt\": \"2022-01-11T02:33:43.003Z\",\n    \"updatedAt\": \"2022-05-01T06:46:31.246Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"userType\": 1,\n    \"id\": 1,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n    \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4050,7 +4105,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"username\": \"Cary66\",\n        \"password\": \"1DB6nAR9wvA4gT7\",\n        \"email\": \"Electa33@hotmail.com\",\n        \"name\": \"Jane Hane\",\n        \"mobileNo\": \"380-962-6562\",\n        \"role\": 1,\n        \"id\": 101,\n        \"createdAt\": \"2021-12-23T06:26:11.119Z\",\n        \"updatedAt\": \"2022-05-05T02:38:28.342Z\",\n        \"isDeleted\": false,\n        \"isActive\": true\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"data\": [\n      {\n        \"username\": \"Reynold.Beatty\",\n        \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n        \"name\": \"Lynn McLaughlin\",\n        \"mobileNo\": \"(775) 508-6870 x55941\",\n        \"userType\": 1,\n        \"id\": 101,\n        \"isDeleted\": false,\n        \"isActive\": true,\n        \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n        \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n      }\n    ],\n    \"paginator\": {\n      \"currentPage\": 1,\n      \"itemCount\": 1,\n      \"pageCount\": 1,\n      \"perPage\": 25\n    }\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4139,7 +4194,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1\n    }\n  ]\n}"
+                  "raw": "{\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"password\": \"AntFH0HtYjQivYC\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"mobileNo\": \"(775) 508-6870 x55941\",\n      \"userType\": 1\n    }\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -4162,7 +4217,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1,\n      \"id\": 101,\n      \"createdAt\": \"2022-09-19T20:23:50.198Z\",\n      \"updatedAt\": \"2022-08-06T04:58:43.103Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"mobileNo\": \"(775) 508-6870 x55941\",\n      \"userType\": 1,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n      \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4170,10 +4225,10 @@
               "_postman_isSubFolder": true
             },
             {
-              "name": "getuser",
+              "name": "deleteManyuser",
               "request": {
                 "url": {
-                  "raw": "{{url}}/device/api/v1/user/:id",
+                  "raw": "{{url}}/device/api/v1/user/deleteMany",
                   "host": [
                     "{{url}}"
                   ],
@@ -4182,12 +4237,7 @@
                     "api",
                     "v1",
                     "user",
-                    ":id"
-                  ],
-                  "variable": [
-                    {
-                      "key": "id"
-                    }
+                    "deleteMany"
                   ]
                 },
                 "method": "POST",
@@ -4200,7 +4250,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"include\": [\n    {\n      \"model\": \"dummyModel\",\n      \"as\": \"_field\",\n      \"attributes\": [\n        \"field1\",\n        \"field2\"\n      ]\n    }\n  ],\n  \"select\": [\n    \"field1\",\n    \"field2\"\n  ]\n}"
+                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
                 },
                 "description": "",
                 "auth": {
@@ -4212,18 +4262,18 @@
               },
               "response": [
                 {
-                  "name": "getuser_response",
+                  "name": "deleteManyuser_response",
                   "originalRequest": {
                     "method": "POST",
                     "header": [],
                     "url": {
-                      "raw": "{{url}}/device/api/v1/user/:id"
+                      "raw": "{{url}}/device/api/v1/user/deleteMany"
                     }
                   },
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-05-02T09:10:37.771Z\",\n    \"updatedAt\": \"2022-07-15T07:23:32.958Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Reynold.Beatty\",\n      \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n      \"name\": \"Lynn McLaughlin\",\n      \"mobileNo\": \"(775) 508-6870 x55941\",\n      \"userType\": 1,\n      \"id\": 101,\n      \"isDeleted\": false,\n      \"isActive\": true,\n      \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n      \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n    }\n  ]\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4279,7 +4329,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {}\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": null\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4397,7 +4447,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-03-28T13:31:33.213Z\",\n    \"updatedAt\": \"2022-06-27T01:01:34.594Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"userType\": 1,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n    \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4498,7 +4548,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"mobileNo\": \"(775) 508-6870 x55941\",\n  \"userType\": 1\n}"
                 },
                 "description": "",
                 "auth": {
@@ -4521,7 +4571,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-03-13T07:02:54.906Z\",\n    \"updatedAt\": \"2021-12-09T01:32:52.377Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"userType\": 1,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n    \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4554,7 +4604,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"mobileNo\": \"(775) 508-6870 x55941\",\n  \"userType\": 1\n}"
                 },
                 "description": "",
                 "auth": {
@@ -4577,63 +4627,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n            \"status\": \"SUCCESS\",\n            \"message\": \"Your request is successfully executed\",\n            \"data\": [{\"username\":\"Cary66\",\"password\":\"1DB6nAR9wvA4gT7\",\"email\":\"Electa33@hotmail.com\",\"name\":\"Jane Hane\",\"mobileNo\":\"380-962-6562\",\"role\":1,\"id\":101,\"createdAt\":\"2022-10-27T01:06:53.059Z\",\"updatedAt\":\"2022-09-24T19:04:14.559Z\",\"isDeleted\":false,\"isActive\":true}]\n        }",
-                  "header": [],
-                  "cookie": []
-                }
-              ],
-              "_postman_isSubFolder": true
-            },
-            {
-              "name": "deleteManyuser",
-              "request": {
-                "url": {
-                  "raw": "{{url}}/device/api/v1/user/deleteMany",
-                  "host": [
-                    "{{url}}"
-                  ],
-                  "path": [
-                    "device",
-                    "api",
-                    "v1",
-                    "user",
-                    "deleteMany"
-                  ]
-                },
-                "method": "DELETE",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "description": ""
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"isWarning\": true,\n  \"ids\": [\n    \":id\"\n  ]\n}"
-                },
-                "description": "",
-                "auth": {
-                  "type": "bearer",
-                  "bearer": {
-                    "token": "{{token}}"
-                  }
-                }
-              },
-              "response": [
-                {
-                  "name": "deleteManyuser_response",
-                  "originalRequest": {
-                    "method": "DELETE",
-                    "header": [],
-                    "url": {
-                      "raw": "{{url}}/device/api/v1/user/deleteMany"
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": [\n    {\n      \"username\": \"Cary66\",\n      \"password\": \"1DB6nAR9wvA4gT7\",\n      \"email\": \"Electa33@hotmail.com\",\n      \"name\": \"Jane Hane\",\n      \"mobileNo\": \"380-962-6562\",\n      \"role\": 1,\n      \"id\": 101,\n      \"createdAt\": \"2021-12-11T11:53:21.542Z\",\n      \"updatedAt\": \"2022-06-01T11:16:53.945Z\",\n      \"isDeleted\": false,\n      \"isActive\": true\n    }\n  ]\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": \"[{\\\"username\\\":\\\"Reynold.Beatty\\\",\\\"email\\\":\\\"Gilberto_Runolfsson@yahoo.com\\\",\\\"name\\\":\\\"Lynn McLaughlin\\\",\\\"mobileNo\\\":\\\"(775) 508-6870 x55941\\\",\\\"userType\\\":1,\\\"id\\\":101,\\\"isDeleted\\\":false,\\\"isActive\\\":true,\\\"createdAt\\\":\\\"2023-02-04T08:23:22.932Z\\\",\\\"updatedAt\\\":\\\"2022-11-07T12:29:36.220Z\\\"}]\"\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4695,7 +4689,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-10-22T13:13:32.026Z\",\n    \"updatedAt\": \"2022-08-20T09:11:06.153Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"userType\": 1,\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-02-04T08:23:22.932Z\",\n    \"updatedAt\": \"2022-11-07T12:29:36.220Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4732,7 +4726,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Your username\",\n  \"password\": \"YourPassword\"\n}"
+                  "raw": "{\n  \"username\": \"username\",\n  \"password\": \"password\"\n}"
                 },
                 "description": "",
                 "auth": {}
@@ -4750,7 +4744,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Login Successful\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWRlZDVjMGFjMjAxMmFjMDI4ODkxZiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2MjkzNTEyNzAsImV4cCI6MTYyOTk1MTI3MH0.BJ-WKjNYeFDQ4pn8kfli5gwn6GLz_c3voFht20Agj9k\",\n    \"createdAt\": \"2022-09-23T16:56:12.876Z\",\n    \"updatedAt\": \"2022-01-09T08:12:37.727Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Login Successful\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMWRlZDVjMGFjMjAxMmFjMDI4ODkxZiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE2MjkzNTEyNzAsImV4cCI6MTYyOTk1MTI3MH0.BJ-WKjNYeFDQ4pn8kfli5gwn6GLz_c3voFht20Agj9k\",\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-10T19:08:51.711Z\",\n    \"updatedAt\": \"2022-08-12T11:54:49.369Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4781,7 +4775,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"username\": \"Cary66\",\n  \"password\": \"1DB6nAR9wvA4gT7\",\n  \"email\": \"Electa33@hotmail.com\",\n  \"name\": \"Jane Hane\",\n  \"mobileNo\": \"380-962-6562\",\n  \"role\": 1\n}"
+                  "raw": "{\n  \"username\": \"Reynold.Beatty\",\n  \"password\": \"AntFH0HtYjQivYC\",\n  \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n  \"name\": \"Lynn McLaughlin\",\n  \"mobileNo\": \"(775) 508-6870 x55941\"\n}"
                 },
                 "description": "",
                 "auth": {}
@@ -4799,7 +4793,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Cary66\",\n    \"password\": \"1DB6nAR9wvA4gT7\",\n    \"email\": \"Electa33@hotmail.com\",\n    \"name\": \"Jane Hane\",\n    \"mobileNo\": \"380-962-6562\",\n    \"role\": 1,\n    \"id\": 101,\n    \"createdAt\": \"2022-06-08T07:21:14.473Z\",\n    \"updatedAt\": \"2022-08-12T05:33:04.955Z\",\n    \"isDeleted\": false,\n    \"isActive\": true\n  }\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Your request is successfully executed\",\n  \"data\": {\n    \"username\": \"Reynold.Beatty\",\n    \"email\": \"Gilberto_Runolfsson@yahoo.com\",\n    \"name\": \"Lynn McLaughlin\",\n    \"mobileNo\": \"(775) 508-6870 x55941\",\n    \"id\": 101,\n    \"isDeleted\": false,\n    \"isActive\": true,\n    \"createdAt\": \"2023-03-10T19:08:51.711Z\",\n    \"updatedAt\": \"2022-08-12T11:54:49.369Z\"\n  }\n}",
                   "header": [],
                   "cookie": []
                 }
@@ -4966,7 +4960,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"oldPassword\": \"YourOldPassword\",\n  \"newPassword\": \"YourNewPassword\"\n}"
+                  "raw": "{\n  \"oldPassword\": \"OldPassword\",\n  \"newPassword\": \"NewPassword\"\n}"
                 },
                 "description": "",
                 "auth": {
@@ -4989,7 +4983,7 @@
                   "status": "OK",
                   "code": 200,
                   "_postman_previewlanguage": "json",
-                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Password changed successfully\",\n  \"data\": {}\n}",
+                  "body": "{\n  \"status\": \"SUCCESS\",\n  \"message\": \"Password changed successfully\",\n  \"data\": null\n}",
                   "header": [],
                   "cookie": []
                 }

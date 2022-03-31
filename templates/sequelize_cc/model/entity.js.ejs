@@ -1,31 +1,32 @@
 
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
-function buildMake<%-MODEL_NAME%> ({
-    insert<%-MODEL_NAME%>Validator,update<%-MODEL_NAME%>Validator
-  }){
-    return function make<%-MODEL_NAME%> (data,validatorName){
-      let isValid = '';
-      switch (validatorName){
-      case 'insert<%-MODEL_NAME%>Validator':
-        isValid = insert<%-MODEL_NAME%>Validator(data);
-        break;
-  
-      case 'update<%-MODEL_NAME%>Validator':
-        isValid = update<%-MODEL_NAME%>Validator(data);  
-        break; 
-      }
-      if (isValid.error){
-        throw new Error({
-          name:'ValidationError',
-          message:`Invalid data in <%-MODEL_NAME%> entity. ${isValid.error}`
-        });
-      }
-        
-      return {
-        <%_SCHEMA.forEach((v)=>{ _%>
-          <%-v%>:data.<%-v%>,
-        <%_ }) _%>  
-      };
-    };
+module.exports = (<%-MODEL%>) => {
+
+  let new<%-MODEL_NAME%> = {
+    <%_SCHEMA.forEach((v)=>{ _%>
+      <%-v%>:<%-MODEL%>.<%-v%>,
+    <%_ }); _%> 
+  };
+
+  // remove undefined values
+  if (new<%-MODEL_NAME%>.id){
+    Object.keys(new<%-MODEL_NAME%>).forEach(key =>{
+      if (new<%-MODEL_NAME%>[key] === undefined) return new<%-MODEL_NAME%>[key] = null;
+    });
+  } else {
+    Object.keys(new<%-MODEL_NAME%>).forEach(key => new<%-MODEL_NAME%>[key] === undefined && delete new<%-MODEL_NAME%>[key]);
   }
-  module.exports =  buildMake<%-MODEL_NAME%>;
+
+  // To validate Entity uncomment this block
+
+  /*
+   * const validate = (new<%-MODEL_NAME%>) => {
+   *   if (!new<%-MODEL_NAME%>.field) {
+   *       throw new Error("this field is required");
+   *   }
+   * }
+   * 
+   * validate(new<%-MODEL_NAME%>) 
+   */
+  return Object.freeze(new<%-MODEL_NAME%>);
+};

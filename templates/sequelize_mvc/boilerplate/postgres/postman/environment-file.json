@@ -1,6 +1,6 @@
 {
-  "id": "db3223ab-db59-4cc3-a0bd-326833179d99",
-  "name": "seq_pg_mvc_environment",
+  "id": "64c223a1-036f-4b76-9f35-9961b78b67b8",
+  "name": "postgres_mvc_boilerplate_environment",
   "values": [
     {
       "key": "token",
@@ -14,6 +14,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2021-11-11T07:42:41.699Z",
+  "_postman_exported_at": "2022-03-31T11:59:00.885Z",
   "_postman_exported_using": "Postman"
 }

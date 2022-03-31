@@ -1,470 +1,273 @@
-const message = require('../../../utils/messages');
+const response = require('../../../utils/response'); 
+const responseHandler = require('../../../utils/response/responseHandler'); 
+const getSelectObject = require('../../../utils/getSelectObject'); 
 
-function makeUserController ({
-  userService,makeUser,authService
-})
-{
-  const addUser = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      const originalData = data;
-      originalData.addedBy = loggedInUser.id.toString();
-      const user = makeUser(originalData,'insertUserValidator');
-      let createdUser = await userService.createDocument(user);
-            
-      return message.successResponse(
-        { data :  createdUser }
-      );
+const addUser = (addUserUsecase) => async (req,res) => {
+  try {
+    let dataToCreate = { ...req.body || {} };
+    dataToCreate.addedBy = req.user.id;
+    let result = await addUserUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const findAllUser = (findAllUserUsecase) => async (req,res) => {
+  try {
+    let query = { ...req.body.query || {} };
+    let options = { ...req.body.options || {} };
+    query._id = { $ne: req.user.id };
+    if (req.body && req.body.query && req.body.query._id) {
+      query._id.$in = [req.body.query._id];
     }
-  };
+    let result = await findAllUserUsecase({
+      query,
+      options,
+      isCountOnly:req.body.isCountOnly || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const findAllUser = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      let options = {};
-      let query = {};
-      let result;
-      if (data.query !== undefined) {
-        query = { ...data.query };
-      }
-      if (loggedInUser){
-        query = {
-          ...query,
-          ...{ '_id': { $ne: loggedInUser.id } } 
-        };
-        if (data.query && data.query._id) {
-          Object.assign(query._id, { $in: [data.query._id] });
-        }
-      } else {
-        return message.badRequest();
-      }
-      if (data.isCountOnly){
-        result = await userService.countDocument(query);
-        if (result) {
-          result = { totalRecords: result };  
-          return message.successResponse(result);
-        } else {
-          return message.recordNotFound();
-        }
-      } else { 
-        if (data.options !== undefined) {
-          options = { ...data.options };
-        }
-        result = await userService.getAllDocuments(query,options);
-      }
-      if (result.data){
-        return message.successResponse({ data: result });
-      } else {
-        return message.recordNotFound();
-      }
-            
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const getUserCount = (getUserCountUsecase) => async (req,res) => {
+  try {
+    let where = { ...req.body.where || {} };
+    let result = await getUserCountUsecase({ where },req,res);  
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserCount = async (data) => {
-    try {
-      let where = {};
-      if (data && data.where){
-        where = data.where;
-      }
-      let result = await userService.countDocument(where);
-      if (result){
-        result = { totalRecords:result };
-        return message.successResponse({ data: result });
-                
-      }
-      else {
-        return message.recordNotFound();
-      }
-      return message.badRequest();
+const softDeleteManyUser = (softDeleteManyUserUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    query._id.$ne = req.user.id;
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteManyUserUsecase({
+      query,
+      dataToUpdate,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserByAggregate = async ({ data }) =>{
-    try {
-      if (data){
-        let result = await userService.getDocumentByAggregation(data);
-        if (result && result.length){
-          return message.successResponse({ data: result });
-        }
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse(); 
+const bulkInsertUser = (bulkInsertUserUsecase)=> async (req,res) => {
+  try {
+    let dataToCreate = [...req.body.data];
+    for (let i = 0;i < dataToCreate.length;i++){
+      dataToCreate[i] = {
+        ...dataToCreate[i],
+        addedBy:req.user.id,
+      };
     }
-  };
+    let result = await bulkInsertUserUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteManyUser = async (ids, loggedInUser) => {
-    try {
-      if (ids){
-        const deleteDependentService = require('../../../utils/deleteDependent');
-        let query = {};
-        if (loggedInUser){
-          query = {
-            '_id': {
-              '$in': ids,
-              '$ne': loggedInUser.id
-            }
-          };
-        } 
-        let result = await deleteDependentService.softDeleteUser(query, loggedInUser);
-        return message.successResponse({ data:result });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
+const bulkUpdateUser = (bulkUpdateUserUsecase) => async (req,res) => {
+  try {
+    let dataToUpdate = { ...req.body.data || {} };
+    let query = { ...req.body.filter || {} };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    query._id = { $ne: req.user.id };
+    if (req.body.filter && req.body.filter._id){
+      query._id.$in = [req.body.filter._id];
     }
-  };
+    let result = await bulkUpdateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkInsertUser = async ({
-    body, loggedInUser
-  }) => {
-    try {
-      let data = body.data;
-      data.map((item) => { 
-        item.addedBy = loggedInUser.id.toString(); 
-        return item; 
-      });
-      const userEntities = data.map((item)=>makeUser(item,'insertUserValidator'));
-      const results = await userService.bulkInsert(userEntities);
-      return message.successResponse({ data:results });
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const deleteManyUser = (deleteManyUserUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    query._id.$ne = req.user.id;
+    let result = await deleteManyUserUsecase({
+      query,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkUpdateUser = async (data, loggedInUser) => {
-    try {
-      if (data.filter && data.data){
-        delete data.data['addedBy'];
-        delete data.data['updatedBy'];
-        data.data.updatedBy = loggedInUser.id;
-        const user = makeUser(data.data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let query = {};
-        if (loggedInUser){
-          query = {
-            '_id': {
-              '$eq': id,
-              '$ne': loggedInUser.id
-            },
-            ...data.filter                        
-          };
-        } else {
-          return message.badRequest();
-        }
-        const updatedUsers = await userService.bulkUpdate(query,filterData);
-        return message.successResponse({ data:updatedUsers });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
+const softDeleteUser = (softDeleteUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { _id: req.params.id };
+    query._id.$ne = req.user.id;
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteUserUsecase({
+      query,
+      dataToUpdate,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const deleteManyUser = async (data, loggedInUser) => {
-    try {
-      if (data && data.ids){
-        const deleteDependentService = require('../../../utils/deleteDependent');
-        let ids = data.ids;
-        let query = {};
-        if (loggedInUser){
-          query = {
-            '_id': {
-              '$in': ids,
-              '$ne': loggedInUser.id
-            }
-          };
-        } 
-        let result;
-        if (data.isWarning){
-          result = await deleteDependentService.countUser(query);
-        } else {
-          result = await deleteDependentService.deleteUser(query);
-        }
-        return message.successResponse({ data:result });
-      }
-      return message.badRequest();
+const partialUpdateUser = (partialUpdateUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let query = { _id: req.params.id };
+    let dataToUpdate = req.body;
+    dataToUpdate.updatedBy = req.user.id;
+    query._id.$ne = req.user.id;
+    let result = await partialUpdateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteUser = async (id,loggedInUser) => {
-    try {
-      const deleteDependentService = require('../../../utils/deleteDependent');
-      let query = {};
-      if (loggedInUser){
-        query = {
-          '_id': {
-            '$eq': id,
-            '$ne': loggedInUser.id
-          }
-        };
-      } else {
-        return message.badRequest();
-      }
-      let result = await deleteDependentService.softDeleteUser(query, loggedInUser);
-      return message.successResponse({ data:result });
-            
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message: error.message });
-      }
-      return message.failureResponse();
+const updateUser = (updateUserUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let dataToUpdate = { ...req.body || {} };
+    let query = { _id: req.params.id };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    query._id.$ne = req.user.id;
+    let result = await updateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const partialUpdateUser = async (data,id, loggedInUser) => {
-    try {
-      if (id && data){
-        delete data['addedBy'];
-        delete data['updatedBy'];
-        user.updatedBy = loggedInUser.id;
-        const user = makeUser(data,'updateUserValidator');            
-        const filterData = removeEmpty(user);
-        let query = {};
-        if (loggedInUser){
-          query = {
-            '_id': {
-              '$eq': id,
-              '$ne': loggedInUser.id
-            }
-          }; 
-          let updatedUser = await userService.findOneAndUpdateDocument(query,filterData,{ new:true });
-          if (updatedUser){
-            return message.successResponse({ data: updatedUser });
-          }
-          else {
-            return message.badRequest();
-          }
-        }
-      }
-      else {
-        return message.badRequest();
-      }
+const getUser = (getUserUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let query = { _id: req.params.id };
+    let options = {};
+    let result = await getUserUsecase({
+      query,
+      options
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const updateUser = async (data,id, loggedInUser) =>{
-    try {
-      delete data['addedBy'];
-      delete data['updatedBy'];
-      data.updatedBy = loggedInUser.id;
-      if (id && data){
-        const user = makeUser(data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let query = {};
-        if (loggedInUser){
-          query = {
-            '_id': {
-              '$eq': id,
-              '$ne': loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        let updatedUser = await userService.findOneAndUpdateDocument(query,filterData,{ new:true });
-        if (updatedUser){
-          return message.successResponse({ data : updatedUser });
-        }
-      }
-      return message.badRequest();
+const deleteUser = (deleteUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let ids = req.body.ids;
+    let query = { _id: req.params.id };
+    query._id.$ne = req.user.id;
+    let result = await deleteUserUsecase({
+      query,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserById = async (query, body = {}) =>{
-    try {
-      if (query){
-        let options = {};
-        if (body && body.populate && body.populate.length) options.populate = body.populate;
-        if (body && body.select && body.select.length) options.select = body.select;
-        let result = await userService.getSingleDocument(query, options);
-        if (result){
-          return message.successResponse({ data: result });
-        }
-        return message.recordNotFound();
-                 
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const changePassword = (changePasswordUsecase) => async (req,res) => {
+  try {
+    let result = await changePasswordUsecase(req.body,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};  
 
-  const deleteUser = async (data,id,loggedInUser) => {
-    try {
-      let possibleDependent = [
-        {
-          model: 'user',
-          refId: 'addedBy' 
-        },
-        {
-          model: 'user',
-          refId: 'updatedBy' 
-        },
-        {
-          model: 'userTokens',
-          refId: 'userId' 
-        },
-        {
-          model: 'userRole',
-          refId: 'userId' 
-        }
-      ];
-      const deleteDependentService = require('../../../utils/deleteDependent');
-      let query = {};
-      if (loggedInUser){
-        query = {
-          '_id': {
-            '$eq': id,
-            '$ne': loggedInUser.id
-          }
-        };
-      } else {
-        return message.badRequest();
-      }
-      if (data.isWarning) {
-        let all = await deleteDependentService.countUser(query);
-        return message.successResponse({ data:all });
-      } else {
-        let result = await deleteDependentService.deleteUser(query);
-        if (result){
-          return message.successResponse({ data:result });
-                    
-        }
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message:error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const updateProfile = (updateProfileUsecase) => async (req,res) => {
+  try {
+    let result = await updateProfileUsecase({
+      id:req.user.id,
+      profileData:req.body
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const removeEmpty = (obj) => {
-    Object.entries(obj).forEach(([key,value])=>{
-      if (value === undefined){
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
+const getLoggedInUserInfo = (getUserUsecase) => async (req,res) =>{
+  try {
+    const options = {};
+    const query = {
+      _id : req.user.id,
+      isDeleted: false,
+      isActive: true
+    };
+    let result = await getUserUsecase({
+      query,
+      options 
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const changePassword = async (params) => {
-    try {
-      if (!params.newPassword || !params.userId || !params.oldPassword) {
-        return message.inValidParam({ message:'Please Provide userId and new Password and Old password' });
-      }
-      let result = await authService.changePassword(params);
-      if (result.flag) {
-        return message.invalidRequest({ message :result.data });
-      }
-      return message.requestValidated({ message :result.data });
-            
-    } catch (error) {
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };  
-    
-  const updateProfile = async (data,id) =>{
-    try {
-      if (id && data){
-        if (data.password) delete data.password;
-        if (data.createdAt) delete data.createdAt;
-        if (data.updatedAt) delete data.updatedAt;
-        if (data.id) delete data.id;
-        const user = makeUser(data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let updatedUser = await userService.findOneAndUpdateDocument({ _id:id },filterData,{ new:true });
-        return message.successResponse({ data:updatedUser });
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
-
-  return Object.freeze({
-    addUser,
-    findAllUser,
-    getUserCount,
-    getUserByAggregate,
-    softDeleteManyUser,
-    bulkInsertUser,
-    bulkUpdateUser,
-    deleteManyUser,
-    softDeleteUser,
-    partialUpdateUser,
-    updateUser,
-    getUserById,
-    deleteUser,
-    removeEmpty,
-    changePassword,
-    updateProfile,
-  });
-}
-
-module.exports = makeUserController;
+module.exports = {
+  addUser,
+  findAllUser,
+  getUserCount,
+  softDeleteManyUser,
+  bulkInsertUser,
+  bulkUpdateUser,
+  deleteManyUser,
+  softDeleteUser,
+  partialUpdateUser,
+  updateUser,
+  getUser,
+  deleteUser,
+  changePassword,
+  updateProfile,
+  getLoggedInUserInfo
+};

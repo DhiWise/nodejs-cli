@@ -1,300 +1,217 @@
-const message = require('../../../utils/messages');
+const response = require('../../../utils/response'); 
+const responseHandler = require('../../../utils/response/responseHandler'); 
+const getSelectObject = require('../../../utils/getSelectObject'); 
 
-function makeProjectRouteController ({
-  projectRouteService,makeProjectRoute
-})
-{
-  const addProjectRoute = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      const originalData = data;
-      originalData.addedBy = loggedInUser.id.toString();
-      const projectRoute = makeProjectRoute(originalData,'insertProjectRouteValidator');
-      let createdProjectRoute = await projectRouteService.createDocument(projectRoute);
-            
-      return message.successResponse(
-        { data :  createdProjectRoute }
-      );
+const addProjectRoute = (addProjectRouteUsecase) => async (req,res) => {
+  try {
+    let dataToCreate = { ...req.body || {} };
+    dataToCreate.addedBy = req.user.id;
+    let result = await addProjectRouteUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const bulkInsertProjectRoute = (bulkInsertProjectRouteUsecase)=> async (req,res) => {
+  try {
+    let dataToCreate = [...req.body.data];
+    for (let i = 0;i < dataToCreate.length;i++){
+      dataToCreate[i] = {
+        ...dataToCreate[i],
+        addedBy:req.user.id,
+      };
     }
-  };
+    let result = await bulkInsertProjectRouteUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkInsertProjectRoute = async ({
-    body, loggedInUser
-  }) => {
-    try {
-      let data = body.data;
-      data.map((item) => { 
-        item.addedBy = loggedInUser.id.toString(); 
-        return item; 
-      });
-      const projectRouteEntities = data.map((item)=>makeProjectRoute(item,'insertProjectRouteValidator'));
-      const results = await projectRouteService.bulkInsert(projectRouteEntities);
-      return message.successResponse({ data:results });
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const findAllProjectRoute = (findAllProjectRouteUsecase) => async (req,res) => {
+  try {
+    let query = { ...req.body.query || {} };
+    let options = { ...req.body.options || {} };
+    let result = await findAllProjectRouteUsecase({
+      query,
+      options,
+      isCountOnly:req.body.isCountOnly || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const findAllProjectRoute = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      let options = {};
-      let query = {};
-      let result;
-      if (data.query !== undefined) {
-        query = { ...data.query };
-      }
-      if (data.isCountOnly){
-        result = await projectRouteService.countDocument(query);
-        if (result) {
-          result = { totalRecords: result };  
-          return message.successResponse(result);
-        } else {
-          return message.recordNotFound();
-        }
-      } else { 
-        if (data.options !== undefined) {
-          options = { ...data.options };
-        }
-        result = await projectRouteService.getAllDocuments(query,options);
-      }
-      if (result.data){
-        return message.successResponse({ data: result });
-      } else {
-        return message.recordNotFound();
-      }
-            
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const getProjectRouteCount = (getProjectRouteCountUsecase) => async (req,res) => {
+  try {
+    let where = { ...req.body.where || {} };
+    let result = await getProjectRouteCountUsecase({ where },req,res);  
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getProjectRouteById = async (query, body = {}) =>{
-    try {
-      if (query){
-        let options = {};
-        if (body && body.populate && body.populate.length) options.populate = body.populate;
-        if (body && body.select && body.select.length) options.select = body.select;
-        let result = await projectRouteService.getSingleDocument(query, options);
-        if (result){
-          return message.successResponse({ data: result });
-        }
-        return message.recordNotFound();
-                 
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const bulkUpdateProjectRoute = (bulkUpdateProjectRouteUsecase) => async (req,res) => {
+  try {
+    let dataToUpdate = { ...req.body.data || {} };
+    let query = { ...req.body.filter || {} };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await bulkUpdateProjectRouteUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const partialUpdateProjectRoute = async (data,id, loggedInUser) => {
-    try {
-      if (id && data){
-        delete data['addedBy'];
-        delete data['updatedBy'];
-        projectRoute.updatedBy = loggedInUser.id;
-        const projectRoute = makeProjectRoute(data,'updateProjectRouteValidator');            
-        const filterData = removeEmpty(projectRoute);
-        const query = { _id:id };
-        let updatedProjectRoute = await projectRouteService.findOneAndUpdateDocument(query,filterData,{ new:true });
-        if (updatedProjectRoute){
-          return message.successResponse({ data : updatedProjectRoute });
-        }
-        else {
-          return message.badRequest();
-        }
-      }
-      else {
-        return message.badRequest();
-      }
+const softDeleteManyProjectRoute = (softDeleteManyProjectRouteUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteManyProjectRouteUsecase({
+      query,
+      dataToUpdate,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteProjectRoute = async (id,loggedInUser) => {
-    try {
-      const deleteDependentService = require('../../../utils/deleteDependent');
-      const query = { _id:id };
-      let result = await deleteDependentService.softDeleteProjectRoute(query, loggedInUser);
-      return message.successResponse({ data:result });
-            
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message: error.message });
-      }
-      return message.failureResponse();
+const deleteManyProjectRoute = (deleteManyProjectRouteUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    let result = await deleteManyProjectRouteUsecase({
+      query,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const updateProjectRoute = async (data,id, loggedInUser) =>{
-    try {
-      delete data['addedBy'];
-      delete data['updatedBy'];
-      data.updatedBy = loggedInUser.id;
-      if (id && data){
-        const projectRoute = makeProjectRoute(data,'updateProjectRouteValidator');
-        const filterData = removeEmpty(projectRoute);
-        let query = { _id:id };
-        let updatedProjectRoute = await projectRouteService.findOneAndUpdateDocument(query,filterData,{ new:true });
-        if (updatedProjectRoute){
-          return message.successResponse({ data : updatedProjectRoute });
-        }
-      }
-      return message.badRequest();
+const softDeleteProjectRoute = (softDeleteProjectRouteUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+    let query = { _id: req.params.id };
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteProjectRouteUsecase({
+      query,
+      dataToUpdate,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+const partialUpdateProjectRoute = (partialUpdateProjectRouteUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { _id: req.params.id };
+    let dataToUpdate = req.body;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await partialUpdateProjectRouteUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getProjectRouteByAggregate = async ({ data }) =>{
-    try {
-      if (data){
-        let result = await projectRouteService.getDocumentByAggregation(data);
-        if (result && result.length){
-          return message.successResponse({ data: result });
-        }
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse(); 
+const updateProjectRoute = (updateProjectRouteUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let dataToUpdate = { ...req.body || {} };
+    let query = { _id: req.params.id };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await updateProjectRouteUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getProjectRouteCount = async (data) => {
-    try {
-      let where = {};
-      if (data && data.where){
-        where = data.where;
-      }
-      let result = await projectRouteService.countDocument(where);
-      if (result){
-        result = { totalRecords:result };
-        return message.successResponse({ data: result });
-                
-      }
-      else {
-        return message.recordNotFound();
-      }
-      return message.badRequest();
+const getProjectRoute = (getProjectRouteUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
+    let query = { _id: req.params.id };
+    let options = {};
+    let result = await getProjectRouteUsecase({
+      query,
+      options
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+const deleteProjectRoute = (deleteProjectRouteUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let ids = req.body.ids;
+    let query = { _id: req.params.id };
+    let result = await deleteProjectRouteUsecase({
+      query,
+      isWarning:req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const upsertProjectRoute = async (data, loggedInUser)=>{
-    try {
-      if (data){
-        let result;
-        if (data && data.id) {
-          let where = data.id; 
-          delete data['addedBy'];
-          delete data['updatedBy'];
-          data.updatedBy = loggedInUser.id;
-          const projectRoute = makeProjectRoute(data,'updateProjectRouteValidator');
-          const filterData = removeEmpty(projectRoute);
-          result = await projectRouteService.updateDocument(where,filterData);
-        }
-        else {
-          delete data['addedBy'];
-          delete data['updatedBy'];
-          data.addedBy = loggedInUser.id;
-          const projectRoute = makeProjectRoute(data,'insertProjectRouteValidator');
-
-          result = await projectRouteService.createDocument(projectRoute); 
-        }
-        return message.successResponse({ data:result });
-                
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
-
-  const bulkUpdateProjectRoute = async (data, loggedInUser) => {
-    try {
-      if (data.filter && data.data){
-        delete data.data['addedBy'];
-        delete data.data['updatedBy'];
-        data.data.updatedBy = loggedInUser.id;
-        const projectRoute = makeProjectRoute(data.data,'updateProjectRouteValidator');
-        const filterData = removeEmpty(projectRoute);
-        let query = data.filter;
-        const updatedProjectRoutes = await projectRouteService.bulkUpdate(query,filterData);
-        return message.successResponse({ data:updatedProjectRoutes });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
-
-  const removeEmpty = (obj) => {
-    Object.entries(obj).forEach(([key,value])=>{
-      if (value === undefined){
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
-
-  return Object.freeze({
-    addProjectRoute,
-    bulkInsertProjectRoute,
-    findAllProjectRoute,
-    getProjectRouteById,
-    partialUpdateProjectRoute,
-    softDeleteProjectRoute,
-    updateProjectRoute,
-    getProjectRouteByAggregate,
-    getProjectRouteCount,
-    upsertProjectRoute,
-    bulkUpdateProjectRoute,
-    removeEmpty,
-  });
-}
-
-module.exports = makeProjectRouteController;
+module.exports = {
+  addProjectRoute,
+  bulkInsertProjectRoute,
+  findAllProjectRoute,
+  getProjectRouteCount,
+  bulkUpdateProjectRoute,
+  softDeleteManyProjectRoute,
+  deleteManyProjectRoute,
+  softDeleteProjectRoute,
+  partialUpdateProjectRoute,
+  updateProjectRoute,
+  getProjectRoute,
+  deleteProjectRoute
+};

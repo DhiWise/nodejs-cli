@@ -11,6 +11,7 @@ async function main() {
         let destinationPath = program.args.shift() || '.'
         // App name
         let projectPath = path.resolve(destinationPath);
+        projectPath = "/home/shubhamjasani/Documents/dhiwise-git/github-node-cli/dhiwise-node-generator/project_mvc_mon";
         let projectType = await prompts(constant.SELECT_PROJECT_TYPE);
         let ormType = await prompts(constant.SELECT_ORM_TYPE);
         const codeGen = new codeGenerator({ projectType: projectType.value, ormType: ormType.value });

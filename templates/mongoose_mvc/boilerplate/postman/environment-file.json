@@ -1,6 +1,6 @@
 {
-  "id": "f70c94bc-bdf5-4ea1-8ed6-f2225a83d9d6",
-  "name": "Mongoose_MVC_environment",
+  "id": "234a1c97-5ad7-45c0-8342-6823de5e265e",
+  "name": "mongo-mvc-boilerplate_environment",
   "values": [
     {
       "key": "token",
@@ -14,6 +14,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2021-11-10T12:01:05.635Z",
+  "_postman_exported_at": "2022-03-31T11:46:45.062Z",
   "_postman_exported_using": "Postman"
 }

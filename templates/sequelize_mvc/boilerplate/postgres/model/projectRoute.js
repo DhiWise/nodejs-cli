@@ -1,4 +1,11 @@
-const { DataTypes } = require('sequelize');
+/**
+ * projectRoute.js
+ * @description :: sequelize model of database table projectRoute
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
@@ -16,13 +23,17 @@ let ProjectRoute = sequelize.define('projectRoute',{
     type:DataTypes.STRING,
     allowNull:false
   },
-  isActive:{ type:DataTypes.BOOLEAN },
-  isDeleted:{ type:DataTypes.BOOLEAN },
   id:{
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true
-  }
+  },
+  isActive:{ type:DataTypes.BOOLEAN },
+  createdAt:{ type:DataTypes.DATE },
+  updatedAt:{ type:DataTypes.DATE },
+  addedBy:{ type:DataTypes.INTEGER },
+  updatedBy:{ type:DataTypes.INTEGER },
+  isDeleted:{ type:DataTypes.BOOLEAN }
 }
 ,{
   hooks:{
@@ -30,15 +41,18 @@ let ProjectRoute = sequelize.define('projectRoute',{
       async function (projectRoute,options){
         projectRoute.isActive = true;
         projectRoute.isDeleted = false;
+
       },
     ],
     beforeBulkCreate: [
       async function (projectRoute,options){
         if (projectRoute !== undefined && projectRoute.length) { 
           for (let index = 0; index < projectRoute.length; index++) { 
+        
             const element = projectRoute[index]; 
             element.isActive = true; 
             element.isDeleted = false; 
+  
           } 
         }
       },
@@ -47,7 +61,7 @@ let ProjectRoute = sequelize.define('projectRoute',{
 }
 );
 ProjectRoute.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
   return values;
 };
 sequelizeTransforms(ProjectRoute);

@@ -1,31 +1,35 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);
     FUNCTION_NAME = [];
+    let MODEL_PATH = `../../model/${MODEL}`;
+    let UTILS_PATH = `../../utils`;
+    if(PLATFORM !== "admin"){
+      MODEL_PATH = `../../../model/${MODEL}`;
+      UTILS_PATH = `../../../utils`;
+    }
 %>
-const <%- MODEL_NAME %> = require("../../model/<%-MODEL%>")
-const <%-MODEL %>SchemaKey = require("../../utils/validation/<%-MODEL%>Validation");
-const validation = require("../../utils/validateRequest");
-const dbService = require("../../utils/dbService");
+const <%- MODEL_NAME %> = require(<%=MODEL_PATH%>)
+const <%-MODEL %>SchemaKey = require("<%-UTILS_PATH%>/validation/<%-MODEL%>Validation");
+const validation = require("<%-UTILS_PATH%>/validateRequest");
+const dbService = require("<%-UTILS_PATH%>/dbService");
 const { Op } = require('sequelize');
 
 
 <%_ if(METHODS.includes("C")){ FUNCTION_NAME.push(`add${MODEL_NAME}`); _%>
 const add<%-MODEL_NAME%> = async (req, res) => {
     try {
-        let isValid = validation.validateParamsWithJoi(
-        req.body,
+        let dataToCreate = { ...req.body || {} };
+        let validateRequest = validation.validateParamsWithJoi(
+        dataToCreate,
         <%-MODEL%>SchemaKey.schemaKeys);
-        if (isValid.error) {
-            return res.inValidParam(isValid.error);
+        if (!validateRequest.isValid) {
+          return res.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
         } 
-        delete req.body['addedBy'];
-        delete req.body['updatedBy'];
-        let data =  {
-            ...req.body
-        };
-        let result = await dbService.createOne(<%-MODEL_NAME%>,data);
-        return res.ok(result);
+        delete dataToCreate['addedBy'];
+        delete dataToCreate['updatedBy'];
+        let created<%-MODEL_NAME%> = await dbService.createOne(<%-MODEL_NAME%>,dataToCreate);
+        return res.success({ data : created<%-MODEL_NAME%> });
     } catch (error) {
-        return res.failureResponse(error.message); 
+        return res.internalServerError( { message : error.message  } );  
     }
 };
 
@@ -33,96 +37,83 @@ const add<%-MODEL_NAME%> = async (req, res) => {
 <%_ if(METHODS.includes("BC")){ FUNCTION_NAME.push(`bulkInsert${MODEL_NAME}`); _%>
 const bulkInsert<%-MODEL_NAME%> = async (req,res)=>{
     try {
-        let data;   
-        if (req.body.data !== undefined && req.body.data.length){
-            data = req.body.data;
-            data = data.map(item=>{
+        let dataToCreate = req.body.data; 
+        if (dataToCreate !== undefined && dataToCreate.length){
+            dataToCreate = dataToCreate.map(item=>{
                 delete item.addedBy;
                 delete item.updatedBy;
                 return item;
             });        
-            let result = await dbService.createMany(<%-MODEL_NAME%>,data);
-            return  res.ok({ data : result });
+            let created<%-MODEL_NAME%> = await dbService.createMany(<%-MODEL_NAME%>,dataToCreate);
+            return res.success({ data : created<%-MODEL_NAME%> });
         } else {
             return res.badRequest();
         }  
     } catch (error){
-        return res.failureResponse();
+        return res.internalServerError( { message : error.message  } ); 
     }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("FALL")){ FUNCTION_NAME.push(`findAll${MODEL_NAME}`); _%>
 const findAll<%-MODEL_NAME%> = async (req,res) => {
     try {
+        let dataToFind = req.body;
         let options = {};
         let query = {};
-        let result;
+        if (dataToFind && dataToFind.query !== undefined) {
+          query = dataToFind.query;
+        }
+        query = dbService.queryBuilderParser(query);
         if (req.body && req.body.isCountOnly){
-            if (req.body.query !== undefined) {
-                query = { ...req.body.query };
-            }
-            query = dbService.queryBuilderParser(query);
-            result = await dbService.count(<%-MODEL_NAME%>, query);
-            if (result) {
-                result = { totalRecords: result };
-                return res.ok(result);
-            } 
-            return res.recordNotFound({});
+            let totalRecords = await dbService.count(<%-MODEL_NAME%>, query);
+            return res.success({ data : { totalRecords } });
         }
-        else {
-            if (req.body && req.body.options !== undefined) {
-                options = { ...req.body.options };
-            }
-            if (options && options.select && options.select.length){
-                options.attributes = options.select;
-            }
-                
-            if (req.body.query !== undefined){
-                query = { ...req.body.query };
-            }
-            query = dbService.queryBuilderParser(query);
-            if (options && options.include && options.include.length){
-            let include = [];
-            options.include.forEach(i => {
-                i.model = models[i.model];
-                if (i.query) {
-                    i.where = dbService.queryBuilderParser(i.query);
-                }
-                include.push(i);
-            });
-            options.include = include;
-            }
-            if (options && options.sort){
-                options.order = dbService.sortParser(options.sort);
-                delete options.sort;
-            }
-            result = await dbService.findMany(<%-MODEL_NAME%>,query,options);
-                
-            if (!result){
-                return res.recordNotFound({});
-            }
-            return res.ok(result);   
+        if (dataToFind && dataToFind.options !== undefined) {
+          options = dataToFind.options;
         }
-    }
-    catch (error){
-        return res.failureResponse(error.message);
+        if (options && options.select && options.select.length){
+            options.attributes = options.select;
+        }
+        if (options && options.include && options.include.length){
+          let include = [];
+          options.include.forEach(i => {
+            i.model = models[i.model];
+            if (i.query) {
+              i.where = dbService.queryBuilderParser(i.query);
+            }
+            include.push(i);
+          });
+          options.include = include;
+        }
+        if (options && options.sort){
+            options.order = dbService.sortParser(options.sort);
+            delete options.sort;
+        }
+        let result = await dbService.findMany(<%-MODEL_NAME%>,query,options);
+        if (!result){
+            return res.recordNotFound();
+        }
+        return res.success({ data : result });   
+    } catch (error){
+      return res.internalServerError( { message : error.message  } ); 
     }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("FBYID")){ FUNCTION_NAME.push(`get${MODEL_NAME}`); _%>
 const get<%-MODEL_NAME%> = async (req,res) => {
     try {
-        let query = {};
-        let id = req.params.id;
-        let result = await dbService.findByPk(<%-MODEL_NAME %>,id,query);
-        if (result){
-          return  res.ok(result);
+        if(!req.params.id){
+          return res.badRequest();
         }
-        return res.recordNotFound({});
-    }
-      catch (error){
-        return res.failureResponse(error.message);
-    }
+        let id = req.params.id;
+        let result = await dbService.findByPk(<%-MODEL_NAME %>,id,{});
+        if (!result){
+          return res.recordNotFound();
+        }
+        return res.success({ data : result });
+      } catch (error){
+        return res.internalServerError( { message : error.message  } ); 
+      }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("COUNT")){ FUNCTION_NAME.push(`get${MODEL_NAME}Count`); _%>
@@ -132,96 +123,79 @@ const get<%-MODEL_NAME%>Count = async (req,res) => {
         if (req.body.where){
           where = req.body.where;
         }
-        let result = await dbService.count(<%-MODEL_NAME%>,where);
-        if (result){
-          result = { totalRecords:result };
-          return res.ok(result);
-        }
-        return res.recordNotFound({});
-    }
-      catch (error){
-        return res.failureResponse(error.message);
+        let totalRecords = await dbService.count(<%-MODEL_NAME%>,where);
+        return res.success({ data : { totalRecords } });
+    } catch (error){
+        return res.internalServerError( { message : error.message  } ); 
     }
 };      
 <%_ } _%>
-<%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
+<%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); _%>
 const update<%-MODEL_NAME%> = async (req,res) => {
     try {
-        const data = { ...req.body };
+        const dataToUpdate = { ...req.body };
         delete data.addedBy;
         delete data.updatedBy;
-        let isValid = validation.validateParamsWithJoi(
-          data,
+        let validateRequest = validation.validateParamsWithJoi(
+          dataToUpdate,
           <%-MODEL%>SchemaKey.schemaKeys
         );
-        if (isValid.error) {
-          return  res.inValidParam(isValid.error);
+        if (validateRequest.isValid) {
+          return res.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
         }
-    
         let query = { id:req.params.id };
-        let result = await dbService.updateMany(<%-MODEL_NAME%>,query,data);
-        if (!result){
-          return res.failureResponse('something is wrong');
-        }
-        return  res.ok(result);
-    }
-      catch (error){
-        return res.failureResponse(error.message);
+        let updated<%-MODEL_NAME%> = await dbService.updateMany(<%-MODEL_NAME%>,query,dataToUpdate);
+        return res.success({ data : updated<%-MODEL_NAME%> });
+    } catch (error) {
+        return res.internalServerError( { message : error.message  } ); 
     }
 };
-
+<%_ } _%>
+<%_ if(METHODS.includes("PU")){ FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
 const partialUpdate<%-MODEL_NAME%> = async (req,res) => {
     try {
-        const data = {
+        const dataToUpdate = {
           ...req.body,
-          id: req.params.id
         };
         delete data.addedBy;
         delete data.updatedBy;
         
-        let isValid = validation.validateParamsWithJoi(
-          data,
+        let validateRequest = validation.validateParamsWithJoi(
+          dataToUpdate,
           <%-MODEL%>SchemaKey.updateSchemaKeys
         );
-        if (isValid.error) {
-          return res.inValidParam(isValid.error);
+        if (validateRequest.isValid) {
+          return res.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
         }
     
-        const query = { id:req.params.id };
-        let result = await dbService.updateMany(<%-MODEL_NAME%>, query, data);
-        if (!result) {
-          return res.failureResponse('something is wrong');
+        const query = { id : req.params.id };
+        let updated<%-MODEL_NAME%> = await dbService.updateMany(<%-MODEL_NAME%>, query, dataToUpdate);
+        if (!updated<%-MODEL_NAME%>) {
+          return res.recordNotFound();
         }
-        return res.ok(result);    
+        return res.success({ data : updated<%-MODEL_NAME%> });    
     }
     catch (error){
-        return res.failureResponse(error.message);
+        return res.internalServerError( { message : error.message  } ); 
     }
 }
 <%_ } _%>
 <%_ if(METHODS.includes("BU")){ FUNCTION_NAME.push(`bulkUpdate${MODEL_NAME}`); _%>
 const bulkUpdate<%-MODEL_NAME%> = async (req,res)=>{
     try {
+        let dataToUpdate = req.body;
         let filter = {};
-        let data;
-        if (req.body.filter !== undefined){
-          filter = req.body.filter;
+        if (dataToUpdate && dataToUpdate.filter !== undefined) {
+          filter = dataToUpdate.filter;
         }
-        if (req.body.data !== undefined){
-          data = req.body.data;
-          let result = await dbService.updateMany(<%-MODEL_NAME%>,filter,data);
-          if (!result){
-            return res.failureResponse('something is wrong.');
-          }
-          return  res.ok(result);
+        if (dataToUpdate && dataToUpdate.data !== undefined) {
+          let updated<%-MODEL_NAME%> = await dbService.updateMany(<%-MODEL_NAME%>,filter,dataToUpdate);
+          return  res.success({ data : updated<%-MODEL_NAME%> });
         }
-        else {
-          return res.failureResponse('Invalid Data');
-        }
+        return res.badRequest();
+      } catch (error){
+        return res.internalServerError( { message : error.message  } );  
       }
-      catch (error){
-        return res.failureResponse(error.message); 
-    }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("UP")){ FUNCTION_NAME.push("upsert"); _%>
@@ -238,54 +212,56 @@ const upsert = async (req,res) => {
     
         let result = await dbService.upsert(<%-MODEL_NAME%>,req.body);
     
-        return  res.ok(result);    
+        return  res.success(result);    
       }
     catch (error){
-        return res.failureResponse(error.message); 
+        return res.internalServerError( { message : error.message  } );  
     }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("DMANY")){ FUNCTION_NAME.push(`deleteMany${MODEL_NAME}`); _%>
 const deleteMany<%-MODEL_NAME%> = async (req, res) => {
-    try {
-        let ids = req.body.ids; 
-        if (ids){
-          const query = { id:{ [Op.in]:ids } };
-          let result = await dbService.deleteMany(<%-MODEL_NAME%>,query);
-          return res.ok({ data : result });
-        }
-        return res.badRequest({}); 
+  try {
+      let ids = req.body.ids; 
+      if (!ids || !Array.isArray(ids) || !ids.length ) {
+        return res.badRequest(); 
       }
-    catch (error){
-        return res.failureResponse(error.message); 
+      const query = { id:{ [Op.in]:ids } };
+      let result = await dbService.deleteMany(<%-MODEL_NAME%>,query);
+      return res.success({ data : result });
+    } catch (error){
+      return res.internalServerError( { message : error.message  } );  
     }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("D")){ FUNCTION_NAME.push(`delete${MODEL_NAME}`); _%>
 const delete<%-MODEL_NAME%> = async (req,res) => {
   try {
-    const result = await dbService.deleteByPk(<%-MODEL_NAME%>, req.params.id);
-    if (result){
-      return  res.ok({ data : result });
+    if(!req.params.id){
+      return res.badRequest();
     }
-    return res.recordNotFound({});
+    const result = await dbService.deleteByPk(<%-MODEL_NAME%>, req.params.id);
+    if (!result){
+      return res.recordNotFound();
+    }
+    return  res.success({ data : result });
   }
   catch (error){
-    return res.failureResponse(error.message);
+    return res.internalServerError( { message : error.message  } ); 
   }
 };
 <%_ } _%>
 <%_ if(METHODS.includes("SD")){ FUNCTION_NAME.push(`softDelete${MODEL_NAME}`); _%>
 const softDelete<%-MODEL_NAME%> = async (req,res) => {
   try {
+    if(!req.params.id){
+      return res.badRequest();
+    }
     let id = req.params.id;
     let result = await dbService.softDeleteByPk(<%-MODEL_NAME%>,id);
-    if (!result){
-      return res.failureResponse('something went wrong');
-    }
-    return  res.ok(result);
+    return  res.success({ data : result });
   } catch (error){
-    return res.failureResponse(error.message); 
+    return res.internalServerError( { message : error.message  } );  
   }
 };
 <%_ } _%>
@@ -293,16 +269,13 @@ const softDelete<%-MODEL_NAME%> = async (req,res) => {
 const softDeleteMany<%-MODEL_NAME%> = async (req,res) => {
   try {
     let ids = req.body.ids;
-    if (ids){
-      let result = await dbService.softDeleteMany(<%-MODEL_NAME%>,{ id:{ [Op.in]:ids } });
-      if (!result) {
-        return res.recordNotFound({});
-      }
-      return  res.ok(result);
+    if (!ids || !Array.isArray(ids) || !ids.length ) {
+      return res.badRequest();
     }
-    return res.badRequest({});
+    let result = await dbService.softDeleteMany(<%-MODEL_NAME%>,{ id:{ [Op.in]:ids } }, { isDeleted : true });
+    return res.success({ data : result });
   } catch (error){
-    return res.failureResponse(error.message); 
+    return res.internalServerError( { message : error.message  } );  
   }    
 };
 <%_ } _%>

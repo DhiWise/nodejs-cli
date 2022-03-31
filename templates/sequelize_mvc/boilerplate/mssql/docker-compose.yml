@@ -1,0 +1,32 @@
+version: '3'
+services:
+  node-app:
+    container_name: node-app
+    image: node
+    user: root
+    command: ["/bin/bash","-lc","npm install -g mssql tedious && npm i && npm start"]
+    ports:
+      - '5000:5000'
+    depends_on:
+      - sqlserver
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+      - ./.env.docker:/home/node/app/.env
+    networks:
+      - node-network
+  sqlserver:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID : Developer
+      SA_PASSWORD: SqlServer@123
+      SA_USER: sqlserver
+    networks:
+      - node-network
+volumes:
+  dbdata:
+networks:
+  node-network:
+    driver: bridge

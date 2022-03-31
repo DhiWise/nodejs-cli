@@ -4,18 +4,15 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 global.__basedir = __dirname;
-const ejs = require('ejs');
 const postmanToOpenApi = require('postman-to-openapi');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-require('./config/db');
 const listEndpoints = require('express-list-endpoints');
-let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 const passport = require('passport');
 
-const { devicePassportStrategy } = require('./config/devicePassportStrategy');
-const { adminPassportStrategy } = require('./config/adminPassportStrategy');
+const { devicePassportStrategy } = require('./middleware');
+const { adminPassportStrategy } = require('./middleware');
 
 const app = express();
 const corsOptions = { origin: process.env.ALLOW_ORIGIN, };
@@ -31,7 +28,6 @@ const routes =  require('./routes/index');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
 

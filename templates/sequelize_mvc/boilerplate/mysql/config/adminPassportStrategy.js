@@ -1,5 +1,7 @@
-/*
- * admin authentication - with passport
+/**
+ * @description : exports authentication strategy for admin using passport.js
+ * @params {obj} passport : passport object for authentication
+ * @return {callback} : returns callback to be used in middleware
  */
 
 const {
@@ -9,20 +11,22 @@ const { JWT } = require('../constants/authConstant');
 const model = require('../model/index');
 const dbService = require('../utils/dbService');
 
-module.exports = {
-  adminPassportStrategy: passport => {
-    const options = {};
-    options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-    options.secretOrKey = JWT.ADMIN_SECRET;
-    passport.use('admin-rule',
-      new Strategy(options, (payload, done) => {
-        dbService.findOne(model.user,{ id: payload.id }).then((user)=>{
-          if (user) {
-            return done(null, { ...user.toJSON() });
-          }
-          return done('No User Found', {});
-        }).catch(err => done(err, false));
-      })
-    );
-  }
+const adminPassportStrategy = async (passport) => {
+  const options = {};
+  options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+  options.secretOrKey = JWT.ADMIN_SECRET;
+  passport.use('admin-rule',
+    new Strategy(options, async (payload, done) => {
+      try {
+        const user = await dbService.findOne(model.user,{ id: payload.id });
+        if (user) {
+          return done(null, { ...user.toJSON() });
+        }
+        return done('No User Found', {});
+      } catch (error) {
+        return done(error,{});
+      }            
+    }) 
+  );        
 };
+module.exports = { adminPassportStrategy };

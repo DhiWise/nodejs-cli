@@ -1,419 +1,275 @@
+const response = require('../../../utils/response'); 
+const responseHandler = require('../../../utils/response/responseHandler'); 
+const getSelectObject = require('../../../utils/getSelectObject'); 
 
-const { Op } = require('sequelize');
-const deleteDependentService = require('../../../utils/deleteDependent');
-const message = require('../../../utils/messages');
-const models = require('../../../model');
-function makeUserController ({
-  userService,makeUser,authService
-})
-{
-  const addUser = async ({
-    data,loggedInUser
-  }) => {
-    try {
-      const originalData = data;
-      delete originalData.addedBy;
-      delete originalData.updatedBy;
-      originalData.addedBy = loggedInUser.id;
-      const user = makeUser(originalData, 'insertUserValidator');
-      let createdUser = await userService.createOne(user);
-      return message.successResponse({ data:createdUser });
-    } catch (error) {
-      if (error.name === 'ValidationError') {
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const addUser = (addUserUsecase) => async (req,res) => {
+  try {
+    let dataToCreate = { ...req.body || {} };
+    dataToCreate.addedBy = req.user.id;
+    let result = await addUserUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const findAllUser = async ({
-    data,loggedInUser
-  }) => {
-    try {
-      let query = {};
-      let options = {};
-      if (data.query !== undefined){
-        query = { ...data.query };
-      }
-      if (data.options !== undefined){
-        options = { ...data.options };
-      }
-      query = userService.queryBuilderParser(query);
-      if (loggedInUser){
-        query = {
-          ...query,
-          id: { [Op.ne]: loggedInUser.id }
-        };
-        if (data.query && data.query.id) {
-          Object.assign(query.id, { [Op.in]: [data.query.id] });
-        }
-      } else {
-        return message.badRequest();
-      }
-      if (options && options.select && options.select.length){
-        options.attributes = options.select;
-      }
-      if (options && options.sort){
-        options.order = userService.sortParser(options.sort);
-        delete options.sort;
-      }
-      let result;
-      if (options && options.include && options.include.length){
-        let include = [];
-        options.include.forEach(i => {
-          i.model = models[i.model];
-          if (i.query) {
-            i.where = userService.queryBuilderParser(i.query);
-          }
-          include.push(i);
-        });
-        options.include = include;
-      }  
-      if (data.isCountOnly){
-        result = await userService.count(query, options);
-        if (result) {
-          result = { totalRecords: result };  
-          return message.successResponse(result);
-        } else {
-          return message.recordNotFound();
-        }
-      } else {
-        result = await userService.findMany(query, options);
-      }
-      if (result){
-        return message.successResponse({ data:result });
-      } else {
-        return message.badRequest();
-      }
-              
+const findAllUser = (findAllUserUsecase) => async (req,res) => {
+  try {
+    let query = { ...req.body.query || {} };
+    let options = { ...req.body.options || {} };
+    query.id = { $ne: req.user.id };
+    if (req.body && req.body.query && req.body.query.id) {
+      query.id.$in = [req.body.query.id];
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let result = await findAllUserUsecase({
+      query,
+      options,
+      isCountOnly:req.body.isCountOnly || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteManyUser = async (ids,loggedInUser) => {
-    try {
-      if (ids){
-        let query = {};
-        if (loggedInUser){
-          query = {
-            id: {
-              [Op.in]: ids,
-              [Op.ne]: loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        let data = await deleteDependentService.softDeleteUser(query,loggedInUser.id);
-        return message.successResponse({ data:data });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const getUserCount = (getUserCountUsecase) => async (req,res) => {
+  try {
+    let where = { ...req.body.where || {} };
+    let result = await getUserCountUsecase({ where },req,res);  
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkInsertUser = async ({
-    body,loggedInUser
-  })=>{
-    try {
-      let data = body.data;
-      const userEntities = data.map((item)=>{
-        delete item.addedBy;
-        delete item.updatedBy;
-        item.addedBy = loggedInUser.id;
-        return makeUser(item,'insertUserValidator');
-      });
-      const results = await userService.createMany(userEntities);
-      return message.successResponse({ data:results });
-    } catch (error){
-      if (error.name === 'ValidationError') {
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const softDeleteManyUser = (softDeleteManyUserUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let ids = req.body.ids;
+    let query = { id : { $in:ids } };
+    query.id.$ne = req.user.id;
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteManyUserUsecase({
+      data:req.body,
+      query,
+      dataToUpdate
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkUpdateUser = async (data,loggedInUser) =>{
-    try {
-      if (data.filter && data.data){
-        delete data.data.addedBy;
-        delete data.data.updatedBy;
-        data.data.updatedBy = loggedInUser.id;
-        const user = makeUser(data.data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        const updatedUsers = await userService.updateMany(data.filter,filterData);
-        return message.successResponse({ data:updatedUsers });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message: error.message });
-      }
-      return message.failureResponse();
+const bulkInsertUser = (bulkInsertUserUsecase)=> async (req,res) => {
+  try {
+    let dataToCreate = req.body.data;
+    for (let i = 0;i < dataToCreate.length;i++){
+      dataToCreate[i] = {
+        ...dataToCreate[i],
+        addedBy:req.user.id,
+      };
     }
-  };
+    let result = await bulkInsertUserUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const deleteManyUser = async (data, loggedInUser) => {
-    try {
-      if (data && data.ids){
-        let ids = data.ids;
-        let query = {};
-        if (loggedInUser){
-          query = {
-            id: {
-              [Op.in]: ids,
-              [Op.ne]: loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        let result;
-        if (data.isWarning){
-          result = await deleteDependentService.countUser(query);
-        }
-        else {
-          result = await deleteDependentService.deleteUser(query);
-        }
-        return message.successResponse({ data:result });
-      }
-      return message.badRequest();
+const bulkUpdateUser = (bulkUpdateUserUsecase) => async (req,res) => {
+  try {
+    let dataToUpdate = { ...req.body.data || {} };
+    let query = { ...req.body.filter || {} };
+    delete dataToUpdate.addedBy;
+    delete dataToUpdate.updatedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    query.id = { $ne: req.user.id };
+    if (req.body.filter && req.body.filter.id){
+      query.id.$in = [req.body.filter.id];
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let result = await bulkUpdateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteUser = async ({
-    pk,loggedInUser
-  },options = {})=>{
-    try {
-      if (pk){
-        let updatedUser;
-        let query = {};
-        if (loggedInUser){
-          query = {
-            id: {
-              [Op.eq]: pk,
-              [Op.ne]: loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        updatedUser = await deleteDependentService.softDeleteUser(query,loggedInUser.id);            
-        return message.successResponse({ data:updatedUser });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const deleteManyUser = (deleteManyUserUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let ids = req.body.ids;
+    let query = { id : { $in:ids } };
+    query.id.$ne = req.user.id;
+    let result = await deleteManyUserUsecase({
+      data:req.body,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const partialUpdateUser = async (id,data,loggedInUser) =>{
-    try {
-      if (data && id){          
-        const user = makeUser(data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let query = {};
-        if (loggedInUser){
-          query = {
-            'id': {
-              [Op.eq]: id,
-              [Op.ne]: loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        let updatedUser = await userService.updateMany(query,filterData);
-        return message.successResponse({ data:updatedUser });
-      }
-      return message.badRequest();
+const softDeleteUser = (softDeleteUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message: error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let query = { id: req.params.id };
+    query.id.$ne = req.user.id;
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteUserUsecase({
+      data:req.body,
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const updateUser = async (pk, data,loggedInUser) =>{
-    try {
-      if (pk){          
-        delete data.addedBy;
-        delete data.updatedBy;
-        data.updatedBy = loggedInUser.id;
-        const user = makeUser(data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let query = {};
-        if (loggedInUser){
-          query = {
-            'id': {
-              [Op.eq]: pk,
-              [Op.ne]: loggedInUser.id
-            }
-          };
-        } else {
-          return message.badRequest();
-        }
-        let updatedUser = await userService.updateMany(query,filterData);
-        return message.successResponse({ data:updatedUser });
-      }
-      return message.badRequest();
+const partialUpdateUser = (partialUpdateUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let query = { id: req.params.id };
+    let dataToUpdate = req.body;
+    delete dataToUpdate.updatedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    query.id.$ne = req.user.id;
+    let result = await partialUpdateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const findUserByPk = async (pk,body = {}) => {
-    try {
-      let options = {};
-      if (body && body.select && body.select.length) {
-        options.attributes = body.select;
-      }
-      if (body && body.include && body.include.length) {
-        let include = [];
-        body.include.forEach(i => {
-          i.model = models[i.model];
-          if (i.query) {
-            i.where = dbService.queryBuilderParser(i.query);
-          }
-          include.push(i);
-        });
-        options.include = include;
-      }
-      let result = await userService.findByPk(pk, options);
-      if (result){
-        return message.successResponse({ data:result });
-      } else {
-        return message.recordNotFound();
-      }
-            
+const updateUser = (updateUserUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+    let dataToUpdate = { ...req.body || {} };
+    let query = { id: req.params.id };
+    delete dataToUpdate.addedBy;
+    delete dataToUpdate.updatedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    query.id.$ne = req.user.id;
+    let result = await updateUserUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+const getUser = (getUserUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let options = {};
+    let query = { id: req.params.id };
+    let result = await getUserUsecase({
+      query,
+      options
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const deleteUser = async (pk, body,loggedInUser,options = {})=>{
-    try {
-      if (!pk){
-        return message.badRequest();
-      }
-      let query = {};
-      if (loggedInUser){
-        query = {
-          'id': {
-            [Op.eq]: pk,
-            [Op.ne]: loggedInUser.id
-          }
-        };
-      } else {
-        return message.badRequest();
-      }
-      let deletedUser = '';
-      if (isWarning){
-        deletedUser = await deleteDependentService.countUser(query);
-      } else {
-        deletedUser = await deleteDependentService.deleteUser(query);
-      }
-      return message.successResponse({ data: deletedUser });
-    } catch (error) {
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const deleteUser = (deleteUserUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { id: req.params.id };
+    query.id.$ne = req.user.id;
+    let result = await deleteUserUsecase({
+      query,
+      isWarning: req.body.isWarning || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const changePassword = async (params) => {
-    try {
-      if (!params.newPassword || !params.userId || !params.oldPassword) { 
-        return message.inValidParam({ message : 'Please Provide userId and Password' });
-      }
-      let result = await authService.changePassword(params);
-      if (result.flag) {
-        return message.invalidRequest({ message :result.data });
-      }
-      return message.requestValidated({ data :result.data });
-    } catch (error) {
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };     
+const changePassword = (changePasswordUsecase) => async (req,res) => {
+  try {
+    let result = await changePasswordUsecase(req.body,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};  
 
-  const updateProfile = async (data,id) =>{
-    try {
-      if (id && data){
-        if (data.password) delete data.password;
-        if (data.createdAt) delete data.createdAt;
-        if (data.updatedAt) delete data.updatedAt;
-        if (data.id) delete data.id;
-        const user = makeUser(data,'updateUserValidator');
-        const filterData = removeEmpty(user);
-        let updatedUser = await userService.updateByPk(id,filterData);
-        return message.successResponse({ data:updatedUser });
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };   
+const updateProfile = (updateProfileUsecase) => async (req,res) => {
+  try {
+    let result = await updateProfileUsecase({
+      data:req.body,
+      id:req.user.id
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const removeEmpty = (obj) => {
-    Object.entries(obj).forEach(([key,value])=>{
-      if (value === undefined){
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
+const getLoggedInUserInfo = (getUserUsecase) => async (req,res) =>{
+  try {
+    const options = {};
+    const query = {
+      id : req.user.id,
+      isDeleted: false,
+      isActive: true
+    };
+    let result = await getUserUsecase({
+      query,
+      options 
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  return Object.freeze({
-    addUser,
-    findAllUser,
-    softDeleteManyUser,
-    bulkInsertUser,
-    bulkUpdateUser,
-    deleteManyUser,
-    softDeleteUser,
-    partialUpdateUser,
-    updateUser,
-    findUserByPk,
-    deleteUser,
-    changePassword,
-    updateProfile
-  });
-}
-
-module.exports = makeUserController;
+module.exports = {
+  addUser,
+  findAllUser,
+  getUserCount,
+  softDeleteManyUser,
+  bulkInsertUser,
+  bulkUpdateUser,
+  deleteManyUser,
+  softDeleteUser,
+  partialUpdateUser,
+  updateUser,
+  getUser,
+  deleteUser,
+  changePassword,
+  updateProfile,
+  getLoggedInUserInfo
+};

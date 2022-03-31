@@ -1,0 +1,235 @@
+<%let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
+<%_ if(METHOD === 'C'){ _%>
+/**
+ *add<%-MODEL_NAME%>.js
+ */
+
+const  <%-MODEL%>Entity = require('../../entities/<%-MODEL%>');
+const response = require('../../utils/response');
+/**
+ *
+ * /**
+ * @description : create documents of document of <%-MODEL%> in mongodb collection
+ * @param {Object} <%-MODEL%>Db : db service instance
+ * @param {Object} params : {data: data to add}
+ * @return {Object} : response of create. {status, message, data}
+ */
+const add<%-MODEL_NAME%> = ({
+  <%-MODEL%>Db,createValidation 
+}) => async (dataToCreate,req,res) => {
+  const validateRequest = await createValidation(dataToCreate);
+  if (!validateRequest.isValid) {
+    return response.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
+  }
+  let <%-MODEL%> = <%-MODEL%>Entity(dataToCreate);
+  <%-MODEL%> = await <%-MODEL%>Db.create(<%-MODEL%>);
+  return response.success({ data: <%-MODEL%> });
+};
+module.exports = add<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'BC'){ _%>
+/**
+ *bulkUpdate<%-MODEL_NAME%>.js
+ */
+
+const response = require('../../utils/response');
+/**
+* @description : update multiple records of <%-MODEL%> with data by filter.
+* @param {Object} <%-MODEL%>Db : db service instance
+* @param {Object} params : {query: query to find data, data: data to update }
+* @return {Object} : response of bulkUpdate. {status, message, data}
+*/
+const bulkUpdate<%-MODEL_NAME%> = ({ <%-MODEL%>Db }) => async (params,req,res) => {
+    const updated<%-MODEL_NAME%> = await <%-MODEL%>Db.updateMany(params.query,params.dataToUpdate);
+    return response.success({ data:updated<%-MODEL_NAME%> });
+};
+module.exports = bulkUpdate<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'FALL'){ _%>
+/**
+*findAll<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+const findAll<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db 
+}) => async (params,req,res) => {
+    let {
+        query, options, isCountOnly 
+    } = params;
+    let found<%-MODEL_NAME%>;
+    if (isCountOnly){
+        found<%-MODEL_NAME%> = await <%-MODEL%>Db.count(query);
+        found<%-MODEL_NAME%> = { totalRecords: found<%-MODEL_NAME%> };
+    }
+    else {
+        found<%-MODEL_NAME%> = await <%-MODEL%>Db.paginate(query,options);
+        if (!found<%-MODEL_NAME%>){
+            return response.recordNotFound();
+        }
+    }
+    return response.success({ data:found<%-MODEL_NAME%> });  
+};
+module.exports = findAll<%-MODEL_NAME%>;
+<%_ } else if(METHOD === 'FBYID'){ _%>
+/**
+*get<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+
+const get<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db 
+}) => async (params,req,res) => {
+    let {
+        query, options  
+    } = params;
+    let found<%-MODEL_NAME%> = await <%-MODEL%>Db.findOne(query, options);
+    if (found<%-MODEL_NAME%>){
+        return response.success({ data:found<%-MODEL_NAME%> });
+    }
+    return response.recordNotFound();
+};
+module.exports = get<%-MODEL_NAME%>;
+<%_ } else if(METHOD === 'COUNT') { _%>
+/**
+*get<%-MODEL_NAME%>Count.js
+*/
+
+const response = require('../../utils/response');
+/**
+* /**
+* @description : returns total number of documents of <%-MODEL%>
+* @param {Object} <%-MODEL%>Db : db service instance
+* @param {Object} params : {where: query to find data}
+* @return {Object} : response of count. {status, message, data}
+*/
+const get<%-MODEL_NAME%>Count = ({
+    <%-MODEL%>Db 
+}) => async (params,req,res) => {
+    let { where } = params;
+    let result = await <%-MODEL%>Db.count(where);
+    result = { totalRecords:result };
+    return response.success({ data:result });
+};
+module.exports = get<%-MODEL_NAME%>Count;
+
+<%_ }else if(METHOD === 'U'){ _%>
+/**
+*update<%-MODEL_NAME%>.js
+*/
+
+const  <%-MODEL%>Entity = require('../../entities/<%-MODEL%>');
+const response = require('../../utils/response');
+const update<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db, updateValidation
+}) => async (params,req,res) => {
+    let {
+        dataToUpdate, query 
+    } = params;
+    const validateRequest = await updateValidation(dataToUpdate);
+    if (!validateRequest.isValid) {
+        return response.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
+    }
+    let <%-MODEL%> = <%-MODEL%>Entity(dataToUpdate);
+    <%-MODEL%> = await <%-MODEL%>Db.updateOne(query,<%-MODEL%>);
+    if (<%-MODEL%>){
+        return response.success({ data:<%-MODEL%> });
+    }
+    return response.recordNotFound();
+};
+module.exports = update<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'PU'){ _%>
+/**
+*partialUpdate<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+const partialUpdate<%-MODEL_NAME%> = ({ <%-MODEL%>Db }) => async (params,req,res) => {
+    const <%-MODEL%> = await <%-MODEL%>Db.updateOne(params.query,params.dataToUpdate);
+    if (!<%-MODEL%>){
+    return response.recordNotFound();
+    }
+    return response.success({ data:<%-MODEL%> });
+};
+module.exports = partialUpdate<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'BU'){ _%>
+/**
+*bulkUpdate<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+/**
+* @description : update multiple records of <%-MODEL%> with data by filter.
+* @param {Object} <%-MODEL%>Db : db service instance
+* @param {Object} params : {query: query to find data, data: data to update }
+* @return {Object} : response of bulkUpdate. {status, message, data}
+*/
+const bulkUpdate<%-MODEL_NAME%> = ({ <%-MODEL%>Db }) => async (params,req,res) => {
+    const updated<%-MODEL_NAME%> = await <%-MODEL%>Db.updateMany(params.query,params.dataToUpdate);
+    return response.success({ data:updated<%-MODEL_NAME%> });
+};
+module.exports = bulkUpdate<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'UP'){ _%>
+// Upsert
+<%_ }else if(METHOD === 'DMANY'){ _%>
+/**
+*deleteMany<%-MODEL_NAME%>.js
+*/
+const deleteMany<%-MODEL_NAME%> = ({
+<%-MODEL%>Db,
+}) => async (params,req,res) => {
+    let { query } = params;
+    let deleted<%-MODEL_NAME%> = await <%-MODEL%>Db.deleteMany(query);
+    return response.success({ data:deleted<%-MODEL_NAME%> });
+};
+module.exports = deleteMany<%-MODEL_NAME%>;
+
+<%_ }else if(METHOD === 'D'){ _%>
+
+/**
+*delete<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+const delete<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db
+}) => async (params,req,res) => {
+    let { query } = params;
+    let deleted<%-MODEL_NAME%> = await <%-MODEL%>Db.deleteMany(query);
+    return response.success({ data:deleted<%-MODEL_NAME%> });
+};
+
+module.exports = delete<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'SD'){ _%>
+/**
+*softDelete<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+
+const softDelete<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db
+}) => async (params,req,res) => {
+    let { query, dataToUpdate } = params;
+    let updated<%-MODEL_NAME%> = <%-MODEL%>Db.updateMany(query,dataToUpdate);
+    return response.success({ data:updated<%-MODEL_NAME%> });
+    
+};
+module.exports = softDelete<%-MODEL_NAME%>;
+<%_ }else if(METHOD === 'SDMANY'){ _%>    
+/**
+*softDeleteMany<%-MODEL_NAME%>.js
+*/
+
+const response = require('../../utils/response');
+const softDeleteMany<%-MODEL_NAME%> = ({
+    <%-MODEL%>Db
+}) => async (params,req,res) => {
+    let {
+        query, dataToUpdate 
+    } = params;
+    let updated<%-MODEL_NAME%>s = <%-MODEL%>Db.updateMany(query,dataToUpdate);
+    return response.success({ data:updated<%-MODEL_NAME%>s });
+};
+module.exports = softDeleteMany<%-MODEL_NAME%>;   
+<%_}_%>
+

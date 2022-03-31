@@ -1,0 +1,31 @@
+version: '3'
+services:
+  node-app:
+    container_name: node-app
+    image: node
+    user: root
+    command: ["/bin/bash","-lc","npm i && npm start"]
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+      - ./.env.docker:/home/node/app/.env
+    networks:
+      - node-network
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: Dhiwise
+    networks:
+      - node-network
+volumes:
+  dbdata:
+networks:
+  node-network:
+    driver: bridge

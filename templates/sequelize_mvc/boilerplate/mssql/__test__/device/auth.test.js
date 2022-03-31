@@ -1,9 +1,14 @@
+/**
+ * auth.test.js
+ * @description :: contains test cases of APIs for authentication module.
+ */
+
 const dotenv = require('dotenv');
 dotenv.config();
 process.env.NODE_ENV = 'test';
 const request = require('supertest');
 const db = require('../../config/dbConnection');
-const app = require('../../app.js');
+const app = require('../../app');
 const authConstant = require('../../constants/authConstant');
 const routes = require('../../routes');
 app.use(routes);
@@ -18,17 +23,19 @@ afterAll(async function (){
   await db.close();
 });
 
+// test cases
+
 describe('POST /register -> if email and username is given', () => {
   test('should register a user', async () => {
     let registeredUser = await request(app)
       .post('/device/auth/register')
       .send({
-        'username':'Clovis_Legros3',
-        'password':'GSNU6afxXVUNlrx',
-        'email':'Vinnie_Breitenberg@yahoo.com',
-        'name':'Carole Frami MD',
-        'mobileNo':'781-897-6628 x282',
-        'role':authConstant.USER_ROLE.User
+        'username':'Lincoln_Hermiston22',
+        'password':'uXNAGwOHvSwA1oU',
+        'email':'June.Boehm@yahoo.com',
+        'name':'Marjorie Cartwright',
+        'userType':authConstant.USER_TYPES.User,
+        'mobileNo':'(454) 588-3728 x9248'
       });
     expect(registeredUser.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(registeredUser.body.status).toBe('SUCCESS');
@@ -43,8 +50,8 @@ describe('POST /login -> if username and password is correct', () => {
       .post('/device/auth/login')
       .send(
         {
-          username: 'Vinnie_Breitenberg@yahoo.com',
-          password: 'GSNU6afxXVUNlrx'
+          username: 'Lincoln_Hermiston22',
+          password: 'uXNAGwOHvSwA1oU'
         }
       );
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
@@ -64,7 +71,7 @@ describe('POST /login -> if username is incorrect', () => {
       .send(
         {
           username: 'wrong.username',
-          password: 'GSNU6afxXVUNlrx'
+          password: 'uXNAGwOHvSwA1oU'
         }
       );
 
@@ -80,7 +87,7 @@ describe('POST /login -> if password is incorrect', () => {
       .post('/device/auth/login')
       .send(
         {
-          username: 'Vinnie_Breitenberg@yahoo.com',
+          username: 'Lincoln_Hermiston22',
           password: 'wrong@password'
         }
       );
@@ -99,7 +106,7 @@ describe('POST /login -> if username or password is empty string or has not pass
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -112,7 +119,7 @@ describe('POST /forgot-password -> if email has not passed from request body', (
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -139,7 +146,7 @@ describe('POST /forgot-password -> if email passed from request body is valid an
     ];
     let user = await request(app)
       .post('/device/auth/forgot-password')
-      .send({ 'email':'Vinnie_Breitenberg@yahoo.com', });
+      .send({ 'email':'June.Boehm@yahoo.com', });
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('SUCCESS');
@@ -154,8 +161,8 @@ describe('POST /validate-otp -> otp is sent in request body and OTP is correct',
       .post('/device/auth/login')
       .send(
         {
-          username: 'Vinnie_Breitenberg@yahoo.com',
-          password: 'GSNU6afxXVUNlrx'
+          username: 'Lincoln_Hermiston22',
+          password: 'uXNAGwOHvSwA1oU'
         }).then(login => () => {
         return request(app)
           .get(`/device/api/v1/user/${login.body.data.id}`)
@@ -205,8 +212,8 @@ describe('PUT /reset-password -> code is sent in request body and code is correc
       .post('/device/auth/login')
       .send(
         {
-          username: 'Vinnie_Breitenberg@yahoo.com',
-          password: 'GSNU6afxXVUNlrx'
+          username: 'Lincoln_Hermiston22',
+          password: 'uXNAGwOHvSwA1oU'
         }).then(login => () => {
         return request(app)
           .get(`/device/api/v1/user/${login.body.data.id}`)

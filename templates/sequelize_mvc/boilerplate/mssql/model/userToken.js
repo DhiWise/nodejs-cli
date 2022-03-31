@@ -1,4 +1,11 @@
-const { DataTypes } = require('sequelize');
+/**
+ * userToken.js
+ * @description :: sequelize model of database table userToken
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
@@ -17,6 +24,10 @@ let UserToken = sequelize.define('userToken',{
     defaultValue:false
   },
   isActive:{ type:DataTypes.BOOLEAN },
+  addedBy:{ type:DataTypes.INTEGER },
+  updatedBy:{ type:DataTypes.INTEGER },
+  createdAt:{ type:DataTypes.DATE },
+  updatedAt:{ type:DataTypes.DATE },
   isDeleted:{ type:DataTypes.BOOLEAN }
 }
 ,{
@@ -25,15 +36,18 @@ let UserToken = sequelize.define('userToken',{
       async function (userToken,options){
         userToken.isActive = true;
         userToken.isDeleted = false;
+
       },
     ],
     beforeBulkCreate: [
       async function (userToken,options){
         if (userToken !== undefined && userToken.length) { 
           for (let index = 0; index < userToken.length; index++) { 
+        
             const element = userToken[index]; 
             element.isActive = true; 
             element.isDeleted = false; 
+  
           } 
         }
       },
@@ -42,7 +56,7 @@ let UserToken = sequelize.define('userToken',{
 }
 );
 UserToken.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
   return values;
 };
 sequelizeTransforms(UserToken);

@@ -1,23 +1,138 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
-const db = require('mongoose');
-const <%-MODEL_NAME%> = require('../../../model/<%-MODEL%>')(db);
-const {
-  schemaKeys,updateSchemaKeys
-} = require('../../../validation/<%-MODEL%>Validation');
-const insert<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(schemaKeys);
-const update<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(updateSchemaKeys);
-const make<%-MODEL_NAME%> = require('../../../entity/<%-MODEL%>')({
-  insert<%-MODEL_NAME%>Validator,
-  update<%-MODEL_NAME%>Validator
-});
-const <%-MODEL%>Service = require('../../../services/mongoDbService')({
-  model:<%-MODEL_NAME%>,
-  make<%-MODEL_NAME%>
-});
-const make<%-MODEL_NAME%>Controller = require('./<%-MODEL%>');
+<% let FUNCTION_NAME = []; %>
+<%
+  let RELATIVE_PATH = "../../../";
+  if(PLATFORM !== "admin"){
+    RELATIVE_PATH = "../../../../";
+  }
+%> 
+<%_ if(!IS_EXIST){ _%>
+const <%-MODEL%>Db = require('<%-RELATIVE_PATH%>data-access/<%-MODEL%>Db');
+const <%-MODEL%>Schema = require('<%-RELATIVE_PATH%>validation/schema/<%-MODEL%>');
 
-const <%-MODEL%>Controller = make<%-MODEL_NAME%>Controller({
-  <%-MODEL%>Service,
-  make<%-MODEL_NAME%>
+const createValidation = require('<%-RELATIVE_PATH%>validation')(<%-MODEL%>Schema.createSchema);
+const updateValidation = require('<%-RELATIVE_PATH%>validation')(<%-MODEL%>Schema.updateSchema);
+<%_ } _%>
+<%_ if(METHODS.includes("C")){ _%>
+const add<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/add<%-MODEL_NAME%>')({
+  <%-MODEL%>Db,
+  createValidation 
 });
-module.exports = <%-MODEL%>Controller;
+<%_ } _%>
+<%_ if(METHODS.includes("BC")){ _%>
+const bulkInsert<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/bulkInsert<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(METHODS.includes("FALL")){ _%>
+const findAll<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/findAll<%-MODEL_NAME%>')({
+  <%-MODEL%>Db,
+});
+<%_}_%>
+
+<%_ if(METHODS.includes("FBYID")){ _%>
+const get<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/get<%-MODEL_NAME%>')({
+  <%-MODEL%>Db,
+});
+<%_}_%>
+
+<%_ if(METHODS.includes("COUNT")){ _%>
+const get<%-MODEL_NAME%>CountUsecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/get<%-MODEL_NAME%>Count')({
+  <%-MODEL%>Db,
+});
+<%_}_%>
+
+<%_ if(METHODS.includes("PU")){ _%>
+const partialUpdate<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/partialUpdate<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_ } _%>
+
+<%_ if(METHODS.includes("U")){ _%>
+const update<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/update<%-MODEL_NAME%>')({
+  <%-MODEL%>Db,
+  updateValidation 
+});
+<%_}_%>
+
+<%_ if(METHODS.includes("BU")){ _%>
+const bulkUpdate<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/bulkUpdate<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(METHODS.includes("UP")){ _%>
+//upsert
+<%_}_%>
+
+<%_ if(METHODS.includes("DMANY")){ _%>
+const deleteMany<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/deleteMany<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(METHODS.includes("D")){ _%>
+const delete<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/delete<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(METHODS.includes("SD")){ _%>
+const softDelete<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/softDelete<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(METHODS.includes("SDMANY")){ _%>
+const softDeleteMany<%-MODEL_NAME%>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/softDeleteMany<%-MODEL_NAME%>')({ <%-MODEL%>Db });
+<%_}_%>
+
+<%_ if(!IS_EXIST){ _%>
+const <%-MODEL%>Controller = require('./<%-MODEL%>');
+<%_ } _%>
+<%_ if(METHODS.includes("C")){ FUNCTION_NAME.push(`add${MODEL_NAME}`); _%>
+const add<%-MODEL_NAME%> = <%-MODEL%>Controller.add<%-MODEL_NAME%>(add<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("BC")){ FUNCTION_NAME.push(`bulkInsert${MODEL_NAME}`); _%>
+const bulkInsert<%-MODEL_NAME%> = <%-MODEL%>Controller.bulkInsert<%-MODEL_NAME%>(bulkInsert<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("FALL")){ FUNCTION_NAME.push(`findAll${MODEL_NAME}`); _%>
+const findAll<%-MODEL_NAME%> = <%-MODEL%>Controller.findAll<%-MODEL_NAME%>(findAll<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("FBYID")){ FUNCTION_NAME.push(`get${MODEL_NAME}`); _%>
+const get<%-MODEL_NAME%> = <%-MODEL%>Controller.get<%-MODEL_NAME%>(get<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("COUNT")){ FUNCTION_NAME.push(`get${MODEL_NAME}Count`); _%>
+const get<%-MODEL_NAME%>Count = <%-MODEL%>Controller.get<%-MODEL_NAME%>Count(get<%-MODEL_NAME%>CountUsecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("PU")){ FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`); _%>
+const partialUpdate<%-MODEL_NAME%> = <%-MODEL%>Controller.partialUpdate<%-MODEL_NAME%>(partialUpdate<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("U")){  FUNCTION_NAME.push(`update${MODEL_NAME}`); _%>
+const update<%-MODEL_NAME%> = <%-MODEL%>Controller.update<%-MODEL_NAME%>(update<%-MODEL_NAME%>Usecase);
+<%_ } _%>
+
+<%_ if(METHODS.includes("BU")){ FUNCTION_NAME.push(`bulkUpdate${MODEL_NAME}`); _%>
+const bulkUpdate<%-MODEL_NAME%> = <%-MODEL%>Controller.bulkUpdate<%-MODEL_NAME%>(bulkUpdate<%-MODEL_NAME%>Usecase);
+<%_}_%>
+
+<%_ if(METHODS.includes("UP")){ FUNCTION_NAME.push(``); _%>
+//upsert
+<%_ } _%>
+
+<%_ if(METHODS.includes("DMANY")){ FUNCTION_NAME.push(`deleteMany${MODEL_NAME}`); _%>
+const deleteMany<%-MODEL_NAME%> = <%-MODEL%>Controller.deleteMany<%-MODEL_NAME%>(deleteMany<%-MODEL_NAME%>Usecase);
+<%_}_%>
+
+<%_ if(METHODS.includes("D")){ FUNCTION_NAME.push(`delete${MODEL_NAME}`); _%>
+const delete<%-MODEL_NAME%> = <%-MODEL%>Controller.delete<%-MODEL_NAME%>(delete<%-MODEL_NAME%>Usecase);
+<%_}_%>
+
+<%_ if(METHODS.includes("SD")){ FUNCTION_NAME.push(`softDelete${MODEL_NAME}`); _%>
+const softDelete<%-MODEL_NAME%> = <%-MODEL%>Controller.softDelete<%-MODEL_NAME%>(softDelete<%-MODEL_NAME%>Usecase);
+<%_}_%>
+
+<%_ if(METHODS.includes("SDMANY")){ FUNCTION_NAME.push(`softDeleteMany${MODEL_NAME}`); _%>
+const softDeleteMany<%-MODEL_NAME%> = <%-MODEL%>Controller.softDeleteMany<%-MODEL_NAME%>(softDeleteMany<%-MODEL_NAME%>Usecase);
+<%_}_%>
+
+<%_ if(!IS_EXIST){ _%>
+module.exports = {
+  <%- FUNCTION_NAME.join(",") %>
+}
+<%_ } _%>

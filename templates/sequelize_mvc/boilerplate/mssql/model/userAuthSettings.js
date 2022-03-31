@@ -1,4 +1,11 @@
-const { DataTypes } = require('sequelize');
+/**
+ * userAuthSettings.js
+ * @description :: sequelize model of database table userAuthSettings
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
@@ -20,6 +27,10 @@ let UserAuthSettings = sequelize.define('userAuthSettings',{
   },
   loginReactiveTime:{ type:DataTypes.DATE },
   isActive:{ type:DataTypes.BOOLEAN },
+  addedBy:{ type:DataTypes.INTEGER },
+  updatedBy:{ type:DataTypes.INTEGER },
+  createdAt:{ type:DataTypes.DATE },
+  updatedAt:{ type:DataTypes.DATE },
   isDeleted:{ type:DataTypes.BOOLEAN }
 }
 ,{
@@ -28,15 +39,18 @@ let UserAuthSettings = sequelize.define('userAuthSettings',{
       async function (userAuthSettings,options){
         userAuthSettings.isActive = true;
         userAuthSettings.isDeleted = false;
+
       },
     ],
     beforeBulkCreate: [
       async function (userAuthSettings,options){
         if (userAuthSettings !== undefined && userAuthSettings.length) { 
           for (let index = 0; index < userAuthSettings.length; index++) { 
+        
             const element = userAuthSettings[index]; 
             element.isActive = true; 
             element.isDeleted = false; 
+  
           } 
         }
       },
@@ -45,7 +59,7 @@ let UserAuthSettings = sequelize.define('userAuthSettings',{
 }
 );
 UserAuthSettings.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
   return values;
 };
 sequelizeTransforms(UserAuthSettings);
