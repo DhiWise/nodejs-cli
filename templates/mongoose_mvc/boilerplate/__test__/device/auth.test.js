@@ -1,13 +1,15 @@
+/**
+ * auth.test.js
+ * @description :: contains test cases of APIs for authentication module.
+ */
 
 const dotenv = require('dotenv');
 dotenv.config();
 process.env.NODE_ENV = 'test';
 const db = require('mongoose');
 const request = require('supertest');
-const {
-  MongoClient, ObjectId 
-} = require('mongodb');
-const app = require('../../app.js');
+const { MongoClient } = require('mongodb');
+const app = require('../../app');
 const authConstant = require('../../constants/authConstant');
 const uri = 'mongodb://127.0.0.1:27017';
 
@@ -16,48 +18,53 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true
 });
 
-let inserted_user = {};
+let insertedUser = {};
 
+/**
+ * @description : model dependencies resolver
+ */
 beforeAll(async function (){
   try {
     await client.connect();
-    const db = client.db('db_test');
+    const dbInstance = client.db('Dhiwise_test');
 
-    const user = db.collection('user');
-    inserted_user = await user.insertOne({
-      username: 'Chadrick.Greenholt',
-      password: '5THjBwkB56mziqe',
-      email: 'Karelle82@hotmail.com',
-      name: 'Rebecca Bayer',
-      mobileNo: '1-681-209-1592 x346',
-      role: 666,
+    const user = dbInstance.collection('user');
+    insertedUser = await user.insertOne({
+      username: 'Geoffrey97',
+      password: 'FTUniHIldxKOraV',
+      email: 'Cedrick60@yahoo.com',
+      name: 'Fernando Schaden',
+      userType: 336,
+      mobileNo: '1-725-216-5473 x23765',
       resetPasswordLink: {},
-      loginRetryLimit: 107,
-      loginReactiveTime: '2022-01-27T07:17:22.489Z',
-      id: '618bb481127fe807d9148547'
+      loginRetryLimit: 113,
+      loginReactiveTime: '2022-07-03T18:48:10.228Z',
+      id: '624594a5f438080027f6c2d1'
     });
   }
-  catch (err) {
-    console.error(`we encountered ${err}`);
+  catch (error) {
+    console.error(`we encountered ${error}`);
   }
   finally {
     client.close();
   }
 });
 
+// test cases
+
 describe('POST /register -> if email and username is given', () => {
   test('should register a user', async () => {
     let registeredUser = await request(app)
       .post('/device/auth/register')
       .send({
-        'username':'Ethan9',
-        'password':'JJLnlVwOYjFUe_5',
-        'email':'Avery.Daugherty28@gmail.com',
-        'name':'Krystal Wolff',
-        'mobileNo':'(521) 345-5520 x45756',
-        'addedBy':inserted_user.insertedId,
-        'updatedBy':inserted_user.insertedId,
-        'role':authConstant.USER_ROLE.User
+        'username':'Dallas25',
+        'password':'XJhemJ5_3Osr0an',
+        'email':'Jacques.Cronin@yahoo.com',
+        'name':'Alison Jenkins',
+        'userType':authConstant.USER_TYPES.User,
+        'mobileNo':'1-365-714-5254',
+        'addedBy':insertedUser.insertedId,
+        'updatedBy':insertedUser.insertedId
       });
     expect(registeredUser.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(registeredUser.body.status).toBe('SUCCESS');
@@ -72,8 +79,8 @@ describe('POST /login -> if username and password is correct', () => {
       .post('/device/auth/login')
       .send(
         {
-          username: 'Avery.Daugherty28@gmail.com',
-          password: 'JJLnlVwOYjFUe_5'
+          username: 'Dallas25',
+          password: 'XJhemJ5_3Osr0an'
         }
       );
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
@@ -93,7 +100,7 @@ describe('POST /login -> if username is incorrect', () => {
       .send(
         {
           username: 'wrong.username',
-          password: 'JJLnlVwOYjFUe_5'
+          password: 'XJhemJ5_3Osr0an'
         }
       );
 
@@ -109,7 +116,7 @@ describe('POST /login -> if password is incorrect', () => {
       .post('/device/auth/login')
       .send(
         {
-          username: 'Avery.Daugherty28@gmail.com',
+          username: 'Dallas25',
           password: 'wrong@password'
         }
       );
@@ -128,7 +135,7 @@ describe('POST /login -> if username or password is empty string or has not pass
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -141,7 +148,7 @@ describe('POST /forgot-password -> if email has not passed from request body', (
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -162,13 +169,13 @@ describe('POST /forgot-password -> if email passed from request body is not avai
 describe('POST /forgot-password -> if email passed from request body is valid and OTP sent successfully', () => {
   test('should return success message', async () => {
     const expectedOutputMessages = [
-      'otp successfully send.',
-      'otp successfully send to your email.',
-      'otp successfully send to your mobile number.'
+      'OTP successfully send.',
+      'OTP successfully send to your email.',
+      'OTP successfully send to your mobile number.'
     ];
     let user = await request(app)
       .post('/device/auth/forgot-password')
-      .send({ 'email':'Avery.Daugherty28@gmail.com', });
+      .send({ 'email':'Jacques.Cronin@yahoo.com', });
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('SUCCESS');
@@ -177,14 +184,14 @@ describe('POST /forgot-password -> if email passed from request body is valid an
   });
 });
 
-describe('POST /validate-otp -> otp is sent in request body and OTP is correct', () => {
+describe('POST /validate-otp -> OTP is sent in request body and OTP is correct', () => {
   test('should return success', () => {
     return request(app)
       .post('/device/auth/login')
       .send(
         {
-          username: 'Avery.Daugherty28@gmail.com',
-          password: 'JJLnlVwOYjFUe_5'
+          username: 'Dallas25',
+          password: 'XJhemJ5_3Osr0an'
         }).then(login => () => {
         return request(app)
           .get(`/device/api/v1/user/${login.body.data.id}`)
@@ -216,7 +223,7 @@ describe('POST /validate-otp -> if OTP is incorrect or OTP has expired', () => {
   });
 });
 
-describe('POST /validate-otp -> if request body is empty or otp has not been sent in body', () => {
+describe('POST /validate-otp -> if request body is empty or OTP has not been sent in body', () => {
   test('should return insufficient parameter', async () => {
     let user = await request(app)
       .post('/device/auth/validate-otp')
@@ -234,8 +241,8 @@ describe('PUT /reset-password -> code is sent in request body and code is correc
       .post('/device/auth/login')
       .send(
         {
-          username: 'Avery.Daugherty28@gmail.com',
-          password: 'JJLnlVwOYjFUe_5'
+          username: 'Dallas25',
+          password: 'XJhemJ5_3Osr0an'
         }).then(login => () => {
         return request(app)
           .get(`/device/api/v1/user/${login.body.data.id}`)

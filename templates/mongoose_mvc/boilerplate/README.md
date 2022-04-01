@@ -1,7 +1,7 @@
 # NodeJS,Mongoose,Express Project in MVC Architecture
 
-**supported version of nodejs-15.13.0**,
-**supported version of mongoose-4.0**
+**Supported version of nodejs >= 12**,
+**Supported version of mongoose >= 5**
 
 ## About 
 - This is a Node application, developed using MVC pattern with Node.js, ExpressJS, and Mongoose. 
@@ -12,17 +12,18 @@
 2. ```$ npm start```
 3. Credentials
 
-       - One user with User role,
-	   # Default User credentials
-	   **username** : Ardith12@yahoo.com
-	   **password** : sgtNNPQ7bW8CxjQ
+	- One user with User role,
+	# Default User credentials
+	**username** : Loyce_Leuschke
+	**password** : N0Xmpj2TR0X2ONU
 
+	- One user with Admin role,
+	# Default Admin credentials
+	**username** : Keegan_Daugherty
+	**password** : 8ccL5MLMAwFT_1M
 
-       - One user with Admin role,
-	   # Default Admin credentials
-	   **username** : Jovany_Little17@yahoo.com
-	   **password** : 9VD2vxeooRWfSKy
-
+## How to use generated APIs:
+[Click here to visit documentation](<https://docs.dhiwise.com/knowledgehub/generated-node.js-apis> "API Documentation")
 
 ## How to run with Docker ? :
 - if you have docker file you can execute following command
@@ -49,7 +50,7 @@
   └── utils        - contains utility functions    
 ```
 
-### Detail Description of Files and folders
+## Detail Description of Files and folders
 
 1. app.js
 - entry point of application.
@@ -116,4 +117,4 @@
 
 13. env files
 - You can add credentials and port, database values as per your environment(Development/Production).
-- If you are running test environment then testcases will run using test database,and its configuration is there inside app.js
+- If you are running test environment then test cases will run using test database,and its configuration is there inside app.js

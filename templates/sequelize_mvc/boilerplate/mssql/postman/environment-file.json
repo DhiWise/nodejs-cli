@@ -1,6 +1,6 @@
 {
-  "id": "b046c034-3569-4dc9-ac2b-9e4605512f2f",
-  "name": "seq_mssql_mvc_environment",
+  "id": "fdfad98a-4248-4e29-a9a8-3805211fe61c",
+  "name": "mssql_mvc_boilerplate_environment",
   "values": [
     {
       "key": "token",
@@ -14,6 +14,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2021-11-11T05:34:01.273Z",
+  "_postman_exported_at": "2022-03-31T11:56:43.190Z",
   "_postman_exported_using": "Postman"
 }

@@ -100,6 +100,7 @@ module.exports = {
         choices: [
             { title: 'CREATE', value: 'C', selected: true },
             { title: 'UPDATE', value: 'U', selected: true },
+            { title: 'PARTIAL-UPDATE', value: 'PU', selected: true },
             { title: 'FIND ALL', value: 'FALL', selected: true },
             { title: 'FIND BY ID', value: 'FBYID', selected: true },
             { title: 'COUNT', value: 'COUNT', selected: true },

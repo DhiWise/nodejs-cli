@@ -1,4 +1,11 @@
-const { DataTypes } = require('sequelize');
+/**
+ * userRole.js
+ * @description :: sequelize model of database table userRole
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
@@ -12,13 +19,17 @@ let UserRole = sequelize.define('userRole',{
     type:DataTypes.INTEGER,
     allowNull:false
   },
-  isActive:{ type:DataTypes.BOOLEAN },
-  isDeleted:{ type:DataTypes.BOOLEAN },
   id:{
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true
-  }
+  },
+  isActive:{ type:DataTypes.BOOLEAN },
+  createdAt:{ type:DataTypes.DATE },
+  updatedAt:{ type:DataTypes.DATE },
+  addedBy:{ type:DataTypes.INTEGER },
+  updatedBy:{ type:DataTypes.INTEGER },
+  isDeleted:{ type:DataTypes.BOOLEAN }
 }
 ,{
   hooks:{
@@ -26,15 +37,18 @@ let UserRole = sequelize.define('userRole',{
       async function (userRole,options){
         userRole.isActive = true;
         userRole.isDeleted = false;
+
       },
     ],
     beforeBulkCreate: [
       async function (userRole,options){
         if (userRole !== undefined && userRole.length) { 
           for (let index = 0; index < userRole.length; index++) { 
+        
             const element = userRole[index]; 
             element.isActive = true; 
             element.isDeleted = false; 
+  
           } 
         }
       },
@@ -43,7 +57,7 @@ let UserRole = sequelize.define('userRole',{
 }
 );
 UserRole.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
   return values;
 };
 sequelizeTransforms(UserRole);

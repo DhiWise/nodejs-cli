@@ -127,7 +127,8 @@ module.exports = {
     },
     MODEL_PERMISSION_FUNCTION_NAME_MVC_MONGOOSE: {
         C: "add{{ model }}",
-        U: ["update{{ model }}", "partialUpdate{{ model }}"],
+        U: "update{{ model }}",
+        PU:"partialUpdate{{ model }}",
         FALL: "findAll{{ model }}",
         FBYID: "get{{ model }}",
         COUNT: "get{{ model }}Count",
@@ -140,7 +141,8 @@ module.exports = {
     },
     MODEL_PERMISSION_FUNCTION_NAME_MVC_SEQUELIZE: {
         C: "add{{ model }}",
-        U: ["update{{ model }}", "partialUpdate{{ model }}"],
+        U: "update{{ model }}",
+        PU:"partialUpdate{{ model }}",
         FALL: "findAll{{ model }}",
         FBYID: "get{{ model }}",
         COUNT: "get{{ model }}Count",
@@ -153,27 +155,30 @@ module.exports = {
     },
     MODEL_PERMISSION_FUNCTION_NAME_CC_MONGOOSE: {
         C: "add{{ model }}",
-        U: ["update{{ model }}", "partialUpdate{{ model }}"],
+        U: "update{{ model }}",
+        PU:"partialUpdate{{ model }}",
         FALL: "findAll{{ model }}",
-        FBYID: "get{{ model }}ById",
+        FBYID: "get{{ model }}",
         COUNT: "get{{ model }}Count",
         D: "delete{{ model }}",
         BC: "bulkInsert{{ model }}",
         BU: "bulkUpdate{{ model }}",
         DMANY: "deleteMany{{ model }}",
         SD: "softDelete{{ model }}",
-        SDMANY: "softDeleteMany{{ model }}"
+        SDMANY: "softDeleteMany{{ model }}",
     },
     MODEL_PERMISSION_FUNCTION_NAME_CC_SEQUELIZE: {
         C: "add{{ model }}",
-        U: ["update{{ model }}", "partialUpdate{{ model }}"],
+        U: "update{{ model }}",
+        PU:"partialUpdate{{ model }}",
         FALL: "findAll{{ model }}",
-        FBYID: "find{{ model }}ByPk",
+        FBYID: "get{{ model }}",
+        COUNT: "get{{ model }}Count",
         D: "delete{{ model }}",
         BC: "bulkInsert{{ model }}",
         BU: "bulkUpdate{{ model }}",
         DMANY: "deleteMany{{ model }}",
         SD: "softDelete{{ model }}",
-        SDMANY: "softDeleteMany{{ model }}"
+        SDMANY: "softDeleteMany{{ model }}",
     }
 }

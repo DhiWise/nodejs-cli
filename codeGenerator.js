@@ -1,6 +1,7 @@
 const prompts = require('prompts');
 const path = require("path");
 const fs = require("fs");
+const replace = require('key-value-replace');
 const setting = require("./setting");
 const questions = require('./questions');
 const constant = require("./constant")
@@ -21,6 +22,12 @@ class codeGenerator {
     }
     async updateApp() {
 
+        let modelPath = this.setup.userDirectoryPaths.modelPath;
+        if (constant.ORM.SEQUELIZE === this.ormType) {
+            modelPath = replace(modelPath, { orm: 'sequelize' })
+        } else if (constant.ORM.MONGOOSE === this.ormType) {
+            modelPath = replace(modelPath, { orm: 'mongoDB' })
+        }
         // let operation = await prompts(questions.SELECT_OPERATION);
         switch (this.operation) {
             case constant.CREATE_MODEL:
@@ -35,7 +42,12 @@ class codeGenerator {
                 if (!model || !model.value) {
                     throw new Error("please provide model name");
                 }
-                let existingModels = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
+                let existingModels = await this.getModelNames(modelPath);
+                if(existingModels.length && existingModels.includes("index")){
+                    existingModels = existingModels.filter((e)=>{
+                        return e !== "index";
+                    })
+                }
                 let ansExistModel='y';
                 if (existingModels.includes(model.value)) {
                     ansExistModel = await prompts(questions.ASK_EXIST_MODEL);
@@ -43,11 +55,11 @@ class codeGenerator {
                 }
                 if (ansExistModel === 'y' || ansExistModel === 'Y') {
                     let attributes = await prompts(questions.ASK_MODEL_ATTRIBUTE);
-                    await cm.renderModel({ modelName: model.value, attributes: attributes.value });
+                    await cm.renderModel({ modelName: model.value, attributes: attributes.value,modelPath });
                 }
                 break;
             case constant.CREATE_API:
-                let models = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
+                let models = await this.getModelNames(modelPath);
                 if (!models.length) {
                     throw new Error("we are not able to find existing model");
                 }
@@ -86,14 +98,19 @@ class codeGenerator {
                 });
                 break;
             case constant.CREATE_MODULE:
-                let moduleModels = await this.getModelNames(path.join(`${this.projectPath}`, 'model'));
+                let moduleModels = await this.getModelNames(modelPath);
+                if(moduleModels.length && moduleModels.includes("index")){
+                    moduleModels = moduleModels.filter((e)=>{
+                        return e !== "index";
+                    })
+                }
                 let moduleModelName = await prompts(questions.GET_EXISTING_MODEL(moduleModels, true));
                 let moduleModelAttributes = false;
                 let isNewModel = false;
                 if (moduleModelName.value === 1) {
                     moduleModelName = await prompts(questions.ASK_MODEL_NAME);
                     isNewModel = true;
-                    let ansOfModel;
+                    let ansOfModel = 'y';
                     if (moduleModels.includes(moduleModelName.value)) {
                         ansOfModel = await prompts(questions.ASK_EXIST_MODEL);
                         ansOfModel = ansOfModel.value;
@@ -123,7 +140,8 @@ class codeGenerator {
                     platform: modulePlatformName.value,
                     modelPermission: modelPermission.value,
                     attributes: moduleModelAttributes ? moduleModelAttributes.value : '',
-                    isNewModel
+                    isNewModel,
+                    modelPath
                 });
                 break;
             case constant.CREATE_APP:

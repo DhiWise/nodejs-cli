@@ -8,7 +8,7 @@ module.exports = {
     data: {
       status: 'SUCCESS',
       message: data.message || 'Your request is successfully executed',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -18,7 +18,7 @@ module.exports = {
     data: {
       status: 'FAILURE',
       message: data.message || 'Internal server error.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -28,7 +28,7 @@ module.exports = {
     data: {
       status: 'BAD_REQUEST',
       message: data.message || 'The request cannot be fulfilled due to bad syntax.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -38,7 +38,7 @@ module.exports = {
     data: {
       status: 'VALIDATION_ERROR',
       message: data.message || 'Data duplication found.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -48,7 +48,7 @@ module.exports = {
     data: {
       status: 'RECORD_NOT_FOUND',
       message: data.message || 'Record not found with specified criteria.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -58,7 +58,7 @@ module.exports = {
     data: {
       status: 'BAD_REQUEST',
       message: data.message || 'Insufficient parameters.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -68,7 +68,7 @@ module.exports = {
     data: {
       status: 'VALIDATION_ERROR',
       message: data.message || `Invalid Data, Validation Failed.`,
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -78,7 +78,7 @@ module.exports = {
     data: {
       status: 'UNAUTHORIZED',
       message: data.message || 'You are not authorized to access the request',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -88,7 +88,7 @@ module.exports = {
     data: {
       status: 'SUCCESS',
       message: data.message || 'Login Successful',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -98,7 +98,7 @@ module.exports = {
     data: {
       status: 'BAD_REQUEST',
       message: data.message || `Login Failed.`,
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -108,7 +108,7 @@ module.exports = {
     data: {
       status: 'FAILURE',
       message: data.message || 'Invalid Data, Validation Failed.',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 
@@ -118,7 +118,7 @@ module.exports = {
     data: {
       status: 'SUCCESS',
       message: data.message || 'Your request is successfully executed',
-      data: data.data || {},
+      data: data.data && Object.keys(data.data).length ? data.data : null,
     },
   }),
 

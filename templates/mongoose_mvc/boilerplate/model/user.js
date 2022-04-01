@@ -1,9 +1,16 @@
+/**
+ * user.js
+ * @description :: model of a database collection user
+ */
+
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
-var idValidator = require('mongoose-id-validator');
+let idValidator = require('mongoose-id-validator');
 const bcrypt = require('bcrypt');
-const { USER_ROLE } = require('../constants/authConstant');
+const { USER_TYPES } = require('../constants/authConstant');
 const { convertObjectToEnum } = require('../utils/common');
+const authConstantEnum = require('../constants/authConstant');
+        
 const myCustomLabels = {
   totalDocs: 'itemCount',
   docs: 'data',
@@ -28,7 +35,15 @@ const schema = new Schema(
 
     name:{ type:String },
 
+    userType:{
+      type:Number,
+      enum:convertObjectToEnum(USER_TYPES),
+      required:true
+    },
+
     isActive:{ type:Boolean },
+
+    isDeleted:{ type:Boolean },
 
     createdAt:{ type:Date },
 
@@ -46,14 +61,6 @@ const schema = new Schema(
 
     mobileNo:{ type:String },
 
-    isDeleted:{ type:Boolean },
-
-    role:{
-      type:Number,
-      enum:convertObjectToEnum(USER_ROLE),
-      required:true
-    },
-
     resetPasswordLink:{
       code:String,
       expireTime:Date
@@ -65,10 +72,10 @@ const schema = new Schema(
     },
 
     loginReactiveTime:{ type:Date }
-  },
-  {
-    timestamps: {
-      createdAt: 'createdAt',
+  }
+  ,{ 
+    timestamps: { 
+      createdAt: 'createdAt', 
       updatedAt: 'updatedAt' 
     } 
   }
@@ -99,14 +106,14 @@ schema.methods.isPasswordMatch = async function (password) {
 };
 schema.method('toJSON', function () {
   const {
-    __v, ...object 
+    _id, __v, ...object 
   } = this.toObject({ virtuals:true });
-  object.id = object._id;
+  object.id = _id;
+  delete object.password;
      
   return object;
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-
-const user = mongoose.model('user',schema,'user');
+const user = mongoose.model('user',schema);
 module.exports = user;

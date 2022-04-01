@@ -1,0 +1,35 @@
+<% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
+let <%-MODEL_NAME%> = require('../db/mongoDB/models/<%-MODEL%>');
+let {
+  create,
+  createMany,
+  updateOne,
+  updateMany,
+  deleteOne,
+  deleteMany,
+  softDelete,
+  softDeleteMany,
+  findOne,
+  findMany,
+  paginate,
+  count,
+  upsert,
+  aggregate 
+} = require('../db/mongoDB/dbService')(<%-MODEL_NAME%>);
+
+module.exports = {
+  create,
+  createMany,
+  updateOne,
+  updateMany,
+  deleteOne,
+  deleteMany,
+  softDelete,
+  softDeleteMany,
+  findOne,
+  findMany,
+  paginate,
+  count,
+  upsert,
+  aggregate
+};

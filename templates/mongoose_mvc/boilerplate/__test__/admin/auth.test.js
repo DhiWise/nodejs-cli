@@ -1,13 +1,15 @@
+/**
+ * auth.test.js
+ * @description :: contains test cases of APIs for authentication module.
+ */
 
 const dotenv = require('dotenv');
 dotenv.config();
 process.env.NODE_ENV = 'test';
 const db = require('mongoose');
 const request = require('supertest');
-const {
-  MongoClient, ObjectId 
-} = require('mongodb');
-const app = require('../../app.js');
+const { MongoClient } = require('mongodb');
+const app = require('../../app');
 const authConstant = require('../../constants/authConstant');
 const uri = 'mongodb://127.0.0.1:27017';
 
@@ -16,48 +18,53 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true
 });
 
-let inserted_user = {};
+let insertedUser = {};
 
+/**
+ * @description : model dependencies resolver
+ */
 beforeAll(async function (){
   try {
     await client.connect();
-    const db = client.db('db_test');
+    const dbInstance = client.db('Dhiwise_test');
 
-    const user = db.collection('user');
-    inserted_user = await user.insertOne({
-      username: 'Lukas40',
-      password: 'xufT4O7_A3sLYXX',
-      email: 'Sierra5@hotmail.com',
-      name: 'Mr. Otis Zulauf',
-      mobileNo: '782.718.3837',
-      role: 123,
+    const user = dbInstance.collection('user');
+    insertedUser = await user.insertOne({
+      username: 'Mariana48',
+      password: 'xW2tRZYDrh1hThv',
+      email: 'Anastacio_Douglas@yahoo.com',
+      name: 'Grady Boyle',
+      userType: 603,
+      mobileNo: '1-626-440-0410 x856',
       resetPasswordLink: {},
-      loginRetryLimit: 181,
-      loginReactiveTime: '2022-09-27T19:56:44.313Z',
-      id: '618bb481127fe807d9148526'
+      loginRetryLimit: 673,
+      loginReactiveTime: '2023-03-01T14:46:03.181Z',
+      id: '624594a5f438080027f6c2b0'
     });
   }
-  catch (err) {
-    console.error(`we encountered ${err}`);
+  catch (error) {
+    console.error(`we encountered ${error}`);
   }
   finally {
     client.close();
   }
 });
 
+// test cases
+
 describe('POST /register -> if email and username is given', () => {
   test('should register a user', async () => {
     let registeredUser = await request(app)
       .post('/admin/auth/register')
       .send({
-        'username':'Delores37',
-        'password':'hb7sEMw0tNnZ5AQ',
-        'email':'Leanna.Pollich@hotmail.com',
-        'name':'Ana Yost',
-        'mobileNo':'1-269-819-6230',
-        'addedBy':inserted_user.insertedId,
-        'updatedBy':inserted_user.insertedId,
-        'role':authConstant.USER_ROLE.Admin
+        'username':'Muriel45',
+        'password':'gf1nf7ZDNB7aF22',
+        'email':'Brice20@yahoo.com',
+        'name':'Bennie Nienow',
+        'userType':authConstant.USER_TYPES.Admin,
+        'mobileNo':'551.598.8067 x4142',
+        'addedBy':insertedUser.insertedId,
+        'updatedBy':insertedUser.insertedId
       });
     expect(registeredUser.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(registeredUser.body.status).toBe('SUCCESS');
@@ -72,8 +79,8 @@ describe('POST /login -> if username and password is correct', () => {
       .post('/admin/auth/login')
       .send(
         {
-          username: 'Leanna.Pollich@hotmail.com',
-          password: 'hb7sEMw0tNnZ5AQ'
+          username: 'Muriel45',
+          password: 'gf1nf7ZDNB7aF22'
         }
       );
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
@@ -93,7 +100,7 @@ describe('POST /login -> if username is incorrect', () => {
       .send(
         {
           username: 'wrong.username',
-          password: 'hb7sEMw0tNnZ5AQ'
+          password: 'gf1nf7ZDNB7aF22'
         }
       );
 
@@ -109,7 +116,7 @@ describe('POST /login -> if password is incorrect', () => {
       .post('/admin/auth/login')
       .send(
         {
-          username: 'Leanna.Pollich@hotmail.com',
+          username: 'Muriel45',
           password: 'wrong@password'
         }
       );
@@ -128,7 +135,7 @@ describe('POST /login -> if username or password is empty string or has not pass
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -141,7 +148,7 @@ describe('POST /forgot-password -> if email has not passed from request body', (
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('BAD_REQUEST');
-    expect(user.body.message).toBe('Insufficient parameters');
+    expect(user.body.message).toBe('Insufficient parameters.');
     expect(user.statusCode).toBe(400);
   });
 });
@@ -162,13 +169,13 @@ describe('POST /forgot-password -> if email passed from request body is not avai
 describe('POST /forgot-password -> if email passed from request body is valid and OTP sent successfully', () => {
   test('should return success message', async () => {
     const expectedOutputMessages = [
-      'otp successfully send.',
-      'otp successfully send to your email.',
-      'otp successfully send to your mobile number.'
+      'OTP successfully send.',
+      'OTP successfully send to your email.',
+      'OTP successfully send to your mobile number.'
     ];
     let user = await request(app)
       .post('/admin/auth/forgot-password')
-      .send({ 'email':'Leanna.Pollich@hotmail.com', });
+      .send({ 'email':'Brice20@yahoo.com', });
 
     expect(user.headers['content-type']).toEqual('application/json; charset=utf-8');
     expect(user.body.status).toBe('SUCCESS');
@@ -177,14 +184,14 @@ describe('POST /forgot-password -> if email passed from request body is valid an
   });
 });
 
-describe('POST /validate-otp -> otp is sent in request body and OTP is correct', () => {
+describe('POST /validate-otp -> OTP is sent in request body and OTP is correct', () => {
   test('should return success', () => {
     return request(app)
       .post('/admin/auth/login')
       .send(
         {
-          username: 'Leanna.Pollich@hotmail.com',
-          password: 'hb7sEMw0tNnZ5AQ'
+          username: 'Muriel45',
+          password: 'gf1nf7ZDNB7aF22'
         }).then(login => () => {
         return request(app)
           .get(`/admin/user/${login.body.data.id}`)
@@ -216,7 +223,7 @@ describe('POST /validate-otp -> if OTP is incorrect or OTP has expired', () => {
   });
 });
 
-describe('POST /validate-otp -> if request body is empty or otp has not been sent in body', () => {
+describe('POST /validate-otp -> if request body is empty or OTP has not been sent in body', () => {
   test('should return insufficient parameter', async () => {
     let user = await request(app)
       .post('/admin/auth/validate-otp')
@@ -234,8 +241,8 @@ describe('PUT /reset-password -> code is sent in request body and code is correc
       .post('/admin/auth/login')
       .send(
         {
-          username: 'Leanna.Pollich@hotmail.com',
-          password: 'hb7sEMw0tNnZ5AQ'
+          username: 'Muriel45',
+          password: 'gf1nf7ZDNB7aF22'
         }).then(login => () => {
         return request(app)
           .get(`/admin/user/${login.body.data.id}`)

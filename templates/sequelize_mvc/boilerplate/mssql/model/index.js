@@ -1,3 +1,8 @@
+/**
+ * index.js
+ * @description :: exports all the models and its relationships among other models
+ */
+
 const dbConnection = require('../config/dbConnection');
 const db = {};
 db.sequelize = dbConnection;
@@ -37,6 +42,24 @@ db.user.hasMany(db.userAuthSettings, {
   foreignKey: 'userId',
   sourceKey: 'id' 
 });
+db.userAuthSettings.belongsTo(db.user, {
+  foreignKey: 'addedBy',
+  as: '_addedBy',
+  targetKey: 'id' 
+});
+db.user.hasMany(db.userAuthSettings, {
+  foreignKey: 'addedBy',
+  sourceKey: 'id' 
+});
+db.userAuthSettings.belongsTo(db.user, {
+  foreignKey: 'updatedBy',
+  as: '_updatedBy',
+  targetKey: 'id' 
+});
+db.user.hasMany(db.userAuthSettings, {
+  foreignKey: 'updatedBy',
+  sourceKey: 'id' 
+});
 db.userToken.belongsTo(db.user, {
   foreignKey: 'userId',
   as: '_userId',
@@ -44,6 +67,24 @@ db.userToken.belongsTo(db.user, {
 });
 db.user.hasMany(db.userToken, {
   foreignKey: 'userId',
+  sourceKey: 'id' 
+});
+db.userToken.belongsTo(db.user, {
+  foreignKey: 'addedBy',
+  as: '_addedBy',
+  targetKey: 'id' 
+});
+db.user.hasMany(db.userToken, {
+  foreignKey: 'addedBy',
+  sourceKey: 'id' 
+});
+db.userToken.belongsTo(db.user, {
+  foreignKey: 'updatedBy',
+  as: '_updatedBy',
+  targetKey: 'id' 
+});
+db.user.hasMany(db.userToken, {
+  foreignKey: 'updatedBy',
   sourceKey: 'id' 
 });
 db.userRole.belongsTo(db.user, {

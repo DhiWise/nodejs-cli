@@ -1,23 +1,28 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
-const db = require('mongoose');
-const <%-MODEL%>Model = require('../../../model/<%-MODEL%>')(db);
-const {
-    schemaKeys,updateSchemaKeys
-  } = require('../../../validation/<%-MODEL%>Validation');
-const insert<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(schemaKeys);
-const update<%-MODEL_NAME%>Validator = require('../../../validation/genericValidator')(updateSchemaKeys);
-const make<%-MODEL_NAME%> = require('../../../entity/<%-MODEL%>')({
-    insert<%-MODEL_NAME%>Validator,
-    update<%-MODEL_NAME%>Validator
-  });
-const <%-MODEL%>Service = require('../../../services/mongoDbService')({
-  model:<%-MODEL%>Model,
-  make<%-MODEL_NAME%>
+<%
+  let RELATIVE_PATH = "../../../";
+  if(PLATFORM !== "admin"){
+    RELATIVE_PATH = "../../../../";
+  }
+%> 
+<%_ if(IS_EXIST){ %>
+const <%-CONTROLLER_FUNCTION_NAME %>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/<%-CONTROLLER_FUNCTION_NAME %>')({
+  <%-MODEL%>Db,
 });
-const make<%-MODEL_NAME%>Controller = require('./<%-MODEL%>');
+const <%-CONTROLLER_FUNCTION_NAME %> = <%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME %>(<%-CONTROLLER_FUNCTION_NAME %>Usecase);
+<%_ }else{ _%>
+const <%-MODEL%>Db = require('<%-RELATIVE_PATH%>data-access/<%-MODEL%>Db');
+const <%-MODEL%>Schema = require('<%-RELATIVE_PATH%>validation/schema/<%-MODEL%>');
+const createValidation = require('<%-RELATIVE_PATH%>validation')(<%-MODEL%>Schema.createSchema);
+const updateValidation = require('<%-RELATIVE_PATH%>validation')(<%-MODEL%>Schema.updateSchema);
+const <%-CONTROLLER_FUNCTION_NAME %>Usecase = require('<%-RELATIVE_PATH%>use-case/<%-MODEL%>/<%-CONTROLLER_FUNCTION_NAME %>')({
+  <%-MODEL%>Db,
+});
 
-const <%-MODEL%>Controller = make<%-MODEL_NAME%>Controller({
-    <%-MODEL%>Service,
-    make<%-MODEL_NAME%>
-});
-module.exports = <%-MODEL%>Controller;
+const <%-MODEL%>Controller = require('./<%-MODEL%>');
+const <%-CONTROLLER_FUNCTION_NAME %> = <%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME %>(<%-CONTROLLER_FUNCTION_NAME %>Usecase);
+
+module.exports = {
+  <%-CONTROLLER_FUNCTION_NAME %>
+} 
+<%_ } _%>

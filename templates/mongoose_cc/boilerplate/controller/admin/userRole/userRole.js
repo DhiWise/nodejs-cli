@@ -1,301 +1,208 @@
-const message = require('../../../utils/messages');
+const response = require('../../../utils/response'); 
+const responseHandler = require('../../../utils/response/responseHandler'); 
+const getSelectObject = require('../../../utils/getSelectObject'); 
 
-function makeUserRoleController ({
-  userRoleService,makeUserRole
-})
-{
-  const addUserRole = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      const originalData = data;
-      originalData.addedBy = loggedInUser.id.toString();
-      const userRole = makeUserRole(originalData,'insertUserRoleValidator');
-      let createdUserRole = await userRoleService.createDocument(userRole);
-            
-      return message.successResponse(
-        { data :  createdUserRole }
-      );
+const addUserRole = (addUserRoleUsecase) => async (req,res) => {
+  try {
+    let dataToCreate = { ...req.body || {} };
+    dataToCreate.addedBy = req.user.id;
+    let result = await addUserRoleUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+const bulkInsertUserRole = (bulkInsertUserRoleUsecase)=> async (req,res) => {
+  try {
+    let dataToCreate = [...req.body.data];
+    for (let i = 0;i < dataToCreate.length;i++){
+      dataToCreate[i] = {
+        ...dataToCreate[i],
+        addedBy:req.user.id,
+      };
     }
-  };
+    let result = await bulkInsertUserRoleUsecase(dataToCreate,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const bulkInsertUserRole = async ({
-    body, loggedInUser
-  }) => {
-    try {
-      let data = body.data;
-      data.map((item) => { 
-        item.addedBy = loggedInUser.id.toString(); 
-        return item; 
-      });
-      const userRoleEntities = data.map((item)=>makeUserRole(item,'insertUserRoleValidator'));
-      const results = await userRoleService.bulkInsert(userRoleEntities);
-      return message.successResponse({ data:results });
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const findAllUserRole = (findAllUserRoleUsecase) => async (req,res) => {
+  try {
+    let query = { ...req.body.query || {} };
+    let options = { ...req.body.options || {} };
+    let result = await findAllUserRoleUsecase({
+      query,
+      options,
+      isCountOnly:req.body.isCountOnly || false
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const findAllUserRole = async ({
-    data, loggedInUser
-  }) => {
-    try {
-      let options = {};
-      let query = {};
-      let result;
-      if (data.query !== undefined) {
-        query = { ...data.query };
-      }
-      if (data.isCountOnly){
-        result = await userRoleService.countDocument(query);
-        if (result) {
-          result = { totalRecords: result };  
-          return message.successResponse(result);
-        } else {
-          return message.recordNotFound();
-        }
-      } else { 
-        if (data.options !== undefined) {
-          options = { ...data.options };
-        }
-        result = await userRoleService.getAllDocuments(query,options);
-      }
-      if (result.data){
-        return message.successResponse({ data: result });
-      } else {
-        return message.recordNotFound();
-      }
-            
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const getUserRoleCount = (getUserRoleCountUsecase) => async (req,res) => {
+  try {
+    let where = { ...req.body.where || {} };
+    let result = await getUserRoleCountUsecase({ where },req,res);  
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserRoleById = async (query, body = {}) =>{
-    try {
-      if (query){
-        let options = {};
-        if (body && body.populate && body.populate.length) options.populate = body.populate;
-        if (body && body.select && body.select.length) options.select = body.select;
-        let result = await userRoleService.getSingleDocument(query, options);
-        if (result){
-          return message.successResponse({ data: result });
-        }
-        return message.recordNotFound();
-                 
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+const bulkUpdateUserRole = (bulkUpdateUserRoleUsecase) => async (req,res) => {
+  try {
+    let dataToUpdate = { ...req.body.data || {} };
+    let query = { ...req.body.filter || {} };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await bulkUpdateUserRoleUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const partialUpdateUserRole = async (data,id, loggedInUser) => {
-    try {
-      if (id && data){
-        delete data['addedBy'];
-        delete data['updatedBy'];
-        userRole.updatedBy = loggedInUser.id;
-        const userRole = makeUserRole(data,'updateUserRoleValidator');            
-        const filterData = removeEmpty(userRole);
-        const query = { _id:id };
-        let updatedUserRole = await userRoleService.findOneAndUpdateDocument(query,filterData,{ new:true });
-        if (updatedUserRole){
-          return message.successResponse({ data : updatedUserRole });
-        }
-        else {
-          return message.badRequest();
-        }
-      }
-      else {
-        return message.badRequest();
-      }
+const softDeleteManyUserRole = (softDeleteManyUserRoleUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id
+    };
+    let result = await softDeleteManyUserRoleUsecase({
+      query,
+      dataToUpdate
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const updateUserRole = async (data,id, loggedInUser) =>{
-    try {
-      delete data['addedBy'];
-      delete data['updatedBy'];
-      data.updatedBy = loggedInUser.id;
-      if (id && data){
-        const userRole = makeUserRole(data,'updateUserRoleValidator');
-        const filterData = removeEmpty(userRole);
-        let query = { _id:id };
-        let updatedUserRole = await userRoleService.findOneAndUpdateDocument(query,filterData,{ new:true });
-        if (updatedUserRole){
-          return message.successResponse({ data : updatedUserRole });
-        }
-      }
-      return message.badRequest();
+const deleteManyUserRole = (deleteManyUserRoleUsecase) => async (req,res) => {
+  try {
+    if (!req.body || !req.body.ids){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message : error.message });
-      }
-      return message.failureResponse();
+    let ids = req.body.ids;
+    let query = { _id : { $in:ids } };
+    let result = await deleteManyUserRoleUsecase(query,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+const softDeleteUserRole = (softDeleteUserRoleUsecase) => async (req,res)=>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { _id: req.params.id };
+    const dataToUpdate = {
+      isDeleted: true,
+      updatedBy: req.user.id,
+    };
+    let result = await softDeleteUserRoleUsecase({
+      query,
+      dataToUpdate
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const softDeleteUserRole = async (id,loggedInUser)=>{
-    try {
-      if (id){
-        const query = { _id:id };
-        let updatedUserRole = await userRoleService.softDeleteByQuery(query, loggedInUser);
-        return message.successResponse({ data:updatedUserRole });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message: error.message });
-      }
-      return message.failureResponse();
+const partialUpdateUserRole = (partialUpdateUserRoleUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { _id: req.params.id };
+    let dataToUpdate = req.body;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await partialUpdateUserRoleUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserRoleByAggregate = async ({ data }) =>{
-    try {
-      if (data){
-        let result = await userRoleService.getDocumentByAggregation(data);
-        if (result && result.length){
-          return message.successResponse({ data: result });
-        }
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse(); 
+const updateUserRole = (updateUserRoleUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let dataToUpdate = { ...req.body || {} };
+    let query = { _id: req.params.id };
+    delete dataToUpdate.addedBy;
+    dataToUpdate.updatedBy = req.user.id;
+    let result = await updateUserRoleUsecase({
+      dataToUpdate,
+      query
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const getUserRoleCount = async (data) => {
-    try {
-      let where = {};
-      if (data && data.where){
-        where = data.where;
-      }
-      let result = await userRoleService.countDocument(where);
-      if (result){
-        result = { totalRecords:result };
-        return message.successResponse({ data: result });
-                
-      }
-      else {
-        return message.recordNotFound();
-      }
-      return message.badRequest();
+const getUserRole = (getUserRoleUsecase) => async (req,res) =>{
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
+    let query = { _id: req.params.id };
+    let options = {};
+    let result = await getUserRoleUsecase({
+      query,
+      options
+    },req,res);
+    return responseHandler(res,result);
+  } catch (error) {
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+const deleteUserRole = (deleteUserRoleUsecase) => async (req,res) => {
+  try {
+    if (!req.params.id){
+      return responseHandler(res,response.badRequest());
     }
-  };
+    let query = { _id: req.params.id };
+    let result = await deleteUserRoleUsecase(query,req,res);
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
 
-  const upsertUserRole = async (data, loggedInUser)=>{
-    try {
-      if (data){
-        let result;
-        if (data && data.id) {
-          let where = data.id; 
-          delete data['addedBy'];
-          delete data['updatedBy'];
-          data.updatedBy = loggedInUser.id;
-          const userRole = makeUserRole(data,'updateUserRoleValidator');
-          const filterData = removeEmpty(userRole);
-          result = await userRoleService.updateDocument(where,filterData);
-        }
-        else {
-          delete data['addedBy'];
-          delete data['updatedBy'];
-          data.addedBy = loggedInUser.id;
-          const userRole = makeUserRole(data,'insertUserRoleValidator');
-
-          result = await userRoleService.createDocument(userRole); 
-        }
-        return message.successResponse({ data:result });
-                
-      }
-      return message.badRequest();
-    }
-    catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
-
-  const bulkUpdateUserRole = async (data, loggedInUser) => {
-    try {
-      if (data.filter && data.data){
-        delete data.data['addedBy'];
-        delete data.data['updatedBy'];
-        data.data.updatedBy = loggedInUser.id;
-        const userRole = makeUserRole(data.data,'updateUserRoleValidator');
-        const filterData = removeEmpty(userRole);
-        let query = data.filter;
-        const updatedUserRoles = await userRoleService.bulkUpdate(query,filterData);
-        return message.successResponse({ data:updatedUserRoles });
-      }
-      return message.badRequest();
-    } catch (error){
-      if (error.name === 'ValidationError'){
-        return message.inValidParam({ message :error.message });
-      }
-      return message.failureResponse();
-    }
-  };
-
-  const removeEmpty = (obj) => {
-    Object.entries(obj).forEach(([key,value])=>{
-      if (value === undefined){
-        delete obj[key];
-      }
-    });
-    return obj;
-  };
-
-  return Object.freeze({
-    addUserRole,
-    bulkInsertUserRole,
-    findAllUserRole,
-    getUserRoleById,
-    partialUpdateUserRole,
-    updateUserRole,
-    softDeleteUserRole,
-    getUserRoleByAggregate,
-    getUserRoleCount,
-    upsertUserRole,
-    bulkUpdateUserRole,
-    removeEmpty,
-  });
-}
-
-module.exports = makeUserRoleController;
+module.exports = {
+  addUserRole,
+  bulkInsertUserRole,
+  findAllUserRole,
+  getUserRoleCount,
+  bulkUpdateUserRole,
+  softDeleteManyUserRole,
+  deleteManyUserRole,
+  softDeleteUserRole,
+  partialUpdateUserRole,
+  updateUserRole,
+  getUserRole,
+  deleteUserRole
+};

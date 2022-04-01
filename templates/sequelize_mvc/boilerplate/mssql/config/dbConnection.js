@@ -1,3 +1,9 @@
+
+/**
+ * dbConnection.js
+ * @description :: database connection using sequelize
+ */
+
 const {
   Sequelize, DataTypes 
 } = require('sequelize');

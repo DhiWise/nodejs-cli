@@ -1,7 +1,7 @@
 # NodeJS, Sequelize, Express Project in MVC Architecture
 
-**Supported version of nodejs-15.13.0**,
-**Supported version of sequelize-6.6.5**
+**Supported version of nodejs >= 12**,
+**Supported version of sequelize >= 6**
 
 ## About 
 - This is a Node application, developed using MVC pattern with Node.js, ExpressJS, and Sequelize ORM.
@@ -14,15 +14,18 @@
 
        - One user with User role,
 	   # Default User credentials
-	   **username** : Kale_Pacocha@gmail.com
-	   **password** : UWLB9frve30iGiG
+	   **username** : Tiffany10
+	   **password** : w686tgH3u1RZPVU
 
 
        - One user with Admin role,
 	   # Default Admin credentials
-	   **username** : Daija84@gmail.com
-	   **password** : 0NZ6ftILjzdiV6D
+	   **username** : Lucie91
+	   **password** : dTP5epMbsOGzJsI
 
+
+## How to use generated APIs:
+[Click here to visit documentation](<https://docs.dhiwise.com/knowledgehub/generated-node.js-apis> "API Documentation")
 
 ## How to run with Docker ? :
 - if you have docker file you can execute following command
@@ -49,7 +52,7 @@
   └── utils        - contains utility functions    
 ```
 
-### Detail Description of Files and folders
+## Detail Description of Files and folders
 
 1. app.js
 - entry point of application.
@@ -116,4 +119,4 @@
 
 13. env files
 - You can add credentials and port, database values as per your environment(Development/Production).
-- If you are running test environment then testcases will run using test database,and its configuration is there inside app.js
+- If you are running test environment then test cases will run using test database,and its configuration is there inside app.js

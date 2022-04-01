@@ -1,210 +1,134 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);
     FUNCTION_NAME = [];
-%>
-const message = require('../../../utils/messages');
+    let UTILS_PATH = "../../../utils";
+    if(PLATFORM !== "admin"){
+        UTILS_PATH = "../../../../utils";
+    }
 
-function make<%-MODEL_NAME%>Controller ({
-    <%-MODEL%>Service,make<%-MODEL_NAME%>
-  })
-  {
+%>
+const response = require('<%-UTILS_PATH%>/response'); 
+const responseHandler = require('<%-UTILS_PATH%>/response/responseHandler'); 
 
 <%_ if(METHODS.includes("C")){ FUNCTION_NAME.push(`add${MODEL_NAME}`); _%>
-    const add<%-MODEL_NAME%> = async ({
-        data
-    }) => {
-        try {
-            const originalData = data;
-            const <%-MODEL%> = make<%-MODEL_NAME%>(originalData,'insert<%-MODEL_NAME%>Validator');
-            let created<%-MODEL_NAME%> = await <%-MODEL%>Service.createDocument(<%-MODEL%>);
-                    
-            return message.successResponse(
-                { data :  created<%-MODEL_NAME%> }
-            );
-
-        } catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message : error.message });
-            }
-            return message.failureResponse();
-        }
-    };
+const add<%-MODEL_NAME%> = (add<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        let dataToCreate = { ...req.body || {} };
+        let result = await add<%-MODEL_NAME%>Usecase(dataToCreate,req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("BC")){ FUNCTION_NAME.push(`bulkInsert${MODEL_NAME}`); _%>
-    const bulkInsert<%-MODEL_NAME%> = async ({
-        body
-    }) => {
-        try {
-            let data = body.data;
-            data.map((item) => { 
-                return item; 
-            });
-            const <%-MODEL%>Entities = data.map((item)=>make<%-MODEL_NAME%>(item,'insert<%-MODEL_NAME%>Validator'));
-            const results = await <%-MODEL%>Service.bulkInsert(<%-MODEL%>Entities);
-            return message.successResponse({ data:results });
-        } catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message : error.message });
-            }
-            return message.failureResponse();
-        }
-    };
+const bulkInsert<%-MODEL_NAME%> = (bulkInsert<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        let dataToCreate = [...req.body.data];
+        let result = await bulkInsert<%-MODEL_NAME%>Usecase(dataToCreate,req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("FALL")){ FUNCTION_NAME.push(`findAll${MODEL_NAME}`); _%>
-    const findAll<%-MODEL_NAME%> = async ({
-        data
-    }) => {
-        try {
-            let options = {};
-            let query = {};
-            let result;
-            if (data.query !== undefined) {
-                query = { ...data.query };
-            }
-            if (data.isCountOnly){
-                result = await <%-MODEL%>Service.countDocument(query);
-                if (result) {
-                    result = { totalRecords: result };  
-                } else {
-                    return message.recordNotFound();
-                }
-            } else { 
-                if (data.options !== undefined) {
-                    options = { ...data.options };
-                }
-                result = await <%-MODEL%>Service.getAllDocuments(query,options);
-            }
-            if (result.data){
-                return message.successResponse({ data: result });
-            } else {
-                return message.recordNotFound();
-            }
-                
-        }
-        catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message :error.message });
-            }
-            return message.failureResponse();
-        }
-    };
+const findAll<%-MODEL_NAME%> = (findAll<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        let query = { ...req.body.query || {} };
+        let options = { ...req.body.options || {} };
+        let result = await findAll<%-MODEL_NAME%>Usecase({
+            query,
+            options,
+            isCountOnly:req.body.isCountOnly || false
+        },req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
-<%_ if(METHODS.includes("FBYID")){ FUNCTION_NAME.push(`get${MODEL_NAME}ById`); _%>
-    const get<%-MODEL_NAME%>ById = async (query, body = {}) =>{
-        try {
-            if (query){
-                let options = {};
-                if (body && body.populate && body.populate.length) options.populate = body.populate;
-                if (body && body.select && body.select.length) options.select = body.select;
-                let result = await <%-MODEL%>Service.getSingleDocument(query, options);
-                if (result){
-                    return message.successResponse({ data: result });
-                }
-                return message.recordNotFound();   
-            }
-            return message.badRequest();
+<%_ if(METHODS.includes("FBYID")){ FUNCTION_NAME.push(`get${MODEL_NAME}`); _%>
+const get<%-MODEL_NAME%> = (get<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.params.id){
+            return responseHandler(res,response.badRequest());
         }
-        catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message :error.message });
-            }
-            return message.failureResponse();
-        }
-    };
+        let query = { _id: req.params.id };
+        let options = {};
+        let result = await get<%-MODEL_NAME%>Usecase({
+            query:body,
+            options
+        },req,res);
+        return responseHandler(res,result);
+    } catch (error) {
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("COUNT")){ FUNCTION_NAME.push(`get${MODEL_NAME}Count`); _%>
-    const get<%-MODEL_NAME%>Count = async (data) => {
-        try {
-            let where = {};
-            if (data && data.where){
-                where = data.where;
-            }
-            let result = await <%-MODEL%>Service.countDocument(where);
-            if (result){
-                result = { totalRecords:result };
-                return message.successResponse({ data: result });    
-            }
-            else {
-                return message.recordNotFound();
-            }
-        }
-        catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message : error.message });
-            }
-            return message.failureResponse();
-        }
-    };      
+const get<%-MODEL_NAME%>Count = (get<%-MODEL_NAME%>CountUsecase) => async (req,res) => {
+    try {
+        let where = { ...req.body.where || {} };
+        let result = await get<%-MODEL_NAME%>CountUsecase({ where },req,res);  
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};      
 <%_ } _%>
-<%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
-    const update<%-MODEL_NAME%> = async (data,id) =>{
-        try {
-            delete data['addedBy'];
-            delete data['updatedBy'];
-            if (id && data){
-                const <%-MODEL%> = make<%-MODEL_NAME%>(data,'update<%-MODEL_NAME%>Validator');
-                const filterData = removeEmpty(<%-MODEL%>);
-                let query = {};
-                let updated<%-MODEL_NAME%> = await <%-MODEL%>Service.findOneAndUpdateDocument(query,filterData,{ new:true });
-                if (updated<%-MODEL_NAME%>){
-                    return message.successResponse({ data : updated<%-MODEL_NAME%> });
-                }
-            }
-            return message.badRequest();
+<%_ if(METHODS.includes("U")){ FUNCTION_NAME.push(`update${MODEL_NAME}`); _%>
+const update<%-MODEL_NAME%> = (update<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.params.id){
+          return responseHandler(res,response.badRequest());
         }
-        catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message : error.message });
-            }
-            return message.failureResponse();
+        let dataToUpdate = { ...req.body || {} };
+        let query = { _id: req.params.id };
+        delete dataToUpdate.addedBy;
+        delete dataToUpdate.updatedBy;
+        let result = await updateUserRoleUsecase({
+          dataToUpdate,
+          query
+        },req,res);
+        return responseHandler(res,result);
+      } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+      }
+};
+<%_ } _%>
+<%_ if(METHODS.includes("PU")){ FUNCTION_NAME.push(`partialUpdate${MODEL_NAME}`);  _%>
+const partialUpdate<%-MODEL_NAME%> =  (partialUpdate<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.params.id){
+          return responseHandler(res,response.badRequest());
         }
-    };
-    const partialUpdate<%-MODEL_NAME%> = async (data,id) => {
-        try {
-          if (id && data){
-            delete data['addedBy'];
-            delete data['updatedBy'];
-            const <%-MODEL%> = make<%-MODEL_NAME%>(data,'update<%-MODEL_NAME%>Validator');            
-            const filterData = removeEmpty(<%-MODEL%>);
-            let query = {};
-            let updated<%-MODEL_NAME%> = await <%-MODEL%>Service.findOneAndUpdateDocument(query,filterData,{ new:true });
-            if (updated<%-MODEL_NAME%>){
-                return message.successResponse({ data: updated<%-MODEL_NAME%> });
-            }
-            else {
-                return message.badRequest();
-            }
-          }
-          else {
-            return message.badRequest();
-          }
-        }
-        catch (error){
-          if (error.name === 'ValidationError'){
-            return message.inValidParam({ message :error.message });
-          }
-          return message.failureResponse();
-        }
-    };
+        let query = { _id: req.params.id };
+        let dataToUpdate = req.body;
+        let result = await partialUpdate<%-MODEL_NAME%>Usecase({
+          dataToUpdate,
+          query
+        },req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("BU")){ FUNCTION_NAME.push(`bulkUpdate${MODEL_NAME}`); _%>
-    const bulkUpdate<%-MODEL_NAME%> = async (data) => {
-        try {
-            if (data.filter && data.data){
-                delete data.data['addedBy'];
-                delete data.data['updatedBy'];
-                const <%-MODEL%> = make<%-MODEL_NAME%>(data.data,'update<%-MODEL_NAME%>Validator');
-                const filterData = removeEmpty(<%-MODEL%>);
-                const updated<%-MODEL_NAME%>s = await <%-MODEL%>Service.bulkUpdate(data.filter,filterData);
-                return message.successResponse({ data:updated<%-MODEL_NAME%>s });
-            }
-            return message.badRequest();
-        } catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message :error.message });
-            }
-            return message.failureResponse();
-        }
-    };
+const bulkUpdate<%-MODEL_NAME%> = (bulkUpdate<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        let dataToUpdate = { ...req.body.data || {} };
+        let query = { ...req.body.filter || {} };
+        delete dataToUpdate.addedBy;
+        let result = await bulkUpdate<%-MODEL_NAME%>Usecase({
+            dataToUpdate,
+            query
+        },req,res);
+            return responseHandler(res,result);
+    } catch (error){
+            return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("UP")){ FUNCTION_NAME.push(`upsert${MODEL_NAME}`); _%>
     const upsert<%-MODEL_NAME%> = async (data)=>{
@@ -239,98 +163,76 @@ function make<%-MODEL_NAME%>Controller ({
     };
 <%_ } _%>
 <%_ if(METHODS.includes("DMANY")){ FUNCTION_NAME.push(`deleteMany${MODEL_NAME}`); _%>
-    const deleteMany<%-MODEL_NAME%> = async (data) => {
-        try {
-            if (data && data.ids){
-            let ids = data.ids;
-            if (ids && ids.length){
-                let query = { _id:{ $in:ids } };
-                let result  = await <%-MODEL%>Service.deleteMany(query);
-                if (!result){
-                    return message.invalidRequest({ message:'your request is not successfully executed.' });
-                }
-                return message.successResponse({ data:result });      
-            }
-                return message.badRequest();
-            }
-            return message.badRequest();
+const deleteMany<%-MODEL_NAME%> = (deleteMany<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.body || !req.body.ids){
+            return responseHandler(res,response.badRequest());
         }
-        catch (error){
-            if (error.name === 'ValidationError'){
-                return message.inValidParam({ message :error.message });
-            }
-            return message.failureResponse();
-        }
-  };
+        let ids = req.body.ids;
+        let query = { _id : { $in:ids } };
+        let result = await deleteMany<%-MODEL_NAME%>Usecase(query,req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("D")){ FUNCTION_NAME.push(`delete${MODEL_NAME}`); _%>
-    const delete<%-MODEL_NAME%> = async (id) => {
-        try {
-            if (id){
-              let result = await <%-MODEL%>Service.deleteDocument({ _id:id });
-              if (!result){
-                return message.invalidRequest({ message:'your request is not successfully executed.' });
-              }
-              return message.successResponse({ data:result });      
-            }
-            return message.badRequest();
-          }
-          catch (error){
-            if (error.name === 'ValidationError'){
-              return message.inValidParam({ message:error.message });
-            }
-            return message.failureResponse();
-        }      
-    };
+const delete<%-MODEL_NAME%> = (delete<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.params.id){
+            return responseHandler(res,response.badRequest());
+        }
+        let query = { _id: req.params.id };
+        let result = await delete<%-MODEL_NAME%>Usecase(query,req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }     
+};
 <%_ } _%>
 <%_ if(METHODS.includes("SD")){ FUNCTION_NAME.push(`softDelete${MODEL_NAME}`); _%>
-    const softDelete<%-MODEL_NAME%> = async (id) => {
-        try {
-            let result = await <%-MODEL%>Service.softDeleteDocument(id);
-            if (!result){
-              return message.invalidRequest({ message:'your request is not successfully executed.' });
-            }
-            return message.successResponse({ data:result });
-          } catch (error){
-            if (error.name === 'ValidationError'){
-              return message.inValidParam({ message: error.message });
-            }
-            return message.failureResponse();
+const softDelete<%-MODEL_NAME%> = (softDelete<%-MODEL_NAME%>Usecase) => async (req,res) => {
+    try {
+        if (!req.params.id){
+            return responseHandler(res,response.badRequest());
         }
-    };
+        let query = { _id: req.params.id };
+        const dataToUpdate = {
+            isDeleted: true,
+        };
+        let result = await softDelete<%-MODEL_NAME%>Usecase({
+            query,
+            dataToUpdate
+        },req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
+    }
+};
 <%_ } _%>
 <%_ if(METHODS.includes("SDMANY")){ FUNCTION_NAME.push(`softDeleteMany${MODEL_NAME}`); _%>
-const softDeleteMany<%-MODEL_NAME%> = async (ids) => {
+const softDeleteMany<%-MODEL_NAME%> = (softDeleteMany<%-MODEL_NAME%>Usecase) => async (req,res) => {
     try {
-        if (ids){
-          let result = await <%-MODEL%>Service.bulkUpdate({ _id:{ $in:ids } },{ isDeleted:true });
-          if (!result){
-            return message.invalidRequest({ message:'your request is not successfully executed.' });
-          }
-          return message.successResponse({ data:result });
+        if (!req.body || !req.body.ids){
+          return responseHandler(res,response.badRequest());
         }
-        return message.badRequest();
-      } catch (error){
-        if (error.name === 'ValidationError'){
-          return message.inValidParam({ message :error.message });
-        }
-        return message.failureResponse();
+        let ids = req.body.ids;
+        let query = { _id : { $in:ids } };
+        const dataToUpdate = {
+          isDeleted: true,
+        };
+        let result = await softDeleteMany<%-MODEL_NAME%>Usecase({
+          query,
+          dataToUpdate
+        },req,res);
+        return responseHandler(res,result);
+    } catch (error){
+        return responseHandler(res,response.internalServerError({ message:error.message }));
     }
 };
 <%_ } _%>
 
-    const removeEmpty = (obj) => {
-        Object.entries(obj).forEach(([key,value])=>{
-        if (value === undefined){
-            delete obj[key];
-        }
-        });
-        return obj;
-    };
-    
-    return Object.freeze({
-        <%- FUNCTION_NAME.join(",") %>
-    });
-
+module.exports = {
+    <%- FUNCTION_NAME.join(",") %>
 }
-module.exports = make<%-MODEL_NAME%>Controller;

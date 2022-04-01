@@ -1,3 +1,8 @@
+/**
+ * deleteDependent.js
+ * @description :: exports deleteDependent service for project.
+ */
+
 let User = require('../model/user');
 let UserAuthSettings = require('../model/userAuthSettings');
 let UserToken = require('../model/userToken');
@@ -16,20 +21,26 @@ const deleteUser = async (filter) =>{
     });
     if (user && user.length){
       user = user.map((obj) => obj.id);
-      const userFilter6528 = { 'addedBy': { [Op.in]: user } };
-      const user2418 = await deleteUser(userFilter6528);
-      const userFilter5854 = { 'updatedBy': { [Op.in]: user } };
-      const user8390 = await deleteUser(userFilter5854);
-      const userAuthSettingsFilter9378 = { 'userId': { [Op.in]: user } };
-      const userAuthSettings6907 = await deleteUserAuthSettings(userAuthSettingsFilter9378);
-      const userTokenFilter4715 = { 'userId': { [Op.in]: user } };
-      const userToken3298 = await deleteUserToken(userTokenFilter4715);
-      const userRoleFilter4436 = { 'userId': { [Op.in]: user } };
-      const userRole3890 = await deleteUserRole(userRoleFilter4436);
-      return await User.destroy({ where :filter });
+
+      const userFilter = { [Op.or]: [{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      await dbService.deleteMany(User,userFilter);
+
+      const userAuthSettingsFilter = { [Op.or]: [{ userId : { [Op.in] : user } },{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      await dbService.deleteMany(UserAuthSettings,userAuthSettingsFilter);
+
+      const userTokenFilter = { [Op.or]: [{ userId : { [Op.in] : user } },{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      await dbService.deleteMany(UserToken,userTokenFilter);
+
+      const userRoleFilter = { [Op.or]: [{ userId : { [Op.in] : user } }] };
+      await dbService.deleteMany(UserRole,userRoleFilter);
+
+      let response  = await dbService.deleteMany(User,filter);
+      return response;
+
     } else {
       return 'No user found.';
     }
+
   } catch (error){
     throw new Error(error.message);
   }
@@ -37,7 +48,8 @@ const deleteUser = async (filter) =>{
 
 const deleteUserAuthSettings = async (filter) =>{
   try {
-    return await UserAuthSettings.destroy({ where: filter });
+    let response  = await dbService.deleteMany(UserAuthSettings,filter);
+    return response;
   } catch (error){
     throw new Error(error.message);
   }
@@ -45,7 +57,8 @@ const deleteUserAuthSettings = async (filter) =>{
 
 const deleteUserToken = async (filter) =>{
   try {
-    return await UserToken.destroy({ where: filter });
+    let response  = await dbService.deleteMany(UserToken,filter);
+    return response;
   } catch (error){
     throw new Error(error.message);
   }
@@ -59,14 +72,20 @@ const deleteRole = async (filter) =>{
     });
     if (role && role.length){
       role = role.map((obj) => obj.id);
-      const routeRoleFilter5768 = { 'roleId': { [Op.in]: role } };
-      const routeRole6926 = await deleteRouteRole(routeRoleFilter5768);
-      const userRoleFilter7262 = { 'roleId': { [Op.in]: role } };
-      const userRole3647 = await deleteUserRole(userRoleFilter7262);
-      return await Role.destroy({ where :filter });
+
+      const routeRoleFilter = { [Op.or]: [{ roleId : { [Op.in] : role } }] };
+      await dbService.deleteMany(RouteRole,routeRoleFilter);
+
+      const userRoleFilter = { [Op.or]: [{ roleId : { [Op.in] : role } }] };
+      await dbService.deleteMany(UserRole,userRoleFilter);
+
+      let response  = await dbService.deleteMany(Role,filter);
+      return response;
+
     } else {
       return 'No role found.';
     }
+
   } catch (error){
     throw new Error(error.message);
   }
@@ -80,12 +99,17 @@ const deleteProjectRoute = async (filter) =>{
     });
     if (projectroute && projectroute.length){
       projectroute = projectroute.map((obj) => obj.id);
-      const routeRoleFilter8197 = { 'routeId': { [Op.in]: projectroute } };
-      const routeRole3335 = await deleteRouteRole(routeRoleFilter8197);
-      return await ProjectRoute.destroy({ where :filter });
+
+      const routeRoleFilter = { [Op.or]: [{ routeId : { [Op.in] : projectroute } }] };
+      await dbService.deleteMany(RouteRole,routeRoleFilter);
+
+      let response  = await dbService.deleteMany(ProjectRoute,filter);
+      return response;
+
     } else {
       return 'No projectRoute found.';
     }
+
   } catch (error){
     throw new Error(error.message);
   }
@@ -93,7 +117,8 @@ const deleteProjectRoute = async (filter) =>{
 
 const deleteRouteRole = async (filter) =>{
   try {
-    return await RouteRole.destroy({ where: filter });
+    let response  = await dbService.deleteMany(RouteRole,filter);
+    return response;
   } catch (error){
     throw new Error(error.message);
   }
@@ -101,7 +126,8 @@ const deleteRouteRole = async (filter) =>{
 
 const deleteUserRole = async (filter) =>{
   try {
-    return await UserRole.destroy({ where: filter });
+    let response  = await dbService.deleteMany(UserRole,filter);
+    return response;
   } catch (error){
     throw new Error(error.message);
   }
@@ -115,29 +141,28 @@ const countUser = async (filter) =>{
     });
     if (user && user.length){
       user = user.map((obj) => obj.id);
-      const userFilter1162 = { 'addedBy': { [Op.in]: user } };
-      const user1897Cnt = await countUser(userFilter1162);
-      const userFilter1487 = { 'updatedBy': { [Op.in]: user } };
-      const user7825Cnt = await countUser(userFilter1487);
-      const userAuthSettingsFilter6659 = { 'userId': { [Op.in]: user } };
-      const userAuthSettings5904Cnt = await countUserAuthSettings(userAuthSettingsFilter6659);
-      const userTokenFilter3112 = { 'userId': { [Op.in]: user } };
-      const userToken1433Cnt = await countUserToken(userTokenFilter3112);
-      const userRoleFilter7878 = { 'userId': { [Op.in]: user } };
-      const userRole0516Cnt = await countUserRole(userRoleFilter7878);
-      const userCnt =  await User.count(filter);
-      let response = { user : userCnt  };
-      response = {
-        ...response,
-        ...user1897Cnt,
-        ...user7825Cnt,
-        ...userAuthSettings5904Cnt,
-        ...userToken1433Cnt,
-        ...userRole0516Cnt,
+
+      const userFilter = { [Op.or]: [{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      const userCnt =  await dbService.count(User,userFilter);
+
+      const userAuthSettingsFilter = { [Op.or]: [{ userId : { [Op.in] : user } },{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      const userAuthSettingsCnt =  await dbService.count(UserAuthSettings,userAuthSettingsFilter);
+
+      const userTokenFilter = { [Op.or]: [{ userId : { [Op.in] : user } },{ addedBy : { [Op.in] : user } },{ updatedBy : { [Op.in] : user } }] };
+      const userTokenCnt =  await dbService.count(UserToken,userTokenFilter);
+
+      const userRoleFilter = { [Op.or]: [{ userId : { [Op.in] : user } }] };
+      const userRoleCnt =  await dbService.count(UserRole,userRoleFilter);
+
+      let response = {
+        user : userCnt,
+        userAuthSettings : userAuthSettingsCnt,
+        userToken : userTokenCnt,
+        userRole : userRoleCnt,
       };
-      return response;
+      return response; 
     } else {
-      return 'No user found.';
+      return {  user : 0 };
     }
   } catch (error){
     throw new Error(error.message);
@@ -170,20 +195,20 @@ const countRole = async (filter) =>{
     });
     if (role && role.length){
       role = role.map((obj) => obj.id);
-      const routeRoleFilter9732 = { 'roleId': { [Op.in]: role } };
-      const routeRole9428Cnt = await countRouteRole(routeRoleFilter9732);
-      const userRoleFilter7282 = { 'roleId': { [Op.in]: role } };
-      const userRole3318Cnt = await countUserRole(userRoleFilter7282);
-      const roleCnt =  await Role.count(filter);
-      let response = { role : roleCnt  };
-      response = {
-        ...response,
-        ...routeRole9428Cnt,
-        ...userRole3318Cnt,
+
+      const routeRoleFilter = { [Op.or]: [{ roleId : { [Op.in] : role } }] };
+      const routeRoleCnt =  await dbService.count(RouteRole,routeRoleFilter);
+
+      const userRoleFilter = { [Op.or]: [{ roleId : { [Op.in] : role } }] };
+      const userRoleCnt =  await dbService.count(UserRole,userRoleFilter);
+
+      let response = {
+        routeRole : routeRoleCnt,
+        userRole : userRoleCnt,
       };
-      return response;
+      return response; 
     } else {
-      return 'No role found.';
+      return {  role : 0 };
     }
   } catch (error){
     throw new Error(error.message);
@@ -198,17 +223,14 @@ const countProjectRoute = async (filter) =>{
     });
     if (projectroute && projectroute.length){
       projectroute = projectroute.map((obj) => obj.id);
-      const routeRoleFilter2934 = { 'routeId': { [Op.in]: projectroute } };
-      const routeRole4752Cnt = await countRouteRole(routeRoleFilter2934);
-      const projectRouteCnt =  await ProjectRoute.count(filter);
-      let response = { projectRoute : projectRouteCnt  };
-      response = {
-        ...response,
-        ...routeRole4752Cnt,
-      };
-      return response;
+
+      const routeRoleFilter = { [Op.or]: [{ routeId : { [Op.in] : projectroute } }] };
+      const routeRoleCnt =  await dbService.count(RouteRole,routeRoleFilter);
+
+      let response = { routeRole : routeRoleCnt, };
+      return response; 
     } else {
-      return 'No projectRoute found.';
+      return {  projectroute : 0 };
     }
   } catch (error){
     throw new Error(error.message);
@@ -233,7 +255,7 @@ const countUserRole = async (filter) =>{
   }
 };
 
-const softDeleteUser = async (filter,loggedInUserId) =>{
+const softDeleteUser = async (filter,updateBody, defaultValues = {}) =>{
   try {
     let user = await User.findAll({
       where:filter,
@@ -241,33 +263,28 @@ const softDeleteUser = async (filter,loggedInUserId) =>{
     });
     if (user && user.length){
       user = user.map((obj) => obj.id);
-      const userFilter5407 = { 'addedBy': { [Op.in]: user } };
-      const user3379 = await softDeleteUser(userFilter5407,loggedInUserId);
-      const userFilter6796 = { 'updatedBy': { [Op.in]: user } };
-      const user4398 = await softDeleteUser(userFilter6796,loggedInUserId);
-      const userAuthSettingsFilter5323 = { 'userId': { [Op.in]: user } };
-      const userAuthSettings5254 = await softDeleteUserAuthSettings(userAuthSettingsFilter5323,loggedInUserId);
-      const userTokenFilter1263 = { 'userId': { [Op.in]: user } };
-      const userToken0041 = await softDeleteUserToken(userTokenFilter1263,loggedInUserId);
-      const userRoleFilter5531 = { 'userId': { [Op.in]: user } };
-      const userRole5642 = await softDeleteUserRole(userRoleFilter5531,loggedInUserId);
-      if (loggedInUserId){
-        return await User.update(
-          {
-            isDeleted:true,
-            updatedBy:loggedInUserId
-          },{
-            fields: ['isDeleted','updatedBy'],
-            where: filter ,
-          });
-      } else {
-        return await User.update(
-          { isDeleted:true },{
-            fields: ['isDeleted'],
-            where: filter ,
-          });
-      }
- 
+      const userFilter6656 = { 'addedBy': { [Op.in]: user } };
+      const user6989 = await softDeleteUser(userFilter6656,updateBody);
+      const userFilter5175 = { 'updatedBy': { [Op.in]: user } };
+      const user2122 = await softDeleteUser(userFilter5175,updateBody);
+      const userAuthSettingsFilter9672 = { 'userId': { [Op.in]: user } };
+      const userAuthSettings5816 = await softDeleteUserAuthSettings(userAuthSettingsFilter9672,updateBody);
+      const userAuthSettingsFilter1488 = { 'addedBy': { [Op.in]: user } };
+      const userAuthSettings9033 = await softDeleteUserAuthSettings(userAuthSettingsFilter1488,updateBody);
+      const userAuthSettingsFilter5708 = { 'updatedBy': { [Op.in]: user } };
+      const userAuthSettings8264 = await softDeleteUserAuthSettings(userAuthSettingsFilter5708,updateBody);
+      const userTokenFilter2791 = { 'userId': { [Op.in]: user } };
+      const userToken7427 = await softDeleteUserToken(userTokenFilter2791,updateBody);
+      const userTokenFilter4184 = { 'addedBy': { [Op.in]: user } };
+      const userToken1574 = await softDeleteUserToken(userTokenFilter4184,updateBody);
+      const userTokenFilter0613 = { 'updatedBy': { [Op.in]: user } };
+      const userToken9749 = await softDeleteUserToken(userTokenFilter0613,updateBody);
+      const userRoleFilter7015 = { 'userId': { [Op.in]: user } };
+      const userRole4615 = await softDeleteUserRole(userRoleFilter7015,updateBody);
+      return await User.update({
+        ...updateBody,
+        ...defaultValues
+      },{ where: filter });
     } else {
       return 'No user found.';
     }
@@ -276,55 +293,29 @@ const softDeleteUser = async (filter,loggedInUserId) =>{
   }
 };
 
-const softDeleteUserAuthSettings = async (filter,loggedInUserId) =>{
+const softDeleteUserAuthSettings = async (filter,updateBody, defaultValues = {}) =>{
   try {
-    if (loggedInUserId){
-      return await UserAuthSettings.update(
-        {
-          isDeleted:true,
-          updatedBy:loggedInUserId
-        },{
-          fields: ['isDeleted','updatedBy'],
-          where: filter ,
-        });
-    } else {
-      return await UserAuthSettings.update(
-        { isDeleted:true },{
-          fields: ['isDeleted'],
-          where: filter,
-        });
-    }
-        
+    return await UserAuthSettings.update({
+      ...updateBody,
+      ...defaultValues
+    },{ where: filter });
   } catch (error){
     throw new Error(error.message);
   }
 };
 
-const softDeleteUserToken = async (filter,loggedInUserId) =>{
+const softDeleteUserToken = async (filter,updateBody, defaultValues = {}) =>{
   try {
-    if (loggedInUserId){
-      return await UserToken.update(
-        {
-          isDeleted:true,
-          updatedBy:loggedInUserId
-        },{
-          fields: ['isDeleted','updatedBy'],
-          where: filter ,
-        });
-    } else {
-      return await UserToken.update(
-        { isDeleted:true },{
-          fields: ['isDeleted'],
-          where: filter,
-        });
-    }
-        
+    return await UserToken.update({
+      ...updateBody,
+      ...defaultValues
+    },{ where: filter });
   } catch (error){
     throw new Error(error.message);
   }
 };
 
-const softDeleteRole = async (filter,loggedInUserId) =>{
+const softDeleteRole = async (filter,updateBody, defaultValues = {}) =>{
   try {
     let role = await Role.findAll({
       where:filter,
@@ -332,27 +323,14 @@ const softDeleteRole = async (filter,loggedInUserId) =>{
     });
     if (role && role.length){
       role = role.map((obj) => obj.id);
-      const routeRoleFilter7330 = { 'roleId': { [Op.in]: role } };
-      const routeRole2220 = await softDeleteRouteRole(routeRoleFilter7330,loggedInUserId);
-      const userRoleFilter8098 = { 'roleId': { [Op.in]: role } };
-      const userRole2164 = await softDeleteUserRole(userRoleFilter8098,loggedInUserId);
-      if (loggedInUserId){
-        return await Role.update(
-          {
-            isDeleted:true,
-            updatedBy:loggedInUserId
-          },{
-            fields: ['isDeleted','updatedBy'],
-            where: filter ,
-          });
-      } else {
-        return await Role.update(
-          { isDeleted:true },{
-            fields: ['isDeleted'],
-            where: filter ,
-          });
-      }
- 
+      const routeRoleFilter1150 = { 'roleId': { [Op.in]: role } };
+      const routeRole5982 = await softDeleteRouteRole(routeRoleFilter1150,updateBody);
+      const userRoleFilter6034 = { 'roleId': { [Op.in]: role } };
+      const userRole4233 = await softDeleteUserRole(userRoleFilter6034,updateBody);
+      return await Role.update({
+        ...updateBody,
+        ...defaultValues
+      },{ where: filter });
     } else {
       return 'No role found.';
     }
@@ -361,7 +339,7 @@ const softDeleteRole = async (filter,loggedInUserId) =>{
   }
 };
 
-const softDeleteProjectRoute = async (filter,loggedInUserId) =>{
+const softDeleteProjectRoute = async (filter,updateBody, defaultValues = {}) =>{
   try {
     let projectroute = await ProjectRoute.findAll({
       where:filter,
@@ -369,25 +347,12 @@ const softDeleteProjectRoute = async (filter,loggedInUserId) =>{
     });
     if (projectroute && projectroute.length){
       projectroute = projectroute.map((obj) => obj.id);
-      const routeRoleFilter3052 = { 'routeId': { [Op.in]: projectroute } };
-      const routeRole9559 = await softDeleteRouteRole(routeRoleFilter3052,loggedInUserId);
-      if (loggedInUserId){
-        return await ProjectRoute.update(
-          {
-            isDeleted:true,
-            updatedBy:loggedInUserId
-          },{
-            fields: ['isDeleted','updatedBy'],
-            where: filter ,
-          });
-      } else {
-        return await ProjectRoute.update(
-          { isDeleted:true },{
-            fields: ['isDeleted'],
-            where: filter ,
-          });
-      }
- 
+      const routeRoleFilter3383 = { 'routeId': { [Op.in]: projectroute } };
+      const routeRole6703 = await softDeleteRouteRole(routeRoleFilter3383,updateBody);
+      return await ProjectRoute.update({
+        ...updateBody,
+        ...defaultValues
+      },{ where: filter });
     } else {
       return 'No projectRoute found.';
     }
@@ -396,49 +361,23 @@ const softDeleteProjectRoute = async (filter,loggedInUserId) =>{
   }
 };
 
-const softDeleteRouteRole = async (filter,loggedInUserId) =>{
+const softDeleteRouteRole = async (filter,updateBody, defaultValues = {}) =>{
   try {
-    if (loggedInUserId){
-      return await RouteRole.update(
-        {
-          isDeleted:true,
-          updatedBy:loggedInUserId
-        },{
-          fields: ['isDeleted','updatedBy'],
-          where: filter ,
-        });
-    } else {
-      return await RouteRole.update(
-        { isDeleted:true },{
-          fields: ['isDeleted'],
-          where: filter,
-        });
-    }
-        
+    return await RouteRole.update({
+      ...updateBody,
+      ...defaultValues
+    },{ where: filter });
   } catch (error){
     throw new Error(error.message);
   }
 };
 
-const softDeleteUserRole = async (filter,loggedInUserId) =>{
+const softDeleteUserRole = async (filter,updateBody, defaultValues = {}) =>{
   try {
-    if (loggedInUserId){
-      return await UserRole.update(
-        {
-          isDeleted:true,
-          updatedBy:loggedInUserId
-        },{
-          fields: ['isDeleted','updatedBy'],
-          where: filter ,
-        });
-    } else {
-      return await UserRole.update(
-        { isDeleted:true },{
-          fields: ['isDeleted'],
-          where: filter,
-        });
-    }
-        
+    return await UserRole.update({
+      ...updateBody,
+      ...defaultValues
+    },{ where: filter });
   } catch (error){
     throw new Error(error.message);
   }

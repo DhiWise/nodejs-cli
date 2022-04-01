@@ -1,0 +1,8 @@
+const response = require('../../utils/response');
+
+const <%-CONTROLLER_FUNCTION_NAME %> = ({
+    <%-MODEL%>Db 
+}) => async (req,res) => {
+    return response.success({ data: {} });
+};
+module.exports = <%-CONTROLLER_FUNCTION_NAME %>;

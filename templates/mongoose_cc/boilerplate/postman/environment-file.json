@@ -1,6 +1,6 @@
 {
-  "id": "bd959cb7-d729-4452-b14f-d822e585ad52",
-  "name": "m_cc_environment",
+  "id": "4d079f7d-f040-4d0a-af0a-0b7fd293fbd4",
+  "name": "mongo_cc_boilerplate_environment",
   "values": [
     {
       "key": "token",
@@ -14,6 +14,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2021-11-11T05:24:13.579Z",
+  "_postman_exported_at": "2022-03-31T11:50:30.507Z",
   "_postman_exported_using": "Postman"
 }

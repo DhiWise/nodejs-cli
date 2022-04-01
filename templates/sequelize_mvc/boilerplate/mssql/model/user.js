@@ -1,9 +1,17 @@
-const { DataTypes } = require('sequelize');
+/**
+ * user.js
+ * @description :: sequelize model of database table user
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
 const { convertObjectToEnum } = require('../utils/common');
 const bcrypt = require('bcrypt');
+const authConstantEnum = require('../constants/authConstant');
 let User = sequelize.define('user',{
   id:{
     type:DataTypes.INTEGER,
@@ -14,17 +22,19 @@ let User = sequelize.define('user',{
   password:{ type:DataTypes.STRING },
   email:{ type:DataTypes.STRING },
   name:{ type:DataTypes.STRING },
+     
+  userType:{
+    type:DataTypes.INTEGER,
+    required:true,
+    values:convertObjectToEnum(authConstantEnum.USER_TYPES)
+  },
   isActive:{ type:DataTypes.BOOLEAN },
+  isDeleted:{ type:DataTypes.BOOLEAN },
   createdAt:{ type:DataTypes.DATE },
   updatedAt:{ type:DataTypes.DATE },
   addedBy:{ type:DataTypes.INTEGER },
   updatedBy:{ type:DataTypes.INTEGER },
-  isDeleted:{ type:DataTypes.BOOLEAN },
-  mobileNo:{ type:DataTypes.STRING },
-  role:{
-    type:DataTypes.INTEGER,
-    required:true
-  }
+  mobileNo:{ type:DataTypes.STRING }
 }
 ,{
   hooks:{
@@ -34,6 +44,7 @@ let User = sequelize.define('user',{
           await bcrypt.hash(user.password, 8);}
         user.isActive = true;
         user.isDeleted = false;
+
       },
     ],
     afterCreate: [
@@ -49,7 +60,8 @@ User.prototype.isPasswordMatch = async function (password) {
   return bcrypt.compare(password, user.password);
 };
 User.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
+  delete values.password;
   return values;
 };
 sequelizeTransforms(User);

@@ -1,7 +1,12 @@
 <%_ if(!IS_EXIST){ _%>
+<% let ROUTE_PATH = `../../controller/${PLATFORM}/${MODEL}Controller`;
+    if(PLATFORM !== 'admin'){
+        ROUTE_PATH = `../../../controller/${PLATFORM}/v1/${MODEL}Controller`;
+    }
+%>    
 const express = require('express');
 const router = express.Router();
-const <%-MODEL%>Controller = require('../../controller/<%-PLATFORM%>/<%-MODEL%>Controller');
+const <%-MODEL%>Controller = require(<%=ROUTE_PATH%>);
 router.route("<%-ROUTE_PATTERN%>").<%-ROUTE_METHOD%>(<%-MODEL%>Controller.<%-CONTROLLER_FUNCTION_NAME%>);
 module.exports = router;
 <%_ }else{ _%>

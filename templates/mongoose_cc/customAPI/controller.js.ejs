@@ -1,27 +1,32 @@
 <% let MODEL_NAME =  MODEL.charAt(0).toUpperCase() + MODEL.slice(1);%>
 <%_ if(!IS_EXIST){ _%>
-const message = require('../../../utils/messages');
-function make<%-MODEL_NAME%>Controller ({ <%-MODEL%>Service,make<%-MODEL_NAME%> }){
-
-  const <%-CONTROLLER_FUNCTION_NAME %> = async ({data}) => {
-    try {   
-      return message.successResponse({ data: {} });
-    } catch (error){
-      return message.failureResponse();
-    }
-  };
-
-  return Object.freeze({
-    <%-CONTROLLER_FUNCTION_NAME %>,
-  });
-}
-module.exports =  make<%-MODEL_NAME%>Controller 
-<%_}else{ _%>
-const <%-CONTROLLER_FUNCTION_NAME %> = async () => {
+<%
+  let UTILS_PATH = "../../../utils";
+  if(PLATFORM !== "admin"){
+    UTILS_PATH = "../../../../utils";
+  }
+%>  
+const response = require('<%-UTILS_PATH%>/response'); 
+const responseHandler = require('<%-UTILS_PATH%>/response/responseHandler'); 
+const <%-CONTROLLER_FUNCTION_NAME %> = (<%-CONTROLLER_FUNCTION_NAME %>Usecase) => async (req,res) => {
   try {   
-    return message.successResponse({ data: {} });
+    let result = await <%-CONTROLLER_FUNCTION_NAME %>Usecase(req,res);   
+    return responseHandler(res,result);
   } catch (error){
-    return message.failureResponse();
+    return responseHandler(res,response.internalServerError({ message:error.message }));
+  }
+};
+
+module.exports =  {
+  <%-CONTROLLER_FUNCTION_NAME %>,
+}
+<%_}else{ _%>
+const <%-CONTROLLER_FUNCTION_NAME %> = (<%-CONTROLLER_FUNCTION_NAME %>Usecase) => async (req,res) => {
+  try {
+    let result = await <%-CONTROLLER_FUNCTION_NAME %>Usecase(req,res);   
+    return responseHandler(res,result);
+  } catch (error){
+    return responseHandler(res,response.internalServerError({ message:error.message }));
   }
 };
 <%_ } _%>

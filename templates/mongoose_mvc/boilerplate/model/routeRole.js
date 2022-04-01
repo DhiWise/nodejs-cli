@@ -1,6 +1,11 @@
+/**
+ * routeRole.js
+ * @description :: model of a database collection routeRole
+ */
+
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
-var idValidator = require('mongoose-id-validator');
+let idValidator = require('mongoose-id-validator');
 const myCustomLabels = {
   totalDocs: 'itemCount',
   docs: 'data',
@@ -30,16 +35,25 @@ const schema = new Schema(
 
     isActive:{ type:Boolean },
 
-    isDeleted:{ type:Boolean },
+    createdAt:{ type:Date },
+
+    updatedAt:{ type:Date },
 
     addedBy:{
       type:Schema.Types.ObjectId,
       ref:'user'
-    }
-  },
-  {
-    timestamps: {
-      createdAt: 'createdAt',
+    },
+
+    updatedBy:{
+      type:Schema.Types.ObjectId,
+      ref:'user'
+    },
+
+    isDeleted:{ type:Boolean }
+  }
+  ,{ 
+    timestamps: { 
+      createdAt: 'createdAt', 
       updatedAt: 'updatedAt' 
     } 
   }
@@ -63,14 +77,13 @@ schema.pre('insertMany', async function (next, docs) {
 
 schema.method('toJSON', function () {
   const {
-    __v, ...object 
+    _id, __v, ...object 
   } = this.toObject({ virtuals:true });
-  object.id = object._id;
+  object.id = _id;
      
   return object;
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-
-const routeRole = mongoose.model('routeRole',schema,'routeRole');
+const routeRole = mongoose.model('routeRole',schema);
 module.exports = routeRole;

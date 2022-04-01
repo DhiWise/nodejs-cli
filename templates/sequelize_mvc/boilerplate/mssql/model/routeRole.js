@@ -1,4 +1,11 @@
-const { DataTypes } = require('sequelize');
+/**
+ * routeRole.js
+ * @description :: sequelize model of database table routeRole
+ */
+
+const {
+  DataTypes, Op 
+} = require('sequelize');
 const sequelize = require('../config/dbConnection');
 const sequelizePaginate = require('sequelize-paginate');
 const sequelizeTransforms = require('sequelize-transforms');
@@ -9,13 +16,17 @@ let RouteRole = sequelize.define('routeRole',{
     allowNull:false
   },
   roleId:{ type:DataTypes.INTEGER },
-  isActive:{ type:DataTypes.BOOLEAN },
-  isDeleted:{ type:DataTypes.BOOLEAN },
   id:{
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true
-  }
+  },
+  isActive:{ type:DataTypes.BOOLEAN },
+  createdAt:{ type:DataTypes.DATE },
+  updatedAt:{ type:DataTypes.DATE },
+  addedBy:{ type:DataTypes.INTEGER },
+  updatedBy:{ type:DataTypes.INTEGER },
+  isDeleted:{ type:DataTypes.BOOLEAN }
 }
 ,{
   hooks:{
@@ -23,15 +34,18 @@ let RouteRole = sequelize.define('routeRole',{
       async function (routeRole,options){
         routeRole.isActive = true;
         routeRole.isDeleted = false;
+
       },
     ],
     beforeBulkCreate: [
       async function (routeRole,options){
         if (routeRole !== undefined && routeRole.length) { 
           for (let index = 0; index < routeRole.length; index++) { 
+        
             const element = routeRole[index]; 
             element.isActive = true; 
             element.isDeleted = false; 
+  
           } 
         }
       },
@@ -40,7 +54,7 @@ let RouteRole = sequelize.define('routeRole',{
 }
 );
 RouteRole.prototype.toJSON = function () {
-  var values = Object.assign({}, this.get());
+  let values = Object.assign({}, this.get());
   return values;
 };
 sequelizeTransforms(RouteRole);

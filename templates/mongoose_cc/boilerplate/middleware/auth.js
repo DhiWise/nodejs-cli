@@ -1,22 +1,23 @@
-const passport = require('passport');
-const {
-  ROLE_RIGHTS, USER_ROLE
-} = require('../constants/authConstant');
-const message = require('../utils/messages');
-const sendResponse = require('../helpers/sendResponse');
-const db = require('mongoose');
-const userTokens  = require('../model/userTokens')(db);
-const userTokenService = require('../services/mongoDbService')({ model:userTokens });
+/**
+ * auth.js
+ * @description :: middleware that checks authentication and authorization of user
+ */
 
-const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-  if (err || info || !user) {
+const {
+  LOGIN_ACCESS, USER_TYPES,PLATFORM
+} = require('../constants/authConstant');
+const responseHandler = require('../utils/response/responseHandler');
+const { unAuthorized } = require('../utils/response');
+
+const verifyCallback = (userTokensDb, req, resolve, reject, platform) => async (error, user, info) => {
+  if (error || info || !user) {
     return reject('Unauthorized User');
   }
   req.user = user;
   if (!user.isActive) {
     return reject('User is deactivated');
   }
-  let userToken = await userTokenService.getSingleDocumentByQuery({
+  let userToken = await userTokensDb.findOne({
     token:(req.headers.authorization).replace('Bearer ',''),
     userId:user.id
   });
@@ -26,49 +27,44 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
   if (userToken.isTokenExpired){
     return reject('Token is Expired');
   }
-  if (requiredRights.length) {
-    for (role in USER_ROLE){
-      if (USER_ROLE[role] === user.role){
-        const userRights = ROLE_RIGHTS[user.role];
-        const hasRequiredRights = requiredRights.some((requiredRight) => userRights.includes(requiredRight));
-        if (!hasRequiredRights || !user.id) {
-          return reject('Unauthorized user');
-        }
-      }
+  if (user.userType) {
+    let allowedPlatforms = LOGIN_ACCESS[user.userType] ? LOGIN_ACCESS[user.userType] : [];
+    if (!allowedPlatforms.includes(platform)) {
+      return reject('Unauthorized user');
     }
   }
   resolve();
 };
 
-const auth = (...requiredRights) => async (req, res, next) => {
-
-  let url = req.originalUrl;
+const auth = ({
+  passport, userTokensDb
+}) => (platform) => async (req, res, next) => {
     
-  if (url.includes('device')){
+  if (platform == PLATFORM.DEVICE){
     return new Promise((resolve, reject) => {
-      passport.authenticate('device-rule', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
+      passport.authenticate('device-rule', { session: false }, verifyCallback(userTokensDb,req, resolve, reject, platform))(
         req,
         res,
         next
       );
     })
       .then(() => next())
-      .catch((err) => {
-        sendResponse(res,message.unAuthorizedRequest());
+      .catch((error) => {
+        responseHandler(res,unAuthorized());
       });
   }
     
-  else if (url.includes('admin')){
+  else if (platform == PLATFORM.ADMIN){
     return new Promise((resolve, reject) => {
-      passport.authenticate('admin-rule', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
+      passport.authenticate('admin-rule', { session: false }, verifyCallback(userTokensDb,req, resolve, reject, platform))(
         req,
         res,
         next
       );
     })
       .then(() => next())
-      .catch((err) => {
-        sendResponse(res,message.unAuthorizedRequest());
+      .catch((error) => {
+        responseHandler(res,unAuthorized());
       });
   }
    

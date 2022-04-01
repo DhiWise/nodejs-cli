@@ -1,58 +1,56 @@
-const { Op } = require('sequelize');
-const model = require('../model');
-
-const { userRole } = model;
-const { routeRole } = model;
-const { projectRoute } = model;
-const userRoleDbService = require('../services/dbService')({ model: userRole });
-const routeRoleDbService = require('../services/dbService')({ model: routeRole });
-const projectRoleDbService = require('../services/dbService')({ model: projectRoute });
-const { replaceAll } = require('../utils/common');
-const sendResponse = require('../helpers/sendResponse');
-const message = require('../utils/messages');
-
-const checkRolePermission = async (req, res, next) => {
-  if (req.user) {
-    const loggedInUserId = req.user.id;
-    let rolesOfUser = await userRoleDbService.findMany({
-      userId: loggedInUserId,
-      isActive: true,
-      isDeleted: false,
-    },
-    { attributes: ['roleId'] });
-    if (rolesOfUser && rolesOfUser.data && rolesOfUser.data.length) {
-      rolesOfUser = [...new Set((rolesOfUser.data).map((item) => item.roleId))];
-      const route = await projectRoleDbService.findOne({
-        route_name: replaceAll((req.route.path.toLowerCase()).substring(1), '/', '_'),
-        uri: req.route.path.toLowerCase(),
+/**
+ * checkRolePermission.js
+ * @description :: middleware that checks logged-in user's access of APIs
+ */
+const response = require('../utils/response');
+const responseHandler = require('../utils/response/responseHandler');
+ 
+const checkRolePermission = ({
+  userRoleDb, routeRoleDb,projectRouteDb
+}) =>async (req, res, next) => {
+  if (!req.user) { 
+    return responseHandler(res, response.unAuthorized());
+  } 
+  const loggedInUserId = req.user.id;
+  let rolesOfUser = await userRoleDb.findMany({
+    userId: loggedInUserId,
+    isActive: true,
+    isDeleted: false 
+  }, {
+    roleId: 1,
+    id: 0,
+  });
+ 
+  if (rolesOfUser && rolesOfUser.data && rolesOfUser.data.length) {
+    rolesOfUser = [...new Set((rolesOfUser.data).map((item) => item.roleId))];
+    const route = await projectRouteDb.findOne({
+      route_name: replaceAll((req.route.path.toLowerCase()), '/', '_'),
+      uri: req.route.path.toLowerCase(),
+    });
+ 
+    if (route) { 
+      const allowedRoute = await routeRoleDb.findOne({
+        routeId: route.id,
+        roleId: { $in: rolesOfUser },
+        isActive: true,
+        isDeleted: false,
       });
-      if (route) {
-        const allowedRoute = await routeRoleDbService.findMany({
-          [Op.and]: [
-            { routeId: route.id },
-            { roleId: { [Op.in]: rolesOfUser } },
-            { isActive: true },
-            { isDeleted: false },
-          ],
-        });
-        if (allowedRoute && allowedRoute.data.length) {
-          next();
-        } else {
-          sendResponse(res, message.unAuthorizedRequest());
-        }
-      } else {
+      if (allowedRoute && allowedRoute.data && allowedRoute.data.length) {
         next();
+      } else {
+        return responseHandler(res, response.unAuthorized());
       }
     } else {
-      /*
-       * sendResponse(res, message.unAuthorizedRequest());
-       */
       next();
     }
   } else {
-    sendResponse(res, message.unAuthorizedRequest());
-  }
-  return undefined;
+    next();
+  } 
+  
 };
-
+ 
+function replaceAll (string, search, replace) {
+  return string.split(search).join(replace);
+};
+ 
 module.exports = checkRolePermission;

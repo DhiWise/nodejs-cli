@@ -1,169 +1,219 @@
+/**
+ * authController.js
+ * @description :: exports authentication methods
+ */
 const authService =  require('../../services/auth');
 const model = require('../../model/index');
 const dbService = require('../../utils/dbService');
 const dayjs = require('dayjs');
 const userSchemaKey = require('../../utils/validation/userValidation');
 const validation = require('../../utils/validateRequest');
-const { Op } = require('sequelize');
+const authConstant = require('../../constants/authConstant');
 const { uniqueValidation } = require('../../utils/common');
+const {
+  sendPasswordBySMS, sendPasswordByEmail 
+} = require('../../services/auth');
     
-module.exports = {
-  /*
-   * api: user register 
-   * description : first time user registration.
-   */
-  register : async (req, res) => {
-    try {
-      let validateRequest = validation.validateParamsWithJoi(
-        req.body,
-        userSchemaKey.schemaKeys
-      );
-      if (!validateRequest.isValid) {
-        return res.inValidParam({ message : `Invalid values in parameters, ${validateRequest.message}` });
-      }
-      let unique = await uniqueValidation(model.user,req.body);   
-      if (!unique){ 
-        return res.inValidParam({ message :'User Registration Failed, Duplicate Data found.' });
-      }     
-      const result = await dbService.createOne(model.user,{ ...req.body });
-      return  res.ok({ data :result });
-    } catch (error) {
-      return res.failureResponse();
-    }  
-  },
-  /*
-   * api : forgot password
-   * description : send email or sms to user for forgot password.
-   */
-  forgotPassword: async (req, res) => {
-    const params = req.body;
-    try {
-      if (!params.email) {
-        return res.insufficientParameters();
-      }
-      let where = { email: params.email };
-      params.email = params.email.toString().toLowerCase();
-      let isUser = await dbService.findOne(model.user,where);
-      if (isUser) {
-        let {
-          resultOfEmail,resultOfSMS
-        } = await authService.sendResetPasswordNotification(isUser);
-        if (resultOfEmail && resultOfSMS){
-          return res.requestValidated({ message :'otp successfully send.' });
-        } else if (resultOfEmail && !resultOfSMS) {
-          return res.requestValidated({ message :'otp successfully send to your email.' });
-        } else if (!resultOfEmail && resultOfSMS) { 
-          return res.requestValidated({ message : 'otp successfully send to your mobile number.' });
-        } else {
-          return res.failureResponse({ message :'otp can not be sent due to some issue try again later' });
-        }
-      } else {
-        return res.recordNotFound();
-      }
-    } catch (error) {
-      return res.failureResponse();
+/**
+ * @description : user registration 
+ * @param {Object} req : request for register
+ * @param {Object} res : response for register
+ * @return {Object} : response for register {status, message, data}
+ */
+const register = async (req, res) => {
+  try {
+    let dataToRegister = req.body;
+    let validateRequest = validation.validateParamsWithJoi(
+      dataToRegister,
+      userSchemaKey.schemaKeys
+    );
+    if (!validateRequest.isValid) {
+      return res.validationError({ message : `Invalid values in parameters, ${validateRequest.message}` });
     }
-  },
-  /*
-   * api : validate forgot password otp 
-   * description : after successfully sent mail or sms for forgot password validate otp
-   */
-  validateResetPasswordOtp: async (req, res) => {
-    const params = req.body;
-    try {
-      if (!params || !params.otp) {
-        return res.insufficientParameters();
-      }
-      let isUser = await dbService.findOne(model.userAuthSettings, { resetPasswordCode: params.otp });
-      if (!isUser || !isUser.resetPasswordCode) {
-        return res.invalidRequest({ message :'Invalid OTP' });
-      }
-      // link expire
-      if (dayjs(new Date()).isAfter(dayjs(isUser.expiredTimeOfResetPasswordCode))) {
-        return res.invalidRequest({ message :'Your reset password link is expired or invalid' });
-      }
-      return res.requestValidated({ message : 'Otp verified' });
-    } catch (error) {
-      return res.failureResponse();
+    let isEmptyPassword = false;
+    if (!dataToRegister.password){
+      isEmptyPassword = true;
+      dataToRegister.password = Math.random().toString(36).slice(2);
     }
-  },
-  /*
-   * api : reset password
-   * description : after successfully sent email or sms for forgot password,
-   *                validate otp or link and reset password
-   */
-  resetPassword : async (req, res) => {
-    const params = req.body;
-    try {
-      if (!params.code || !params.newPassword) {
-        return res.insufficientParameters();
-      }
-      let userAuth = await dbService.findOne(model.userAuthSettings, { resetPasswordCode: params.code });
-      if (userAuth && userAuth.expiredTimeOfResetPasswordCode) {
-        if (dayjs(new Date()).isAfter(dayjs(userAuth.expiredTimeOfResetPasswordCode))) {// link expire
-          return res.invalidRequest({ message :'Your reset password link is expired or invalid' });
-        }
-      } else {
-        // invalid code
-        return res.invalidRequest({ message :'Invalid Code' });
-      }
-      let response = await authService.resetPassword(userAuth.userId, params.newPassword);
-      if (response && !response.flag){
-        return res.requestValidated({ message  :response.data });
-      }
-      return res.invalidRequest({ message :response.data });
-    } catch (error) {
-      return res.failureResponse();
+    let unique = await uniqueValidation(model.user,dataToRegister);   
+    if (!unique){ 
+      return res.validationError({ message :'User Registration Failed, Duplicate Data found.' });
+    }   
+    const result = await dbService.createOne(model.user,{
+      ...dataToRegister,
+      userType: authConstant.USER_TYPES.Admin
+    });
+    if (isEmptyPassword && req.body.email){
+      await sendPasswordByEmail({
+        email: req.body.email,
+        password: req.body.password
+      });
     }
-  },
-  /*
-   * api :  authentication
-   * description : login user
-   */
-  login:async (req,res)=>{
-    try {
-      let {
-        username,password
-      } = req.body;
-      let url = req.originalUrl;
-      if (username && password){
-        let roleAccess = false;
-        if (req.body.includeRoleAccess){
-          roleAccess = req.body.includeRoleAccess;
-        }
-        let result = await authService.loginUser(username, password, url, roleAccess);
-        if (!result.flag){
-          return res.loginSuccess({ data :result.data });
-        }
-        return res.loginFailed({ message:result.data });
-      } else {
-        return res.insufficientParameters();
-      }
-    } catch (error) {
-      return res.failureResponse();
+    if (isEmptyPassword && req.body.mobileNo){
+      await sendPasswordBySMS({
+        mobileNo: req.body.mobileNo,
+        password: req.body.password
+      });
     }
-  },
-  /*
-   * api : logout
-   * description : Logout User
-   */
-  logout: async (req, res) => {
-    try {
-      if (req.user) {
-        let userTokens = await dbService.findOne(model.userToken, {
-          token: (req.headers.authorization).replace('Bearer ', ''),
-          userId:req.user.id 
-        });
-        userTokens.isTokenExpired = true;
-        let id = userTokens.id;
-        delete userTokens.id;
-        await dbService.updateByPk(model.userToken,id, userTokens.toJSON());
-        return res.requestValidated({ message :'Logged Out Successfully' });
-      }
-      return res.badRequest();
-    } catch (error) {
-      return res.failureResponse();
-    }
-  },
+    return  res.success({ data :result });
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }  
+};
 
+/**
+ * @description : send email or sms to user with OTP on forgot password
+ * @param {Object} req : request for forgotPassword
+ * @param {Object} res : response for forgotPassword
+ * @return {Object} : response for forgotPassword {status, message, data}
+ */
+const forgotPassword = async (req, res) => {
+  const params = req.body;
+  try {
+    if (!params.email) {
+      return res.badRequest();
+    }
+    let where = { email: params.email.toString().toLowerCase() };
+    let found = await dbService.findOne(model.user,where);
+    if (!found) {
+      return res.recordNotFound();
+    } 
+    let {
+      resultOfEmail,resultOfSMS
+    } = await authService.sendResetPasswordNotification(found);
+    if (resultOfEmail && resultOfSMS){
+      return res.success({ message :'OTP successfully send.' });
+    } else if (resultOfEmail && !resultOfSMS) {
+      return res.success({ message :'OTP successfully send to your email.' });
+    } else if (!resultOfEmail && resultOfSMS) { 
+      return res.success({ message : 'OTP successfully send to your mobile number.' });
+    } else {
+      return res.failure({ message :'OTP can not be sent due to some issue try again later' });
+    }
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }
+};
+
+/**
+ * @description : validate OTP
+ * @param {Object} req : request for validateResetPasswordOtp
+ * @param {Object} res : response for validateResetPasswordOtp
+ * @return {Object} : response for validateResetPasswordOtp  {status, message, data}
+ */ 
+const validateResetPasswordOtp = async (req, res) => {
+  const params = req.body;
+  try {
+    if (!params || !params.otp) {
+      return res.badRequest();
+    }
+    let found = await dbService.findOne(model.userAuthSettings, { resetPasswordCode: params.otp });
+    if (!found || !found.resetPasswordCode) {
+      return res.failure({ message :'Invalid OTP' });
+    }
+    // link expire
+    if (dayjs(new Date()).isAfter(dayjs(found.expiredTimeOfResetPasswordCode))) {
+      return res.failure({ message :'Your reset password link is expired or invalid' });
+    }
+    return res.success({ message : 'OTP verified' });
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }
+};
+
+/**
+ * @description : reset password with code and new password
+ * @param {Object} req : request for resetPassword
+ * @param {Object} res : response for resetPassword
+ * @return {Object} : response for resetPassword {status, message, data}
+ */ 
+const resetPassword = async (req, res) => {
+  const params = req.body;
+  try {
+    if (!params.code || !params.newPassword) {
+      return res.badRequest();
+    }
+    let userAuth = await dbService.findOne(model.userAuthSettings, { resetPasswordCode: params.code });
+    if (userAuth && userAuth.expiredTimeOfResetPasswordCode) {
+      if (dayjs(new Date()).isAfter(dayjs(userAuth.expiredTimeOfResetPasswordCode))) {// link expire
+        return res.failure({ message :'Your reset password link is expired or invalid' });
+      }
+    } else {
+      // invalid code
+      return res.failure({ message :'Invalid Code' });
+    }
+    let response = await authService.resetPassword(userAuth.userId, params.newPassword);
+    if (response.flag){
+      return res.failure({ message :response.data });
+    }
+    return res.success({ message  :response.data });
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }
+};
+
+/**
+ * @description : login with username and password
+ * @param {Object} req : request for login 
+ * @param {Object} res : response for login
+ * @return {Object} : response for login {status, message, data}
+ */
+const login = async (req,res)=>{
+  try {
+    let {
+      username,password
+    } = req.body;
+    if (username && password){
+      let roleAccess = false;
+      if (req.body.includeRoleAccess){
+        roleAccess = req.body.includeRoleAccess;
+      }
+      let result = await authService.loginUser(username, password, authConstant.PLATFORM.ADMIN, roleAccess);
+      if (result.flag){
+        return res.badRequest({ message:result.data });
+      }
+      return res.success({
+        data:result.data,
+        message :'Login successful.'
+      });
+    } else {
+      return res.badRequest();
+    }
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }
+};
+
+/**
+ * @description : logout user
+ * @param {Object} req : request for logout
+ * @param {Object} res : response for logout
+ * @return {Object} : response for logout {status, message, data}
+ */
+const logout = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.badRequest();
+    }
+    let userTokens = await dbService.findOne(model.userToken, {
+      token: (req.headers.authorization).replace('Bearer ', ''),
+      userId:req.user.id 
+    });
+    userTokens.isTokenExpired = true;
+    let id = userTokens.id;
+    delete userTokens.id;
+    await dbService.updateByPk(model.userToken,id, userTokens.toJSON());
+    return res.success({ message :'Logged Out Successfully' });
+
+  } catch (error) {
+    return res.internalServerError({ message:error.message }); 
+  }
+};
+module.exports = {
+  register,
+  login,
+  forgotPassword,
+  validateResetPasswordOtp,
+  resetPassword,
+  logout,
 };

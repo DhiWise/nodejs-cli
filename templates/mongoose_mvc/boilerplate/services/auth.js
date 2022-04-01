@@ -1,3 +1,8 @@
+/**
+ * auth.js
+ * @description :: functions used in authentication
+ */
+
 const User = require('../model/user');
 const dbService = require('../utils/dbService');
 const userTokens = require('../model/userTokens');
@@ -9,20 +14,34 @@ const jwt = require('jsonwebtoken');
 const common = require('../utils/common');
 const dayjs = require('dayjs');
 const bcrypt = require('bcrypt');
-const emailService = require('./email/emailService');
-const sendSMS = require('./sms/smsService');
+const emailService = require('./email');
+const smsService = require('./sms');
 const uuid = require('uuid').v4;
 
-async function generateToken (user,secret){
+/**
+ * @description : generate JWT token for authentication.
+ * @param {Object} user : user who wants to login.
+ * @param {string} secret : secret for JWT.
+ * @return {string}  : returns JWT token.
+ */
+const generateToken = async (user,secret) => {
   return jwt.sign( {
     id:user.id,
-    'email':user.email
+    'username':user.username
   }, secret, { expiresIn: JWT.EXPIRES_IN * 60 });
-}   
-let auth =  module.exports = {};
-auth.loginUser = async (username,password,url,roleAccess) => {
+};
+
+/**
+ * @description : login user.
+ * @param {string} username : username of user.
+ * @param {string} password : password of user.
+ * @param {string} platform : platform.
+ * @param {boolean} roleAccess: a flag to request user`s role access
+ * @return {Object} : returns authentication status. {flag, data}
+ */
+const loginUser = async (username,password,platform,roleAccess) => {
   try {
-    let where = { 'email':username };
+    let where = { 'username':username };
     let user = await dbService.getDocumentByQuery(User,where);
     if (user) {
       if (user.loginRetryLimit >= MAX_LOGIN_RETRY_LIMIT){
@@ -64,71 +83,68 @@ auth.loginUser = async (username,password,url,roleAccess) => {
           }; 
         } 
       }
-      const isPasswordMatched = await user.isPasswordMatch(password);
-      if (isPasswordMatched) {
-        const {
-          password,...userData
-        } = user.toJSON();
-        let token;
-        if (!user.role){
+      if (password){
+        const isPasswordMatched = await user.isPasswordMatch(password);
+        if (!isPasswordMatched) {
+          await dbService.updateDocument(User,user.id,{ loginRetryLimit:user.loginRetryLimit + 1 });
           return {
             flag:true,
-            data:'You have not assigned any role'
+            data:'Incorrect Password'
           };
         }
-        if (url.includes('device')){
-          if (!LOGIN_ACCESS[user.role].includes(PLATFORM.DEVICE)){
-            return {
-              flag:true,
-              data:'you are unable to access this platform'
-            };
-          }
-          token = await generateToken(userData,JWT.DEVICE_SECRET);
-        }
-        else if (url.includes('admin')){
-          if (!LOGIN_ACCESS[user.role].includes(PLATFORM.ADMIN)){
-            return {
-              flag:true,
-              data:'you are unable to access this platform'
-            };
-          }
-          token = await generateToken(userData,JWT.ADMIN_SECRET);
-        }
-        if (user.loginRetryLimit){
-          await dbService.updateDocument(User,user.id,{
-            loginRetryLimit:0,
-            loginReactiveTime:''
-          });
-        }
-        let expire = dayjs().add(JWT.EXPIRES_IN, 'second').toISOString();
-        await dbService.createDocument(userTokens, {
-          userId: user.id,
-          token: token,
-          tokenExpiredTime: expire 
-        });
-        let userToReturn = {
-          ...userData,
-          ...{ token } 
-        };
-        let roleAccessData = {};
-        if (roleAccess){
-          roleAccessData = await common.getRoleAccessData(user.id);
-          userToReturn = {
-            ...userToReturn,
-            roleAccess: roleAccessData
-          };
-        }
-        return {
-          flag:false,
-          data:userToReturn
-        };
-      } else {
-        await dbService.updateDocument(User,user.id,{ loginRetryLimit:user.loginRetryLimit + 1 });
+      }
+      const userData = user.toJSON();
+      let token;
+      if (!user.userType){
         return {
           flag:true,
-          data:'Incorrect Password'
+          data:'You have not assigned any role'
         };
       }
+      if (platform == PLATFORM.DEVICE){
+        if (!LOGIN_ACCESS[user.userType].includes(PLATFORM.DEVICE)){
+          return {
+            flag:true,
+            data:'you are unable to access this platform'
+          };
+        }
+        token = await generateToken(userData,JWT.DEVICE_SECRET);
+      }
+      else if (platform == PLATFORM.ADMIN){
+        if (!LOGIN_ACCESS[user.userType].includes(PLATFORM.ADMIN)){
+          return {
+            flag:true,
+            data:'you are unable to access this platform'
+          };
+        }
+        token = await generateToken(userData,JWT.ADMIN_SECRET);
+      }
+      if (user.loginRetryLimit){
+        await dbService.updateDocument(User,user.id,{
+          loginRetryLimit:0,
+          loginReactiveTime:''
+        });
+      }
+      let expire = dayjs().add(JWT.EXPIRES_IN, 'second').toISOString();
+      await dbService.createDocument(userTokens, {
+        userId: user.id,
+        token: token,
+        tokenExpiredTime: expire 
+      });
+      let userToReturn = {
+        ...userData,
+        token 
+      };
+      let roleAccessData = {};
+      if (roleAccess){
+        roleAccessData = await common.getRoleAccessData(user.id);
+        userToReturn.roleAccess = roleAccessData;
+      }
+      return {
+        flag:false,
+        data:userToReturn
+      };
+            
     } else {
       return {
         flag:true,
@@ -138,8 +154,14 @@ auth.loginUser = async (username,password,url,roleAccess) => {
   } catch (error) {
     throw new Error(error.message);
   }
-},
-auth.changePassword = async (params)=>{
+};
+
+/**
+ * @description : change password.
+ * @param {Object} params : object of new password, old password and user`s id.
+ * @return {Object}  : returns status of change password. {flag,data}
+ */
+const changePassword = async (params)=>{
   try {
     let password = params.newPassword;
     let oldPassword = params.oldPassword;
@@ -154,7 +176,7 @@ auth.changePassword = async (params)=>{
         };
       }
       password = await bcrypt.hash(password, 8);
-      let updatedUser = dbService.updateDocument(User,user.id,{ password:password });
+      let updatedUser = dbService.updateDocument(User,user.id,{ 'password':password });
       if (updatedUser) {
         return {
           flag:false,
@@ -173,14 +195,20 @@ auth.changePassword = async (params)=>{
   } catch (error) {
     throw new Error(error.message);
   }
-},
-auth.sendResetPasswordNotification = async (user) => {
+};
+
+/**
+ * @description : send notification on reset password.
+ * @param {Object} user : user document
+ * @return {}  : returns status where notification is sent or not
+ */
+const sendResetPasswordNotification = async (user) => {
   let resultOfEmail = false;
   let resultOfSMS = false;
   try {
     let token = uuid();
     let expires = dayjs();
-    expires = expires.add(FORGOT_PASSWORD_WITH.EXPIRETIME, 'minute').toISOString();
+    expires = expires.add(FORGOT_PASSWORD_WITH.EXPIRE_TIME, 'minute').toISOString();
     await dbService.updateDocument(User,user.id,
       {
         resetPasswordLink: {
@@ -194,8 +222,9 @@ auth.sendResetPasswordNotification = async (user) => {
       let mailObj = {
         subject: 'Reset Password',
         to: user.email,
-        template: '/views/resetPassword',
+        template: '/views/email/ResetPassword',
         data: {
+          userName: user.username || '-',
           link: `http://localhost:${process.env.PORT}` + viewType + token,
           linkText: 'Reset Password',
           message:msg
@@ -211,13 +240,13 @@ auth.sendResetPasswordNotification = async (user) => {
     if (FORGOT_PASSWORD_WITH.LINK.sms){
       let viewType = '/reset-password/';
       let msg = `Click on the link to reset your password.
-                http://localhost:${process.env.PORT}${viewType + token}`;
+            http://localhost:${process.env.PORT}${viewType + token}`;
       let smsObj = {
         to:user.mobileNo,
         message:msg
       };
       try {
-        await sendSMS(smsObj);
+        await smsService.sendSMS(smsObj);
         resultOfSMS = true;
       } catch (error) {
         console.log(error);
@@ -230,8 +259,15 @@ auth.sendResetPasswordNotification = async (user) => {
   } catch (error) {
     throw new Error(error.message);
   }
-},
-auth.resetPassword = async (user, newPassword) => {
+};
+
+/**
+ * @description : reset password.
+ * @param {Object} user : user document
+ * @param {string} newPassword : new password to be set.
+ * @return {}  : returns status whether new password is set or not. {flag, data}
+ */
+const resetPassword = async (user, newPassword) => {
   try {
     let where = { _id: user.id };
     const dbUser = await dbService.getDocumentByQuery(User,where);
@@ -243,14 +279,14 @@ auth.resetPassword = async (user, newPassword) => {
     }
     newPassword = await bcrypt.hash(newPassword, 8);
     await dbService.updateDocument(User, user.id, {
-      password: newPassword,
+      'password': newPassword,
       resetPasswordLink: null,
       loginRetryLimit:0
     });
     let mailObj = {
       subject: 'Reset Password',
       to: user.email,
-      template: '/views/successfullyResetPassword',
+      template: '/views/email/successfullyResetPassword',
       data: {
         isWidth: true,
         email: user.email || '-',
@@ -265,4 +301,60 @@ auth.resetPassword = async (user, newPassword) => {
   } catch (error) {
     throw new Error(error.message);
   }
+};
+
+/**
+ * @description :  send password via SMS.
+ * @param {string} user : user document.
+ * @return {boolean}  : returns status whether SMS is sent or not.
+ */
+const sendPasswordBySMS = async (user) => {
+  try {
+    let message = `Password for login as`;
+    let msg = `${message} : ${user.password}`;
+    let smsObj = {
+      to: user.mobileNo,
+      message: msg
+    };
+    await smsService.sendSMS(smsObj);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * @description : send password via Email.
+ * @param {string} user : user document.
+ * @return {boolean}  : returns status whether Email is sent or not.
+ */
+const sendPasswordByEmail = async (user) => {
+  try {
+    let msg = `Your Password for login : ${user.password}`;
+    let mailObj = {
+      subject: 'Your Password!',
+      to: user.email,
+      template: '/views/email/passwordTemplate',
+      data: { message:msg }
+    };
+    try {
+      await emailService.sendMail(mailObj);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+module.exports = {
+  loginUser,
+  changePassword,
+  sendResetPasswordNotification,
+  resetPassword,
+  sendPasswordBySMS,
+  sendPasswordByEmail
 };

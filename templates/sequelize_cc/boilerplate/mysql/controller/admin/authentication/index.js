@@ -1,41 +1,50 @@
-const userModel  = require('../../../model').user;
-const userAuthSetting = require('../../../model').userAuthSettings;
-const userToken = require('../../../model').userToken;
-const {
-  schemaKeys,updateSchemaKeys
-} = require('../../../validation/userValidation');
-const insertUserValidator = require('../../../validation/genericValidator')(schemaKeys);
-const updateUserValidator = require('../../../validation/genericValidator')(updateSchemaKeys);
-const makeUser = require('../../../entity/user')({
-  insertUserValidator,
-  updateUserValidator
+let  userDb = require('../../../data-access/userDb');
+const userTokenDb = require('../../../data-access/userTokenDb');
+
+const userSchema = require('../../../validation/schema/user');
+const createValidation = require('../../../validation')(userSchema.createSchema);
+const updateValidation = require('../../../validation')(userSchema.updateSchema);
+
+const userRoleDb  = require('../../../data-access/userRoleDb');
+const routeRoleDb  = require('../../../data-access/routeRoleDb');
+const roleDb = require('../../../data-access/roleDb');
+
+const userAuthSettingsDb = require('../../../data-access/userAuthSettingsDb');    
+
+const authController = require('./authController');
+
+const registerUsecase = require('../../../use-case/authentication/register')({ 
+  userDb, 
+  createValidation, 
 });
-const userService = require('../../../services/dbService')({
-  model:userModel,
-  makeUser
+const forgotPasswordUsecase = require('../../../use-case/authentication/forgotPassword')({
+  userDb,
+  userAuthSettingsDb
 });
-const userAuthSettingService = require('../../../services/dbService')({ model:userAuthSetting });
-const userTokenService = require('../../../services/dbService')({ model:userToken });
-const userRoleModel  = require('../../../model/').userRole;
-const userRoleService = require('../../../services/dbService')({ model:userRoleModel });
-const routeRoleModel  = require('../../../model/').routeRole;
-const routeRoleService = require('../../../services/dbService')({ model:routeRoleModel });
-const authService = require('../../../services/auth')({
-  model:userModel,
-  userService,
-  userAuthSettingService,
-  userTokenService,
-  userRoleService,
-  routeRoleService
+const resetPasswordUsecase = require('../../../use-case/authentication/resetPassword')({
+  userDb,
+  userAuthSettingsDb
 });
-const makeUniqueValidation = require('../../../utils/common.js').makeUniqueValidation(userService);
-const makeAuthController = require('./authController');
-const authController = makeAuthController({
-  authService,
-  makeUniqueValidation,
-  userService,
-  userAuthSettingService,
-  userTokenService,
-  makeUser
+const validateResetPasswordOtpUsecase = require('../../../use-case/authentication/validateResetPasswordOtp')({ userAuthSettingsDb });
+const logoutUsecase = require('../../../use-case/authentication/logout')({ userTokenDb });
+const authenticationUsecase = require('../../../use-case/authentication/authentication')({
+  userDb,
+  userTokenDb,
+  userAuthSettingsDb
 });
-module.exports = authController;
+
+const register = authController.register(registerUsecase);
+const forgotPassword = authController.forgotPassword(forgotPasswordUsecase);
+const resetPassword = authController.resetPassword(resetPasswordUsecase);
+const validateResetPasswordOtp = authController.validateResetPasswordOtp(validateResetPasswordOtpUsecase);
+const logout = authController.logout(logoutUsecase);
+const authentication = authController.authentication(authenticationUsecase);
+
+module.exports = {
+  register,
+  forgotPassword,
+  resetPassword,
+  validateResetPasswordOtp,
+  logout,
+  authentication,
+};

@@ -1,63 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const adaptRequest = require('../../helpers/adaptRequest');
-const sendResponse = require('../../helpers/sendResponse');
-const auth = require('../../middleware/auth');
+const { auth } = require('../../middleware');
 const authController = require('../../controller/admin/authentication');
-router.post('/register',(req,res,next)=>{
-  req = adaptRequest(req);
-  authController.register({ data:req.body }).then((result)=>{
-    sendResponse(res,result);
-  });
-});
-
-router.post('/login',(req,res,next)=>{
-  req = adaptRequest(req);
-  authController.authentication(req).then((result) => {
-    sendResponse(res,result);
-  })
-    .catch((error) => {
-      sendResponse(res,error);
-    });
-});
-router.post('/forgot-password', (req, res, next) => {
-  req = adaptRequest(req);
-  authController.forgotPassword(req.body).then((result) => {
-    sendResponse(res, result);
-  })
-    .catch((error) => {
-      sendResponse(res, error);
-    });
-});
-
-router.post('/validate-otp',(req,res,next)=>{
-  req = adaptRequest(req);
-  authController.validateResetPasswordOtp(req.body).then((result) => {
-    sendResponse(res, result);
-  })
-    .catch((error) => {
-      sendResponse(res, error);
-    });
-});
-
-router.put('/reset-password',(req,res,next)=>{
-  req = adaptRequest(req);
-  authController.resetPassword(req.body).then((result) => {
-    sendResponse(res, result);
-  })
-    .catch((error) => {
-      sendResponse(res, error);
-    });
-});
-
-router.post('/logout',auth(...[ 'logoutByUserInAdminPlatform', 'logoutByAdminInAdminPlatform' ]),(req,res,next)=>{
-  req = adaptRequest(req);
-  authController.logout(req).then((result) => {
-    sendResponse(res, result);
-  })
-    .catch((error) => {
-      sendResponse(res, error);
-    });
-});
+const { PLATFORM } =  require('../../constants/authConstant');  
+router.route('/register').post(authController.register);
+router.route('/login').post(authController.authentication);
+router.route('/forgot-password').post(authController.forgotPassword);
+router.route('/validate-otp').post(authController.validateResetPasswordOtp);
+router.route('/reset-password').put(authController.resetPassword);
+router.route('/logout').post(auth(PLATFORM.ADMIN),authController.logout);
 
 module.exports = router;

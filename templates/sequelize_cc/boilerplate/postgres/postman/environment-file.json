@@ -1,6 +1,6 @@
 {
-  "id": "378c5a5d-3a8e-44c0-bb47-8039f84d611a",
-  "name": "seq_pg_cc_environment",
+  "id": "0b4bd94a-94cc-45b1-8136-c453129a4ab7",
+  "name": "postgres_cc_boilerplate_environment",
   "values": [
     {
       "key": "token",
@@ -14,6 +14,6 @@
     }
   ],
   "_postman_variable_scope": "environment",
-  "_postman_exported_at": "2021-11-11T07:55:45.980Z",
+  "_postman_exported_at": "2022-03-31T12:04:46.027Z",
   "_postman_exported_using": "Postman"
 }

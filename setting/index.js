@@ -20,21 +20,23 @@ function getUserDirectoryPath(projectType, ormType, projectPath) {
 
     if (constant.PROJECT_TYPE.CC === projectType) {
         return {
-            modelPath: path.join(projectPath, 'model'),
-            routePath: path.join(projectPath, 'routes', '{{ platform }}', '{{ model }}Routes.js'),
-            controllerPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ model }}', '{{ model }}.js'),
-            controllerIndexPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ model }}'),
-            routePlatformIndexPath: path.join(projectPath, 'routes', '{{ platform }}', 'index.js'),
-            validationPath: path.join(projectPath, 'validation', '{{ model }}Validation.js'),
-            entityPath: path.join(projectPath, 'entity', '{{ model }}.js'),
+            modelPath: path.join(projectPath, 'db','{{ orm }}','models'),
+            routePath: path.join(projectPath, 'routes', '{{ platform }}','{{ version }}'),
+            controllerPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ version }}'),
+            controllerIndexPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ version }}'),
+            routePlatformIndexPath: path.join(projectPath, 'routes', '{{ platform }}','{{ version }}'),
+            validationPath: path.join(projectPath, 'validation','schema','{{ model }}.js'),
+            entityPath: path.join(projectPath, 'entities', '{{ model }}.js'),
             configPath: path.join(projectPath, 'config'),
+            dataAccessPath : path.join(projectPath, 'data-access', '{{ model }}Db.js'),
+            useCasePath: path.join(projectPath, 'use-case', '{{ model }}'),
         }
     } else if (constant.PROJECT_TYPE.MVC === projectType) {
         return {
             modelPath: path.join(projectPath, 'model'),
-            routePath: path.join(projectPath, 'routes', '{{ platform }}', '{{ model }}Routes.js'),
-            controllerPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ model }}Controller.js'),
-            routePlatformIndexPath: path.join(projectPath, 'routes', '{{ platform }}', 'index.js'),
+            routePath: path.join(projectPath, 'routes', '{{ platform }}', '{{ version }}'),
+            controllerPath: path.join(projectPath, 'controller', '{{ platform }}', '{{ version }}'),
+            routePlatformIndexPath: path.join(projectPath, 'routes', '{{ platform }}', '{{ version }}'),
             validationPath: path.join(projectPath, 'utils', 'validation', '{{ model }}Validation.js'),
             configPath: path.join(projectPath, 'config'),
         }

@@ -13,9 +13,11 @@ function getProjectTypeAndOrmType(projectPath) {
     let projectType = "";
     let ormType = "";
 
-    let entityPath = path.join(projectPath, 'entity');
+    let entityPath = path.join(projectPath, 'entities');
     let helperPath = path.join(projectPath, 'helpers');
-    if (fs.existsSync(entityPath) && fs.existsSync(helperPath)) {
+    let dataAccessPath = path.join(projectPath, 'data-access');
+    let useCasePath = path.join(projectPath, 'use-case');
+    if (fs.existsSync(entityPath) && fs.existsSync(helperPath) && fs.existsSync(dataAccessPath) && fs.existsSync(useCasePath)) {
         projectType = constant.PROJECT_TYPE.CC;
     } else {
         projectType = constant.PROJECT_TYPE.MVC;
@@ -373,7 +375,7 @@ function groupBy(objectArray, property) {
 
 function getControllerFunctionNames(modelPermission, model, type, orm) {
     model = model.charAt(0).toUpperCase() + model.slice(1);
-    let functionName = [];
+    let functionName = {};
     let functionPattern = {}
     if(type === constant.PROJECT_TYPE.MVC && orm === constant.ORM.MONGOOSE){
         functionPattern = constant.MODEL_PERMISSION_FUNCTION_NAME_MVC_MONGOOSE;
@@ -390,15 +392,15 @@ function getControllerFunctionNames(modelPermission, model, type, orm) {
             if (Array.isArray(element)) {
                 element.forEach((s) => {
                     let str = replace(s, { model });
-                    functionName.push(str);
+                    functionName[value] = str;
                 })
             } else {
                 let str = replace(element, { model });
-                functionName.push(str);
+                functionName[value] = str;
             }
         }
     })
-    return functionName
+    return functionName;
 }
 
 module.exports = {

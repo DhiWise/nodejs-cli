@@ -12,6 +12,30 @@ function makeModel (sequelize){
         _%>
         <%-i%>:<%-finalStr%>,
         <%_ } _%>
+    },
+    {
+        hooks:{
+            beforeCreate: [
+              async function (<%-DB_MODEL%>,options){
+                <%-DB_MODEL%>.isActive = true;
+                <%-DB_MODEL%>.isDeleted = false;
+      
+              },
+            ],
+            beforeBulkCreate: [
+              async function (<%-DB_MODEL%>,options){
+                if (<%-DB_MODEL%> !== undefined && <%-DB_MODEL%>.length) { 
+                  for (let index = 0; index < <%-DB_MODEL%>.length; index++) { 
+              
+                    const element = <%-DB_MODEL%>[index]; 
+                    element.isActive = true; 
+                    element.isDeleted = false; 
+        
+                  } 
+                }
+              },
+            ],
+        } 
     });
     <%-MODEL_NAME%>.prototype.toJSON = function () {
         var values = Object.assign({}, this.get());          

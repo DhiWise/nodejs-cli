@@ -16,6 +16,8 @@ router.route("/<%-ROUTE_PREFIX%>/count").post(<%-MODEL%>Controller.get<%-MODEL_N
 <%_ } _%>
 <%_ if(METHODS.includes("U")){ _%>
 router.route("/<%-ROUTE_PREFIX%>/update/:id").put(<%-MODEL%>Controller.update<%-MODEL_NAME%>);
+<%_}_%>
+<%_ if(METHODS.includes("PU")){ _%>
 router.route("/<%-ROUTE_PREFIX%>/partial-update/:id").put(<%-MODEL%>Controller.partialUpdate<%-MODEL_NAME%>);
 <%_ } _%>
 <%_ if(METHODS.includes("BU")){ _%>

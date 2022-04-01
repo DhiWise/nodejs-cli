@@ -1,18 +1,22 @@
+/**
+ * app.js
+ * Use `app.js` to run your app.
+ * To start the server, run: `node app.js`.
+ */
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config({ path:'.env' });
 global.__basedir = __dirname;
-const ejs = require('ejs');
 const postmanToOpenApi = require('postman-to-openapi');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-require('./config/db.js');
+require('./config/db');
 const listEndpoints = require('express-list-endpoints');
 const passport = require('passport');
 
-let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 const { devicePassportStrategy } = require('./config/devicePassportStrategy');
 const { adminPassportStrategy } = require('./config/adminPassportStrategy');
@@ -23,7 +27,7 @@ app.use(cors(corsOptions));
 //template engine
 app.set('view engine', 'ejs'); 
 app.set('views', path.join(__dirname, 'views'));
-app.use(require('./utils/responseHandler'));
+app.use(require('./utils/response/responseHandler'));
 
 //all routes 
 const routes =  require('./routes/index');
@@ -31,7 +35,6 @@ const routes =  require('./routes/index');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(routes);
 

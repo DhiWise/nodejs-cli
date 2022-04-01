@@ -1,6 +1,11 @@
+/**
+ * userTokens.js
+ * @description :: model of a database collection userTokens
+ */
+
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate-v2');
-var idValidator = require('mongoose-id-validator');
+let idValidator = require('mongoose-id-validator');
 const myCustomLabels = {
   totalDocs: 'itemCount',
   docs: 'data',
@@ -31,18 +36,27 @@ const schema = new Schema(
       default:false
     },
 
-    isDeleted:{ type:Boolean },
-
     isActive:{ type:Boolean },
 
     addedBy:{
       type:Schema.Types.ObjectId,
       ref:'user'
-    }
-  },
-  {
-    timestamps: {
-      createdAt: 'createdAt',
+    },
+
+    updatedBy:{
+      type:Schema.Types.ObjectId,
+      ref:'user'
+    },
+
+    createdAt:{ type:Date },
+
+    updatedAt:{ type:Date },
+
+    isDeleted:{ type:Boolean }
+  }
+  ,{ 
+    timestamps: { 
+      createdAt: 'createdAt', 
       updatedAt: 'updatedAt' 
     } 
   }
@@ -66,14 +80,13 @@ schema.pre('insertMany', async function (next, docs) {
 
 schema.method('toJSON', function () {
   const {
-    __v, ...object 
+    _id, __v, ...object 
   } = this.toObject({ virtuals:true });
-  object.id = object._id;
+  object.id = _id;
      
   return object;
 });
 schema.plugin(mongoosePaginate);
 schema.plugin(idValidator);
-
-const userTokens = mongoose.model('userTokens',schema,'userTokens');
+const userTokens = mongoose.model('userTokens',schema);
 module.exports = userTokens;

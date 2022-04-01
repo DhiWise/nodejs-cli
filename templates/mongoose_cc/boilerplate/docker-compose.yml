@@ -1,0 +1,34 @@
+version: '3'
+services:
+  node-app:
+    container_name: node-app
+    image: node
+    user: root
+    command: ["/bin/bash","-lc","npm i && npm start"]
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongodb
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+      - ./.env.docker:/home/node/app/.env
+    networks:
+      - node-network
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    ports:
+      - '27019:27017'
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - node-network
+
+volumes:
+  dbdata:
+
+networks:
+  node-network:
+    driver: bridge
