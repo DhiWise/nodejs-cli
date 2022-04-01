@@ -13,7 +13,7 @@ async function main() {
         let destinationPath = program.args.shift() || '.';
         // App name
         let projectPath = path.resolve(destinationPath);
-        projectPath = path.join(projectPath,'project_cc_seq');
+        // projectPath = path.join(projectPath,'project_cc_seq');
         let projectInformation = utility.getProjectTypeAndOrmType(projectPath);
         let projectType = projectInformation.projectType;
         let ormType = projectInformation.ormType;
