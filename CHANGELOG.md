@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 0.2.1 (2021-11-26)
+
+### Refactor
+
+refactor(a code change that neither fixes a bug nor adds a feature): …
+* **change structure of clean-code architecture:** refactor code of controllers and chnages in clean-code stricture by adding use-case, data-access and little improvements in creating entities. ([e78a245](https://github.com/DhiWise/nodejs-cli/commit/e78a245b3470bca8a6f56a34422bbeadf61d70c3))
+
 ## 0.2.0 (2021-11-26)
 
 
